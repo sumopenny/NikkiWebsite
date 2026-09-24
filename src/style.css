@@ -176,7 +176,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .gallery-card .art-placeholder-title { font-size: 15px; }
 .gallery-card .art-placeholder-ratio { font-size: 12px; }
 .gallery-card .art-placeholder-code { font-size: 10px; }
-.gallery-controls { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 48px 0 0; }
+.gallery-controls { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 48px 48px 0 0; }
 .gallery-step-controls { display: flex; align-items: center; gap: 13px; }
 .gallery-arrow, .gallery-autoplay { display: grid; width: 40px; height: 40px; flex: 0 0 auto; place-items: center; border: 1px solid var(--line-strong); border-radius: 50%; background: color-mix(in srgb, var(--surface) 84%, transparent); color: var(--ink-soft); cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease, transform .2s ease; }
 .gallery-arrow:hover, .gallery-autoplay:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--accent); background: var(--surface); color: var(--accent-deep); }
@@ -359,7 +359,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .gallery-card .art-placeholder-ratio { max-width: 95%; font-size: 11px; }
   .gallery-card .art-placeholder-code { margin-top: 10px; font-size: 9px; }
   .gallery-card > svg { width: 18px; margin-bottom: 8px; }
-  .gallery-controls { gap: 8px; padding-top: 10px; }
+  .gallery-controls { gap: 8px; padding-top: 44px; }
   .gallery-step-controls { gap: 9px; }
   .gallery-arrow, .gallery-autoplay { width: 38px; height: 38px; }
   .gallery-dots { gap: 6px; }

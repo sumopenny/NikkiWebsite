@@ -130,7 +130,7 @@ const screenshots: ScreenshotPreview[] = [
 
 const copy = computed(() => language.value === 'zh'
   ? {
-      nav: ['功能', '界面预览', '快速开始', '常见问题'],
+      nav: ['界面预览', '功能', '快速开始', '常见问题'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: '把每一段心动，\n好好收进相册。',
       heroBody: '为 无限暖暖 玩家打造的本地相册与搭配管理工具。浏览、收藏、解析和整理游戏照片，让珍贵瞬间留在自己的设备里。',
@@ -191,7 +191,7 @@ const copy = computed(() => language.value === 'zh'
       imageModalLabel: '应用界面大图预览', appUnavailableNote: '若主站暂时无法访问，可试用备用站点。'
     }
   : {
-      nav: ['Features', 'Screenshots', 'Get started', 'FAQ'],
+      nav: ['Screenshots', 'Features', 'Get started', 'FAQ'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: 'Keep every lovely\nmoment close.',
       heroBody: 'A local-first photo and outfit manager for Infinity Nikki. Browse, save, parse, and organize your in-game memories right on your device.',
@@ -383,7 +383,7 @@ watch(galleryCanAutoplay, (enabled) => {
     window.clearInterval(galleryTimer)
     galleryTimer = undefined
   }
-  if (enabled) galleryTimer = window.setInterval(showNextGallerySlideForTimer, 4200)
+  if (enabled) galleryTimer = window.setInterval(showNextGallerySlideForTimer, 2700)
 })
 
 watch(lightboxOpen, async (open) => {
@@ -462,8 +462,8 @@ onBeforeUnmount(() => {
         <span class="brand-name">{{ language === 'zh' ? '暖立方' : 'NikkiCube' }}<small>{{ language === 'zh' ? '无限暖暖工具集' : 'Infinity Nikki Toolkit' }}</small></span>
       </a>
       <nav class="desktop-nav" :aria-label="language === 'zh' ? '页面导航' : 'Page navigation'">
-        <a href="#features" :class="{ active: activeSection === 'features' }">{{ copy.nav[0] }}</a>
-        <a href="#screenshots" :class="{ active: activeSection === 'screenshots' }">{{ copy.nav[1] }}</a>
+        <a href="#screenshots" :class="{ active: activeSection === 'screenshots' }">{{ copy.nav[0] }}</a>
+        <a href="#features" :class="{ active: activeSection === 'features' }">{{ copy.nav[1] }}</a>
         <a href="#start" :class="{ active: activeSection === 'start' }">{{ copy.nav[2] }}</a>
         <a href="#faq" :class="{ active: activeSection === 'faq' }">{{ copy.nav[3] }}</a>
       </nav>
@@ -483,8 +483,8 @@ onBeforeUnmount(() => {
       </div>
       <Transition name="mobile-nav">
         <nav v-if="mobileMenuOpen" id="mobile-navigation" class="mobile-nav" :aria-label="language === 'zh' ? '页面导航' : 'Page navigation'">
-          <a href="#features" :class="{ active: activeSection === 'features' }" @click="closeMenu">{{ copy.nav[0] }} <ArrowRight :size="16" /></a>
-          <a href="#screenshots" :class="{ active: activeSection === 'screenshots' }" @click="closeMenu">{{ copy.nav[1] }} <ArrowRight :size="16" /></a>
+          <a href="#screenshots" :class="{ active: activeSection === 'screenshots' }" @click="closeMenu">{{ copy.nav[0] }} <ArrowRight :size="16" /></a>
+          <a href="#features" :class="{ active: activeSection === 'features' }" @click="closeMenu">{{ copy.nav[1] }} <ArrowRight :size="16" /></a>
           <a href="#start" :class="{ active: activeSection === 'start' }" @click="closeMenu">{{ copy.nav[2] }} <ArrowRight :size="16" /></a>
           <a href="#faq" :class="{ active: activeSection === 'faq' }" @click="closeMenu">{{ copy.nav[3] }} <ArrowRight :size="16" /></a>
         </nav>
