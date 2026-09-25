@@ -33,7 +33,7 @@ import ScreenshotPreviewPlaceholder from './components/ScreenshotPreviewPlacehol
 
 type Language = 'zh' | 'en'
 type Theme = 'light' | 'dark'
-type ScreenshotKind = 'outfit-code' | 'image-parameters' | 'lucky-times'
+type ScreenshotKind = 'album-timeline' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'image-parameters' | 'lucky-times'
 type ScreenshotPreview = {
   src: string | null
   title: Record<Language, string>
@@ -49,26 +49,32 @@ const assetPath = (file: string): string => `/images/${file}`
  * 浅色模式读取 1.jpeg ~ 10.jpeg，深色模式读取 11.jpeg ~ 20.jpeg，各最多 10 张。
  *
  * 张数完全由目录里实际存在的文件决定：下面只列出「上限」10 个文件名，
- * 运行时逐个探测，探测到第几个不存在就停在那里，不存在的不会被挂载或请求。
- * 所以你有几张就播几张，不会去找满 10 张。位数不用补零（用 1.jpeg 而非 01.jpeg）。
+ * 运行时逐个探测，**存在的都会被收集**，缺号不会中断探测
+ * （例如只有 1、3、5 就是 3 张，全部会播）。位数不用补零（用 1.jpeg 而非 01.jpeg）。
  */
 const HERO_SLIDE_LIMIT = 10
 const heroSlidesLight: string[] = Array.from({ length: HERO_SLIDE_LIMIT }, (_, index) => assetPath(`${index + 1}.jpeg`))
 const heroSlidesDark: string[] = Array.from({ length: HERO_SLIDE_LIMIT }, (_, index) => assetPath(`${index + 11}.jpeg`))
 /**
  * 画廊美照（16:10 横向原图，建议宽度 2000px+），顺序即轮播顺序。
- * 堆叠卡片固定 5 张（保持原有堆叠转场），每张卡各自探测对应文件是否存在：
+ * 堆叠卡片固定 10 张（保持原有堆叠转场），每张卡各自探测对应文件是否存在：
  * 有图就显示照片，没有就显示占位骨架。
  */
-const GALLERY_SLIDE_LIMIT = 5
+const GALLERY_SLIDE_LIMIT = 10
 const galleryPhotoSlots: string[] = Array.from({ length: GALLERY_SLIDE_LIMIT }, (_, index) => assetPath(`gallery-${index + 1}.jpeg`))
 /** 画廊探测结果：第 N 个卡位是否有真实照片。 */
 const galleryAvailable = ref<Record<number, boolean>>({})
-/** 应用界面截图（16:10 原图），与下方 screenshots 顺序一一对应。 */
+/**
+ * 应用界面截图（16:10 原图），统一放在 public/images/screenshots/ 下。
+ * 命名规则：`序号-英文短名.jpeg`，序号与下方 screenshots 数组（页面展示顺序）一一对应。
+ */
 const screenshotPhotos: Record<ScreenshotKind, string> = {
-  'outfit-code': assetPath('screenshots/outfit-code.jpeg'),
-  'image-parameters': assetPath('screenshots/image-parameters.jpeg'),
-  'lucky-times': assetPath('screenshots/lucky-times.jpeg')
+  'album-timeline': assetPath('screenshots/1-album-timeline.jpg'),
+  'outfit-library': assetPath('screenshots/2-outfit-library.jpg'),
+  'outfit-editor': assetPath('screenshots/3-outfit-editor.jpg'),
+  'outfit-code': assetPath('screenshots/4-outfit-code.jpg'),
+  'image-parameters': assetPath('screenshots/5-image-parameters.jpg'),
+  'lucky-times': assetPath('screenshots/6-lucky-times.jpg')
 }
 /**
  * 画廊堆叠卡片数固定为 5 —— 与原始设计一致：始终渲染 5 张叠放的卡片，
@@ -77,24 +83,27 @@ const screenshotPhotos: Record<ScreenshotKind, string> = {
  */
 const gallerySlideCount = GALLERY_SLIDE_LIMIT
 /**
- * ★ 首屏轮播切换间隔（毫秒）—— 想调快/调慢改这里即可。
- * 2000 = 每 2 秒切到下一张。改 1500 是 1.5 秒，改 3000 是 3 秒。
- * 注意：动画过渡时长（1.05s）写在 src/style.css 的 .hero-photo--current / --next 上，
+ * ★ 首屏轮播「每张停留多久」（毫秒）—— 想调快/调慢改这里即可。
+ * 3000 = 每 3 秒切到下一张。改 2000 是 2 秒，改 4000 是 4 秒。
+ * 注意：这个只管停留时长，**不管淡入淡出的快慢**。
+ * 淡化速度在 src/style.css 的 :root 变量 --hero-fade / --hero-fade-scale 上
+ * （值绑在 .hero-photo--current / --next 的 transition 里）。
  * 间隔不要小于过渡时长，否则会看起来像一直在闪。
  */
 const HERO_SLIDE_INTERVAL = 3000
-/** ★ 画廊轮播切换间隔（毫秒），默认 2.7 秒。 */
-const GALLERY_SLIDE_INTERVAL = 2700
+/** ★ 画廊轮播切换间隔（毫秒），默认 2 秒。 */
+const GALLERY_SLIDE_INTERVAL = 2000
 
 const language = ref<Language>('zh')
 const theme = ref<Theme>('light')
 const mobileMenuOpen = ref(false)
 const activeShotIndex = ref(0)
 const activeGalleryIndex = ref(0)
+/**
+ * 画廊自动播放唯一的暂停开关：由播放/暂停按钮切换。
+ * 悬停、聚焦、滚出视口、手动切图都**不**再暂停 —— 只有这个标记会。
+ */
 const galleryAutoplayRequested = ref(true)
-const galleryHovered = ref(false)
-const galleryFocused = ref(false)
-const galleryInView = ref(true)
 const pageVisible = ref(true)
 const pageReady = ref(false)
 const prefersReducedMotion = ref(false)
@@ -104,12 +113,10 @@ const activeHeroSlide = ref(0)
 const heroInView = ref(true)
 const heroSection = ref<HTMLElement | null>(null)
 const heroRegion = ref<HTMLElement | null>(null)
-const galleryRegion = ref<HTMLElement | null>(null)
 const screenshotTabList = ref<HTMLElement | null>(null)
 const lightboxTrigger = ref<HTMLButtonElement | null>(null)
 const lightboxCloseButton = ref<HTMLButtonElement | null>(null)
 let sectionObserver: IntersectionObserver | undefined
-let galleryObserver: IntersectionObserver | undefined
 let heroObserver: IntersectionObserver | undefined
 let galleryTimer: number | undefined
 let heroTimer: number | undefined
@@ -134,21 +141,44 @@ const heroProbed = ref<Record<Theme, boolean>>({ light: false, dark: false })
 /** 深色模式读取 11~20，浅色模式读取 1~10。 */
 const heroSlides = computed(() => (theme.value === 'dark' ? heroSlidesDark : heroSlidesLight))
 /**
- * 从第 1 张开始连续存在的部分。遇到第一个不存在的就停，
- * 这样张数 = 目录里实际放了几张，不会为了凑数继续往下探测。
+ * 首屏某一主题组的文件名起始序号：浅色 1、深色 11。
+ * **读写 heroAvailable 必须都经过它** —— 探测时写入的 key、渲染时查询的 key
+ * 必须是同一个值，否则深色组会出现「有图但一张都不播」的静默故障。
+ */
+function heroSlotBase(group: Theme): number {
+  return group === 'dark' ? 11 : 1
+}
+
+/** 组内下标（0 起）→ heroAvailable 的 key（全局文件名序号）。 */
+function heroSlotKey(index: number, group: Theme = theme.value): number {
+  return heroSlotBase(group) + index
+}
+
+/**
+ * 目录里实际存在的全部文件，**允许中间跳号**。
+ * 例如只放了 1、3、5，三张都会进列表并依次轮播（不会因缺 2 就断在第 1 张）。
+ * 顺序仍按文件名序号从小到大。
  */
 const heroVisibleSlides = computed(() => {
   if (!heroProbed.value[theme.value]) return []
-  const slots = heroSlides.value
-  const result: string[] = []
-  for (let index = 0; index < slots.length; index++) {
-    if (!heroAvailable.value[index + 1]) break
-    result.push(slots[index]!)
-  }
-  return result
+  return heroSlides.value.filter((_, index) => heroAvailable.value[heroSlotKey(index)])
 })
 const heroSlideCount = computed(() => heroVisibleSlides.value.length)
 const heroHasPhoto = computed(() => heroProbed.value[theme.value] && heroSlideCount.value > 0)
+/**
+ * 首屏右下角「当前序号 —— 总张数」小标（如 01 —— 09）。
+ * 两个数都跟随实际素材，不是硬编码：
+ * - `heroIndexCurrent` 取当前正在展示的那张（1 起、补零），会随轮播实时变；
+ * - `heroIndexTotal` 取当前主题组里探测到的实际张数（深色与浅色可能不同）。
+ * 用 `% count` 兜一层：探测可能晚于首帧完成、切主题时索引会归零，
+ * 极端时序下 activeHeroSlide 也可能短暂超出新张数。
+ */
+const heroIndexCurrent = computed(() => {
+  const count = heroSlideCount.value
+  if (!count) return '01'
+  return String((activeHeroSlide.value % count) + 1).padStart(2, '0')
+})
+const heroIndexTotal = computed(() => String(heroSlideCount.value).padStart(2, '0'))
 /**
  * 自动播放条件：有多张、且没有暂停理由。
  * 暂停只保留：切到别的标签页、系统启用「减少动态效果」。
@@ -159,14 +189,21 @@ const heroCanAutoplay = computed(() => pageReady.value
   && !prefersReducedMotion.value
   && heroInView.value
   && pageVisible.value)
-/** 画廊堆叠轮播：恢复原始行为，不因照片数量而停止。 */
+/**
+ * 画廊堆叠轮播：不因照片数量而停止。
+ * 暂停条件只剩两个：用户点了暂停按钮、切到别的浏览器标签页。
+ * 悬停 / 聚焦 / 滚出视口 / 手动切图都不再暂停。
+ */
 const galleryCanAutoplay = computed(() => pageReady.value
   && galleryAutoplayRequested.value
   && !prefersReducedMotion.value
-  && !galleryHovered.value
-  && !galleryFocused.value
-  && galleryInView.value
   && pageVisible.value)
+/**
+ * 「此刻是否在自动播放」，供播放/暂停按钮的图标与 aria 状态使用。
+ * 与 galleryCanAutoplay 等价（悬停等临时条件已移除，不存在「意图在播但实际停了」的错位），
+ * 单独命名是为了让模板语义更清楚。
+ */
+const galleryAutoplayActive = galleryCanAutoplay
 
 const sectionReveal = {
   initial: { opacity: 0, y: 20 },
@@ -204,9 +241,9 @@ const links = {
 }
 
 const screenshots: ScreenshotPreview[] = [
-  { src: '/screenshots/1.webp', title: { zh: '相册时间轴', en: 'Album timeline' }, alt: { zh: '相册管理界面与照片时间轴', en: 'Album manager with a photo timeline' }, icon: CalendarDays },
-  { src: '/screenshots/搭配码.webp', title: { zh: '搭配方案', en: 'Outfit library' }, alt: { zh: '搭配码方案管理界面', en: 'Outfit code library interface' }, icon: WandSparkles },
-  { src: '/screenshots/搭配码编辑.webp', title: { zh: '方案编辑', en: 'Outfit editor' }, alt: { zh: '搭配方案编辑界面', en: 'Outfit plan editor interface' }, icon: FileImage },
+  { src: null, title: { zh: '相册时间轴', en: 'Album timeline' }, alt: { zh: '相册管理界面与照片时间轴', en: 'Album manager with a photo timeline' }, icon: CalendarDays, kind: 'album-timeline' },
+  { src: null, title: { zh: '搭配方案', en: 'Outfit library' }, alt: { zh: '搭配码方案管理界面', en: 'Outfit code library interface' }, icon: WandSparkles, kind: 'outfit-library' },
+  { src: null, title: { zh: '方案编辑', en: 'Outfit editor' }, alt: { zh: '搭配方案编辑界面', en: 'Outfit plan editor interface' }, icon: FileImage, kind: 'outfit-editor' },
   { src: null, title: { zh: '搭配码解析', en: 'Outfit code parser' }, alt: { zh: '搭配码解析界面素材位，等待真实截图', en: 'Outfit code parser screenshot slot, awaiting the real interface' }, icon: ScanSearch, kind: 'outfit-code' },
   { src: null, title: { zh: '图片参数解析', en: 'Photo parameter parser' }, alt: { zh: '图片参数解析界面素材位，等待真实截图', en: 'Photo parameter parser screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'image-parameters' },
   { src: null, title: { zh: '抽卡吉时', en: 'Lucky pull times' }, alt: { zh: '抽卡吉时界面素材位，等待真实截图', en: 'Lucky pull times screenshot slot, awaiting the real interface' }, icon: Sparkles, kind: 'lucky-times' }
@@ -223,9 +260,9 @@ const copy = computed(() => language.value === 'zh'
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: '把每一段心动，\n好好收进相册。',
       heroBody: '为 无限暖暖 玩家打造的本地相册与搭配管理工具。浏览、收藏、解析和整理游戏照片，让珍贵瞬间留在自己的设备里。',
-      useNow: '打开在线应用',
+      useNow: '打开网站',
       viewFeatures: '看看它能做什么',
-      heroNote: '免费使用 · 开源项目 · 非官方社区工具',
+      heroNote: '免费使用 · 无需注册 · 无需下载',
       artHero: '首屏暖暖氛围美照',
       artRatioWide: '轮播 · 浅色 1-10 / 深色 11-20 · 16:9 横向原图 · 宽度 2400px+',
       local: '照片在本地读取', localBody: '浏览、解析与整理过程在你的设备中完成。',
@@ -239,7 +276,7 @@ const copy = computed(() => language.value === 'zh'
       previewAssetNote: '真实应用截图待提供', previewAssetRatio: '建议原图比例 16:10',
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER',
       galleryTitle: '留一块位置，给你镜头里的暖暖。',
-      galleryBody: '这里会展示你后续提供的游戏美照，让官网也像一本小小的旅途画册。',
+      galleryBody: '尽情欣赏暖暖美照，让官网也像一本小小的旅途画册。',
       artPortrait: '暖暖游戏美照', artRatioPortrait: '建议比例 16:10 · 横幅原图',
       galleryLabel: '暖暖美照轮播', gallerySlide: (index: number) => `第 ${index} 张，共 ${gallerySlideCount} 张`,
       galleryControlsLabel: '画廊控制', galleryPrevious: '上一张美照', galleryNext: '下一张美照',
@@ -284,7 +321,7 @@ const copy = computed(() => language.value === 'zh'
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: 'Keep every lovely\nmoment close.',
       heroBody: 'A local-first photo and outfit manager for Infinity Nikki. Browse, save, parse, and organize your in-game memories right on your device.',
-      useNow: 'Open the app', viewFeatures: 'Explore the features', heroNote: 'Free to use · Open source · Unofficial community tool',
+      useNow: 'Open the app', viewFeatures: 'Explore the features', heroNote: 'Free to use · No sign-up · No download',
       artHero: 'Infinity Nikki hero artwork', artRatioWide: 'Carousel · light 1-10 / dark 11-20 · 16:9 landscape · 2400px+ wide',
       local: 'Photos stay on device', localBody: 'Browsing, parsing, and organizing happen in your browser.',
       privacy: 'Outfit codes / image parsing / cleanup', privacyBody: 'Parse camera settings, manage outfit codes, and clear low-quality files and caches.',
@@ -296,7 +333,7 @@ const copy = computed(() => language.value === 'zh'
       previewShotLabel: 'REAL APP INTERFACE', previewPlaceholderLabel: 'SCREENSHOT SLOT',
       previewAssetNote: 'Real app screenshot to come', previewAssetRatio: 'Suggested source ratio: 16:10',
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER', galleryTitle: 'A little space for Nikki in your frame.',
-      galleryBody: 'Your in-game photos will bring this small travel album to life once you share the artwork.',
+      galleryBody: "Enjoy Nikki's beautiful photos, and let this site feel like a little travel album.",
       artPortrait: 'Infinity Nikki in-game photo', artRatioPortrait: 'Suggested 16:10 landscape original',
       galleryLabel: 'Infinity Nikki photo carousel', gallerySlide: (index: number) => `Image ${index} of ${gallerySlideCount}`,
       galleryControlsLabel: 'Gallery controls', galleryPrevious: 'Previous photo', galleryNext: 'Next photo',
@@ -345,9 +382,34 @@ function getMotionElement<T extends HTMLElement>(instance: unknown): T | null {
   return candidate instanceof HTMLElement ? candidate as T : null
 }
 
-function setGalleryRegion(instance: unknown): void {
-  galleryRegion.value = getMotionElement<HTMLDivElement>(instance)
+/**
+ * 堆叠位移以「容器宽度的百分比」为基准，而不是固定像素 —— 否则屏幕越窄
+ * 卡片越小、位移占比越大，堆叠会显得格外突兀（宽屏反而几乎看不出）。
+ * 这里记住 .art-gallery 的实测宽度，供 galleryCardMotion 换算。
+ */
+const artGalleryWidth = ref(0)
+
+function setArtGalleryEl(instance: unknown): void {
+  artGalleryEl = getMotionElement<HTMLDivElement>(instance)
+  syncArtGalleryWidth()
 }
+let artGalleryEl: HTMLElement | null = null
+
+function syncArtGalleryWidth(): void {
+  const width = artGalleryEl?.offsetWidth ?? 0
+  if (width) artGalleryWidth.value = width
+}
+
+/**
+ * 每层位移步长 = 容器宽 × 3.2%，并夹在 12~30px 之间。
+ * 上下限是为了兜住 900px 断点处 .art-gallery 由「栅格列宽」切成
+ * 「固定 680px 居中」带来的容器宽度跳变（那里容器反而变宽）。
+ */
+const galleryStackStep = computed(() => {
+  const width = artGalleryWidth.value
+  if (!width) return 12
+  return Math.min(30, Math.max(12, width * 0.032))
+})
 
 function setHeroRegion(instance: unknown): void {
   heroRegion.value = getMotionElement<HTMLDivElement>(instance)
@@ -415,23 +477,18 @@ function showNextHeroSlideForTimer(): void {
 }
 
 /**
- * 通用素材探测：从第 1 个开始逐个确认文件是否存在，遇到第一个缺失就停止。
- * 于是「实际张数」= 目录里连续存在的前 N 个，不会为了凑满上限继续往下找。
+ * 通用素材探测：把清单里的每个文件名都试一遍，某个缺失**不会**中断后续探测。
+ * 于是「实际张数」= 目录里存在的所有文件数，允许中间跳号
+ * （例如只有 1、3、5，三张都会播，而不是只播第 1 张）。
+ * 每张之间仍保持原有的先后顺序，只是不再遇缺即停。
  * 探测用的 Image 与模板中的图同 URL，浏览器缓存命中，不会重复下载。
  */
 function probeAvailable(slots: string[], onHit: (slot: number) => void, onDone: () => void): void {
   let index = 0
-  let finished = false
-
-  const finalize = (): void => {
-    if (finished) return
-    finished = true
-    onDone()
-  }
 
   const step = (): void => {
     if (index >= slots.length) {
-      finalize()
+      onDone()
       return
     }
     const image = new Image()
@@ -441,7 +498,11 @@ function probeAvailable(slots: string[], onHit: (slot: number) => void, onDone: 
       index += 1
       step()
     }
-    image.onerror = finalize
+    // 缺失就跳过这一张，继续探测下一个，不再中断整轮探测
+    image.onerror = () => {
+      index += 1
+      step()
+    }
     image.src = slots[index]!
   }
 
@@ -451,7 +512,7 @@ function probeAvailable(slots: string[], onHit: (slot: number) => void, onDone: 
 /** 探测首屏某一主题组（浅色 1~10 / 深色 11~20）。 */
 function probeHeroSlides(group: Theme): void {
   const slots = group === 'dark' ? heroSlidesDark : heroSlidesLight
-  const base = group === 'dark' ? 11 : 1
+  const base = heroSlotBase(group)
   probeAvailable(
     slots,
     (slot) => { heroAvailable.value = { ...heroAvailable.value, [base + slot - 1]: true } },
@@ -494,13 +555,18 @@ watch(heroCanAutoplay, (enabled) => {
   if (enabled) heroTimer = window.setInterval(showNextHeroSlideForTimer, HERO_SLIDE_INTERVAL)
 })
 
+/**
+ * 堆叠卡片的位移与缩放。x / y 基于容器宽度的百分比步长（见 galleryStackStep），
+ * 这样各屏幕宽度下的位移占比一致；scale / opacity 本就是比例量，天然均一。
+ */
 function galleryCardMotion(slot: number): Record<string, number> {
   const offset = galleryOffset(slot)
+  const step = galleryStackStep.value
   return {
-    x: offset * 12,
-    y: offset * 9,
-    scale: 1 - offset * 0.04,
-    opacity: 1 - offset * 0.12
+    x: offset * step,
+    y: offset * step * 0.75,
+    scale: 1 - offset * 0.06,
+    opacity: 1 - offset * 0.14
   }
 }
 
@@ -512,26 +578,35 @@ function setGallerySlide(index: number): void {
   activeGalleryIndex.value = (index + gallerySlideCount) % gallerySlideCount
 }
 
+/**
+ * 用户手动切图（点箭头 / 点小圆点 / 按左右方向键）。
+ * 纯粹只是「换一张」，不改变播放状态，之后从新位置接着播。
+ * 顺带把定时器重置一次，避免刚点完立刻又被切走。
+ */
+function setGallerySlideByUser(index: number): void {
+  setGallerySlide(index)
+  restartGalleryTimer()
+}
+
 function showNextGallerySlide(): void {
   setGallerySlide(activeGalleryIndex.value + 1)
 }
 
-function showPreviousGallerySlide(): void {
-  setGallerySlide(activeGalleryIndex.value - 1)
+function showNextGallerySlideByUser(): void {
+  setGallerySlideByUser(activeGalleryIndex.value + 1)
 }
 
-function handleGalleryFocusOut(event: FocusEvent): void {
-  const nextTarget = event.relatedTarget
-  galleryFocused.value = nextTarget instanceof Node && galleryRegion.value?.contains(nextTarget) === true
+function showPreviousGallerySlideByUser(): void {
+  setGallerySlideByUser(activeGalleryIndex.value - 1)
 }
 
 function handleGalleryKeydown(event: KeyboardEvent): void {
   if (event.key === 'ArrowLeft') {
     event.preventDefault()
-    showPreviousGallerySlide()
+    showPreviousGallerySlideByUser()
   } else if (event.key === 'ArrowRight') {
     event.preventDefault()
-    showNextGallerySlide()
+    showNextGallerySlideByUser()
   }
 }
 
@@ -577,13 +652,21 @@ function showNextGallerySlideForTimer(): void {
   showNextGallerySlide()
 }
 
-watch(galleryCanAutoplay, (enabled) => {
+/**
+ * 按当前播放条件重建定时器。手动切图后调它，
+ * 让 2 秒的倒计时从用户操作那一刻重新开始，而不是接着上一次的残余时间。
+ */
+function restartGalleryTimer(): void {
   if (galleryTimer !== undefined) {
     window.clearInterval(galleryTimer)
     galleryTimer = undefined
   }
-  if (enabled) galleryTimer = window.setInterval(showNextGallerySlideForTimer, GALLERY_SLIDE_INTERVAL)
-})
+  if (galleryCanAutoplay.value) {
+    galleryTimer = window.setInterval(showNextGallerySlideForTimer, GALLERY_SLIDE_INTERVAL)
+  }
+}
+
+watch(galleryCanAutoplay, () => { restartGalleryTimer() })
 
 watch(lightboxOpen, async (open) => {
   await nextTick()
@@ -639,14 +722,19 @@ onMounted(async () => {
       }, { threshold: 0.08 })
       heroObserver.observe(heroRegion.value)
     }
-    if (galleryRegion.value) {
-      galleryObserver = new IntersectionObserver(([entry]) => {
-        galleryInView.value = entry?.isIntersecting ?? false
-      }, { threshold: 0.08 })
-      galleryObserver.observe(galleryRegion.value)
-    }
   }
   pageReady.value = true
+})
+
+/**
+ * 监听 .art-gallery 的尺寸变化，同步堆叠位移的基准宽度。
+ * 窗口缩放、断点切换都会触发，保证位移占比始终一致。
+ */
+const artGalleryObserver = new ResizeObserver(() => { syncArtGalleryWidth() })
+
+onMounted(() => {
+  if (artGalleryEl) artGalleryObserver.observe(artGalleryEl)
+  else nextTick(() => { if (artGalleryEl) artGalleryObserver.observe(artGalleryEl) })
 })
 
 onBeforeUnmount(() => {
@@ -656,8 +744,8 @@ onBeforeUnmount(() => {
   motionPreferenceQuery?.removeEventListener('change', handleMotionPreferenceChange)
   document.removeEventListener('visibilitychange', handleVisibilityChange)
   sectionObserver?.disconnect()
-  galleryObserver?.disconnect()
   heroObserver?.disconnect()
+  artGalleryObserver.disconnect()
 })
 </script>
 
@@ -725,9 +813,9 @@ onBeforeUnmount(() => {
             <a class="button-secondary" href="#features">{{ copy.viewFeatures }} <ArrowDown :size="16" /></a>
           </motion.div>
           <motion.p class="hero-note" :variants="heroItemVariants"><Sparkles :size="14" /> {{ copy.heroNote }}</motion.p>
-          <motion.p class="hero-art-instruction" :variants="heroItemVariants"><Sparkles :size="13" /> <span>{{ copy.artHero }}<small>{{ copy.artRatioWide }}</small></span></motion.p>
         </motion.div>
-        <div class="hero-index" aria-hidden="true"><span>01</span><i></i><span>07</span></div>
+        <!-- aria-hidden：数字每几秒就变一次，读屏软件会不停打断，所以整块保持装饰性 -->
+        <div v-if="heroHasPhoto" class="hero-index" aria-hidden="true"><span>{{ heroIndexCurrent }}</span><i></i><span>{{ heroIndexTotal }}</span></div>
       </section>
 
       <motion.section class="trust-strip" aria-label="Product principles" :initial="'hidden'" :while-in-view="'visible'" :variants="featureGridVariants" :in-view-options="{ once: true, amount: 0.4 }">
@@ -769,28 +857,28 @@ onBeforeUnmount(() => {
       <section id="gallery" class="gallery-band">
         <div class="section gallery-inner">
           <motion.div class="gallery-copy" v-bind="sectionReveal"><span class="eyebrow">{{ copy.galleryKicker }}</span><h2>{{ copy.galleryTitle }}</h2><p>{{ copy.galleryBody }}</p></motion.div>
-          <motion.div :ref="setGalleryRegion" class="gallery-carousel" role="region" tabindex="0" :aria-label="copy.galleryLabel" v-bind="sectionReveal" @mouseenter="galleryHovered = true" @mouseleave="galleryHovered = false" @focusin="galleryFocused = true" @focusout="handleGalleryFocusOut" @keydown="handleGalleryKeydown">
-            <div class="art-gallery" aria-live="off">
+          <motion.div class="gallery-carousel" role="region" tabindex="0" :aria-label="copy.galleryLabel" v-bind="sectionReveal" @keydown="handleGalleryKeydown">
+            <div :ref="setArtGalleryEl" class="art-gallery" aria-live="off">
               <motion.div v-for="slot in gallerySlideCount" :key="slot" class="art-placeholder gallery-card" :class="{ 'has-photo': galleryAvailable[slot] }" :style="{ zIndex: galleryCardLayer(slot) }" :animate="galleryCardMotion(slot)" :transition="{ type: 'spring', stiffness: 140, damping: 24, mass: 0.8 }" role="group" aria-roledescription="slide" :aria-label="copy.gallerySlide(slot)" :aria-hidden="slot - 1 !== activeGalleryIndex ? 'true' : 'false'">
                 <img v-if="galleryAvailable[slot]" class="gallery-photo" :src="galleryPhotoSlots[slot - 1]" :alt="`${copy.artPortrait} ${slot}`" />
                 <template v-else>
                   <Sparkles :size="22" />
                   <span class="art-placeholder-title">{{ copy.artPortrait }}</span>
                   <span class="art-placeholder-ratio">{{ copy.artRatioPortrait }}</span>
-                  <span class="art-placeholder-code">GALLERY 0{{ slot }} · 16:10</span>
+                  <span class="art-placeholder-code">GALLERY {{ String(slot).padStart(2, '0') }} · 16:10</span>
                 </template>
               </motion.div>
             </div>
             <div class="gallery-controls" role="group" :aria-label="copy.galleryControlsLabel">
               <div class="gallery-step-controls">
-                <button class="gallery-arrow" type="button" :aria-label="copy.galleryPrevious" @click="showPreviousGallerySlide"><ChevronLeft :size="18" /></button>
+                <button class="gallery-arrow" type="button" :aria-label="copy.galleryPrevious" @click="showPreviousGallerySlideByUser"><ChevronLeft :size="18" /></button>
                 <div class="gallery-dots">
-                  <button v-for="slot in gallerySlideCount" :key="slot" class="gallery-dot" type="button" :class="{ active: activeGalleryIndex === slot - 1 }" :aria-label="copy.gallerySlide(slot)" :aria-pressed="activeGalleryIndex === slot - 1" @click="setGallerySlide(slot - 1)"></button>
+                  <button v-for="slot in gallerySlideCount" :key="slot" class="gallery-dot" type="button" :class="{ active: activeGalleryIndex === slot - 1 }" :aria-label="copy.gallerySlide(slot)" :aria-pressed="activeGalleryIndex === slot - 1" @click="setGallerySlideByUser(slot - 1)"></button>
                 </div>
-                <button class="gallery-arrow" type="button" :aria-label="copy.galleryNext" @click="showNextGallerySlide"><ChevronRight :size="18" /></button>
+                <button class="gallery-arrow" type="button" :aria-label="copy.galleryNext" @click="showNextGallerySlideByUser"><ChevronRight :size="18" /></button>
               </div>
-              <button class="gallery-autoplay" type="button" :aria-label="prefersReducedMotion ? copy.galleryMotionOff : galleryAutoplayRequested ? copy.galleryPause : copy.galleryPlay" :title="prefersReducedMotion ? copy.galleryMotionOff : galleryAutoplayRequested ? copy.galleryPause : copy.galleryPlay" :aria-pressed="galleryAutoplayRequested && !prefersReducedMotion" :disabled="prefersReducedMotion" @click="galleryAutoplayRequested = !galleryAutoplayRequested">
-                <Pause v-if="galleryAutoplayRequested && !prefersReducedMotion" :size="16" />
+              <button class="gallery-autoplay" type="button" :aria-label="prefersReducedMotion ? copy.galleryMotionOff : galleryAutoplayActive ? copy.galleryPause : copy.galleryPlay" :title="prefersReducedMotion ? copy.galleryMotionOff : galleryAutoplayActive ? copy.galleryPause : copy.galleryPlay" :aria-pressed="galleryAutoplayActive" :disabled="prefersReducedMotion" @click="galleryAutoplayRequested = !galleryAutoplayRequested">
+                <Pause v-if="galleryAutoplayActive" :size="16" />
                 <Play v-else :size="16" />
               </button>
             </div>

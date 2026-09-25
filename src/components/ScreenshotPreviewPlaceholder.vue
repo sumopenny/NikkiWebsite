@@ -4,7 +4,7 @@ import type { Component } from 'vue'
 defineProps<{
   title: string
   icon: Component
-  kind: 'outfit-code' | 'image-parameters' | 'lucky-times'
+  kind: 'album-timeline' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'image-parameters' | 'lucky-times'
   slotLabel: string
   note: string
   ratio: string
@@ -38,7 +38,7 @@ defineProps<{
 .preview-photo {
   display: block;
   width: 100%;
-  aspect-ratio: 1.55;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: top left;
 }
@@ -48,13 +48,34 @@ defineProps<{
   --slot-tint: var(--accent-soft);
   display: grid;
   width: 100%;
-  aspect-ratio: 1.55;
+  aspect-ratio: 16 / 10;
   place-items: center;
   overflow: hidden;
   padding: clamp(14px, 4vw, 42px);
   border: 1px solid var(--line);
   border-radius: 7px;
   background: var(--surface-soft);
+}
+
+/* 各素材位的占位骨架配色：默认紫色，下面按界面类型轮换几种主题色以示区分。 */
+.preview-placeholder--album-timeline {
+  --slot-accent: var(--accent-deep);
+  --slot-tint: var(--accent-soft);
+}
+
+.preview-placeholder--outfit-library {
+  --slot-accent: var(--rose);
+  --slot-tint: color-mix(in srgb, var(--rose) 16%, transparent);
+}
+
+.preview-placeholder--outfit-editor {
+  --slot-accent: var(--accent-deep);
+  --slot-tint: var(--accent-soft);
+}
+
+.preview-placeholder--outfit-code {
+  --slot-accent: var(--accent-deep);
+  --slot-tint: var(--accent-soft);
 }
 
 .preview-placeholder--image-parameters {
@@ -163,13 +184,7 @@ defineProps<{
   line-height: 1.3;
 }
 
-@media (max-width: 900px) {
-  .preview-photo { aspect-ratio: 1.6; }
-}
-
 @media (max-width: 640px) {
-  .preview-photo { aspect-ratio: 1.35; }
-
   .preview-placeholder__chrome {
     min-height: 32px;
     padding-inline: 10px;
