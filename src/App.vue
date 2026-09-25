@@ -42,39 +42,45 @@ type ScreenshotPreview = {
   kind?: ScreenshotKind
 }
 
-// 真实素材路径：把同名 jpeg 放进 public/images/ 对应子目录即可自动启用。
+/**
+ * 素材统一扩展名 —— **换图片格式只改这一行**。
+ * 首屏 / 画廊 / 截图在 public/images 下都是同名文件，只有后缀不同，
+ * 所以全部走这里的常量拼路径，不再在下面各处写死后缀。
+ */
+const IMAGE_EXT = '.webp'
+// 真实素材路径：把同名图片放进 public/images/ 对应子目录即可自动启用。
 const assetPath = (file: string): string => `/images/${file}`
 /**
  * 首屏暖暖氛围美照轮播（16:9 横向原图，建议宽度 2400px+）。
- * 浅色模式读取 1.jpeg ~ 10.jpeg，深色模式读取 11.jpeg ~ 20.jpeg，各最多 10 张。
+ * 浅色模式读取 1.webp ~ 10.webp，深色模式读取 11.webp ~ 20.webp，各最多 10 张。
  *
  * 张数完全由目录里实际存在的文件决定：下面只列出「上限」10 个文件名，
  * 运行时逐个探测，**存在的都会被收集**，缺号不会中断探测
- * （例如只有 1、3、5 就是 3 张，全部会播）。位数不用补零（用 1.jpeg 而非 01.jpeg）。
+ * （例如只有 1、3、5 就是 3 张，全部会播）。位数不用补零（用 1.webp 而非 01.webp）。
  */
 const HERO_SLIDE_LIMIT = 10
-const heroSlidesLight: string[] = Array.from({ length: HERO_SLIDE_LIMIT }, (_, index) => assetPath(`${index + 1}.jpeg`))
-const heroSlidesDark: string[] = Array.from({ length: HERO_SLIDE_LIMIT }, (_, index) => assetPath(`${index + 11}.jpeg`))
+const heroSlidesLight: string[] = Array.from({ length: HERO_SLIDE_LIMIT }, (_, index) => assetPath(`${index + 1}${IMAGE_EXT}`))
+const heroSlidesDark: string[] = Array.from({ length: HERO_SLIDE_LIMIT }, (_, index) => assetPath(`${index + 11}${IMAGE_EXT}`))
 /**
  * 画廊美照（16:10 横向原图，建议宽度 2000px+），顺序即轮播顺序。
  * 堆叠卡片固定 10 张（保持原有堆叠转场），每张卡各自探测对应文件是否存在：
  * 有图就显示照片，没有就显示占位骨架。
  */
 const GALLERY_SLIDE_LIMIT = 10
-const galleryPhotoSlots: string[] = Array.from({ length: GALLERY_SLIDE_LIMIT }, (_, index) => assetPath(`gallery-${index + 1}.jpeg`))
+const galleryPhotoSlots: string[] = Array.from({ length: GALLERY_SLIDE_LIMIT }, (_, index) => assetPath(`gallery-${index + 1}${IMAGE_EXT}`))
 /** 画廊探测结果：第 N 个卡位是否有真实照片。 */
 const galleryAvailable = ref<Record<number, boolean>>({})
 /**
  * 应用界面截图（16:10 原图），统一放在 public/images/screenshots/ 下。
- * 命名规则：`序号-英文短名.jpeg`，序号与下方 screenshots 数组（页面展示顺序）一一对应。
+ * 命名规则：`序号-英文短名 + IMAGE_EXT`，序号与下方 screenshots 数组（页面展示顺序）一一对应。
  */
 const screenshotPhotos: Record<ScreenshotKind, string> = {
-  'album-timeline': assetPath('screenshots/1-album-timeline.jpg'),
-  'outfit-library': assetPath('screenshots/2-outfit-library.jpg'),
-  'outfit-editor': assetPath('screenshots/3-outfit-editor.jpg'),
-  'outfit-code': assetPath('screenshots/4-outfit-code.jpg'),
-  'image-parameters': assetPath('screenshots/5-image-parameters.jpg'),
-  'lucky-times': assetPath('screenshots/6-lucky-times.jpg')
+  'album-timeline': assetPath(`screenshots/1-album-timeline${IMAGE_EXT}`),
+  'outfit-library': assetPath(`screenshots/2-outfit-library${IMAGE_EXT}`),
+  'outfit-editor': assetPath(`screenshots/3-outfit-editor${IMAGE_EXT}`),
+  'outfit-code': assetPath(`screenshots/4-outfit-code${IMAGE_EXT}`),
+  'image-parameters': assetPath(`screenshots/5-image-parameters${IMAGE_EXT}`),
+  'lucky-times': assetPath(`screenshots/6-lucky-times${IMAGE_EXT}`)
 }
 /**
  * 画廊堆叠卡片数固定为 5 —— 与原始设计一致：始终渲染 5 张叠放的卡片，

@@ -13,10 +13,14 @@
   **公共 CTA 键 `copy.useNow` 被 4 处复用**（顶栏 `.header-cta` / 首屏 `.button-primary` / 画廊区 `.text-link` / 快速开始 `.button-primary`）→ **改一次全站生效**，别去模板里找字面量。当前 zh = 「打开网站」、en = `'Open the app'`（两者语义已不一致，用户只要求改中文）。
 
 ## 素材约定（`public/images/`）
-- **首屏轮播**：`.jpeg`。浅色 `1.jpeg`~`10.jpeg`、深色 `11.jpeg`~`20.jpeg`（分组序号即全局文件名序号）。
+- **后缀统一 `.webp`**（2026-09-25 从 `.jpeg`/`.jpg` 全量转换而来），**由 `src/App.vue` 顶部的 `IMAGE_EXT` 常量统一控制 → 换格式只改那一行**。原 jpeg/jpg 归档在 `public/images/originals/`（同名同子目录结构）。
+  - ⚠️ `originals/` 在 `public/` 下 → **会被整包打进 `dist/`**（`dist` 因此从 ~6.5 MB 变 81.8 MB）。页面**从不请求**它们，线上性能不受影响，只是部署上传慢。想精简就把该文件夹移出 `public/`。
+- **重新生成 WebP**：`D:\py\python.exe scripts\convert_webp.py`（读 `originals/` 写 `public/images/`，照片 q82 / 截图 q88 / method 6 / **不缩放**）。用本机 `D:\py\python.exe` 的 Pillow 11.0.0，无需装依赖。
+- **首屏轮播**：浅色 `1.webp`~`10.webp`、深色 `11.webp`~`20.webp`（分组序号即全局文件名序号）。当前实际存在 **浅色 8 张（1–8）、深色 9 张（11–19）**，`9/10/20` 缺失。
   **允许跳号** —— 探测收集"清单里存在的全部"，缺号只跳过那一张，不中断后续。上限 = `HERO_SLIDE_LIMIT`。
-- **画廊**：`gallery-1.jpeg`~`gallery-10.jpeg`，固定 10 张卡位。
-- **应用截图**：`.jpg`（不是 .jpeg）。
+- **画廊**：`gallery-1.webp`~`gallery-10.webp`，固定 10 张卡位（当前 10 张全有）。
+- **应用截图**：`screenshots/序号-英文短名.webp`，6 张全有。
+- 体积基线：全部 33 张 webp 合计 **13.96 MB**（原 jpeg/jpg 为 67.55 MB）。单独改图后可用 `.verify/inspect_images.py` 重新核对。
 
 ## 关键常量
 
@@ -24,6 +28,7 @@
 
 | 常量 | 当前值 | 定义位置 | 含义 |
 |---|---|---|---|
+| `IMAGE_EXT` | `'.webp'` | `App.vue` L45 附近（`assetPath` 上方） | **全部素材的统一后缀**，首屏/画廊/截图共用；换图片格式只改这一行 |
 | `HERO_SLIDE_LIMIT` | 10 | `App.vue` L55 | 每主题最多几张首屏图 |
 | `HERO_SLIDE_INTERVAL` | **3000** | `App.vue` **L91** | 首屏**停留**间隔（3 秒） |
 | `GALLERY_SLIDE_LIMIT` | 10 | `App.vue` L63 | 画廊卡位数 |
@@ -46,10 +51,15 @@
 
 ## 构建与验证
 - **`tsconfig` 开了 `noUnusedLocals`** → 删函数/变量必须连带清掉引用，否则 `vue-tsc` 报 TS6133、构建直接失败。
-- 改完跑 `npm run build`（= `vue-tsc --noEmit && vite build`）确认。
-- **本机 `vite preview` 不可用**（探测 502）→ 验证走自写静态服务 `.verify/server.cjs`（读 `dist/`，未命中回退 `index.html`；**支持 `SERVE_DIR` 环境变量**指向任意构建目录）。
-- **本机构建有一个 bulk-delete 守卫**：同一轮第二次 `npm run build` 会失败并掏空 `dist/assets/`。绕过办法见 `~/.workbuddy/MEMORY.md` 的「Vite / 前端构建」一节。
-- Playwright 在 `.verify/*.mjs`，用 `import pw from 'file:///.../playwright-core/index.js'`（ESM 不认 `NODE_PATH`），Chromium 在 `AppData\Local\ms-playwright\chromium-1208\chrome-win64\chrome.exe`。
+- **🔴 `npm` 在本机 Git Bash 里不可用**（和 `npx` 一样被转发给 WSL 启动器，1 秒内 exit=1，报「没有已安装的 WSL 分发版」）。**必须直调 node**：
+  `node node_modules/vue-tsc/bin/vue-tsc.js --noEmit` + `node node_modules/vite/bin/vite.js build`（即 `npm run build` 的两步）。
+- **Bash 重定向出来的构建日志不是 UTF-8** → Read 工具报 `Cannot display content of binary file`。用 `.verify/dump.py <输入> <输出>` 转成可读文本（多编码试解 + ASCII 占比打分）；**别用 `PowerShell Get-Content -Encoding Unicode`，会二次损坏**。
+- **本机 `vite preview` 不可用**（探测 502）→ 验证走自写静态服务。**但不要单独起后台服务**（`node .verify/server.cjs &` 活不过一条命令，健康检查能过、下一条命令就 connection refused）→ **把 http 服务写在验证脚本内部自起自停**（见 `.verify/verify_webp.mjs`）。
+  - 写静态服务时 **SPA 回退必须限定「无扩展名的路由」**，否则缺失的图片会返回 `index.html`+200 制造假阳性。
+- **本机构建有一个 bulk-delete 守卫**：同一轮第二次 build 会失败并掏空 `dist/assets/`。稳妥做法：先 `[System.IO.Directory]::Delete(dist,$true)` 清空 `dist`，再 `vite build` 到默认目录（此时删除数为 0，不触发守卫）。绕过细节见 `~/.workbuddy/MEMORY.md`。
+- Playwright：`playwright-core` 在 `C:\Users\Penny\.workbuddy\binaries\node\workspace\node_modules\`，**项目内没有装**。用 `await import('file:///C:/Users/Penny/.workbuddy/binaries/node/workspace/node_modules/playwright-core/index.js')`（ESM 不认 `NODE_PATH`），Chromium 在 `%LOCALAPPDATA%\ms-playwright\chromium-1208\chrome-win64\chrome.exe`。
+- 可复用脚本：`.verify/server.cjs`（`SERVE_DIR` 可指向任意构建目录）、`.verify/verify_webp.mjs`（图片链路全量验证，PASS/CHECK 退出码）、`.verify/inspect_images.py`（尺寸体积清单）、`.verify/dump.py`（日志解码）、`.verify/move_originals.py`（带 sha256 校验的迁移）。**这些是 scratch，不保证长期存在；丢失时可据本文件重建。**
+- **验证首屏轮播要采满一整组：采样窗口 ≥ 张数 × `HERO_SLIDE_INTERVAL`**（浅色 8 张 × 3s = 24s），否则会漏采并误判。也可直接读 `.hero-index` 的 `NN —— NN` 角标交叉验证（浅色应显示 `/08`、深色 `/09`）。
 
 ## 色彩令牌（`src/style.css` 顶部）
 

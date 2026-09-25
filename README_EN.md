@@ -32,7 +32,8 @@ The included `wrangler.toml` declares the Pages output directory. This is a stat
 
 ## Assets
 
-- `public/screenshots/` contains product screenshots copied from the main project to show the real application.
+- All site imagery is served as `.webp` from `public/images/` — hero and gallery photos at the root, app screenshots under `screenshots/`. To retarget the format, change the single `IMAGE_EXT` constant at the top of `src/App.vue`.
+- The original JPEG/JPEG files are archived in `public/images/originals/` (same subfolder layout). They ship inside `dist/` but are never requested by the page, so they do not affect runtime performance. Regenerate the WebP set with `scripts/convert_webp.py`.
 - The outfit code parser, photo parameter parser, and lucky pull times previews are screenshot slots; replace them with real app screenshots when available. A 16:10 source ratio is recommended.
 - Areas labeled `ASSET SLOT` are placeholders. No game artwork is included. Confirm that supplied artwork can be displayed publicly before adding it.
 - Suggested original image ratios: hero artwork 16:9 and five gallery images 16:10. Keep the matching container ratio and add descriptive alternative text when replacing a placeholder.
