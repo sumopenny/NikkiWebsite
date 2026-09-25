@@ -91,7 +91,14 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .menu-toggle, .mobile-nav { display: none; }
 
 .hero-section { position: relative; padding: 14px 0 0; }
-.hero-art { position: relative; width: min(var(--content-width), calc(100% - 48px)); min-height: 540px; max-height: calc(100svh - var(--header-height) - 52px); aspect-ratio: 16 / 9; margin-inline: auto; overflow: hidden; border-radius: 8px; background: var(--surface-tint); }
+/*
+ * 首屏版式（仅桌面端）：照片不居中，整体右移；文字卡片左移，
+ * 卡片右半部分叠压在照片左边缘之上，形成「部分重叠」的错位构图。
+ * 桌面端左基准边距统一用 --hero-gutter，卡片比照片左边缘再往左多出 --hero-overlap。
+ * 移动端（≤900px）在两个断点里各自复位，保持原有的竖向堆叠版式。
+ */
+.hero-section { --hero-gutter: max(48px, calc((100vw - 1200px) / 2)); --hero-overlap: clamp(56px, 6vw, 96px); }
+.hero-art { position: relative; width: min(var(--content-width), calc(100% - var(--hero-gutter))); min-height: 540px; max-height: calc(100svh - var(--header-height) - 52px); aspect-ratio: 16 / 9; margin-left: calc(var(--hero-gutter) + var(--hero-overlap)); margin-right: var(--hero-gutter); overflow: hidden; border-radius: 8px; background: var(--surface-tint); }
 .hero-art-frame { position: relative; width: 100%; height: 100%; min-height: inherit; }
 .hero-placeholder { position: absolute; inset: 0; background-color: var(--surface-tint); background-image: linear-gradient(125deg, color-mix(in srgb, var(--sun-soft) 62%, transparent), transparent 45%), linear-gradient(310deg, color-mix(in srgb, var(--accent-soft) 72%, transparent), transparent 58%); }
 .hero-placeholder::before { position: absolute; inset: 24px; border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: 6px; content: ''; pointer-events: none; }
@@ -106,7 +113,13 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .hero-placeholder .art-placeholder-title { top: calc(31% + 42px); }
 .hero-placeholder .art-placeholder-ratio { top: calc(31% + 70px); }
 .hero-placeholder .art-placeholder-code { top: calc(31% + 112px); }
-.hero-copy { position: absolute; z-index: 2; top: clamp(84px, 8vw, 112px); left: max(48px, calc((100vw - 1200px) / 2)); width: min(600px, calc(100% - 96px)); padding: 30px 34px; border: 1px solid color-mix(in srgb, var(--line) 78%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--page) 86%, transparent); box-shadow: var(--shadow); backdrop-filter: blur(18px); }
+/*
+ * 卡片水平位置：left 内联展开，不额外引入变量。
+ * ★ 想单独挪动文字卡片，改下面 left 里最后那个偏移量（+40px），正数往右、负数往左。
+ *   注意 left 与 width 两处的表达式必须同步修改，否则窄窗口下卡片会顶出右边界。
+ *   不要直接去减 max() 里的 48px —— 它在 1200px 以下恒为 48px，减多了 left 变负数卡片会被推出屏幕。
+ */
+.hero-copy { position: absolute; z-index: 2; top: clamp(84px, 8vw, 112px); left: calc(max(48px, (100vw - 1200px) / 2) - 90px); width: min(620px, calc(100% - max(48px, (100vw - 1200px) / 2) - 88px)); padding: 30px 34px; border: 1px solid color-mix(in srgb, var(--line) 78%, transparent); border-radius: 8px; background: color-mix(in srgb, var(--page) 86%, transparent); box-shadow: var(--shadow); backdrop-filter: blur(18px); }
 .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--accent-deep); font-size: 11px; font-weight: 700; line-height: 1.5; }
 .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 4px var(--mint-soft); }
 .hero-copy h1 { max-width: 570px; margin: 17px 0 14px; white-space: pre-line; font-size: 60px; font-weight: 650; line-height: 1.14; }
@@ -266,7 +279,8 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .brand { min-width: 190px; }
   .desktop-nav { gap: 18px; }
   .section, .trust-strip { width: calc(100% - 64px); }
-  .hero-copy { top: 72px; left: 40px; padding: 26px 30px; }
+  .hero-section { --hero-gutter: 40px; --hero-overlap: clamp(48px, 5vw, 76px); }
+  .hero-copy { top: 72px; left: 52px; width: calc(100% - 92px); padding: 26px 30px; }
   .hero-copy h1 { margin-block: 14px 12px; font-size: 54px; }
   .hero-index { right: 40px; }
   .gallery-inner { gap: 38px; }
@@ -287,8 +301,10 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .mobile-nav a { display: flex; min-height: 50px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); color: var(--ink-soft); font-size: 14px; }
   .mobile-nav a:last-child { border-bottom: 0; }
   .mobile-nav a.active, .mobile-nav a svg { color: var(--accent-deep); }
-  .hero-art { min-height: 600px; }
-  .hero-copy { top: 88px; width: min(580px, calc(100% - 80px)); }
+  /* ≤900px 起取消错位重叠，恢复「照片在上、卡片居中叠压」的原有版式 */
+  .hero-section { --hero-overlap: 0px; }
+  .hero-art { min-height: 600px; margin-inline: auto; }
+  .hero-copy { top: 88px; left: 40px; width: min(580px, calc(100% - 80px)); }
   .hero-copy h1 { font-size: 54px; }
   .trust-strip { grid-template-columns: 1fr; }
   .trust-item { min-height: 82px; padding: 14px 18px; }
@@ -327,7 +343,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .header-tools { gap: 6px; }
   .icon-button { width: 38px; height: 38px; }
   .section, .trust-strip { width: calc(100% - 36px); }
-  .hero-section { padding: 10px 10px 0; }
+  .hero-section { padding: 10px 10px 0; --hero-gutter: 0px; --hero-overlap: 0px; }
   .hero-art { width: 100%; min-height: 720px; max-height: none; aspect-ratio: auto; border-radius: 7px; }
   .hero-placeholder::before { inset: 12px; }
   .hero-placeholder::after { top: 16%; right: 8%; width: 42%; height: 34%; transform: none; }
