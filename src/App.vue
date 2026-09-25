@@ -43,12 +43,7 @@ type ScreenshotPreview = {
 }
 
 // 真实素材路径：把同名 jpeg 放进 public/images/ 对应子目录即可自动启用。
-// 必须用 import.meta.env.BASE_URL（而不是写死的 /images/）拼前缀：
-// 部署到 GitHub Pages 子路径时 BASE_URL 是 '/NikkiWebsite/'，本地开发是 '/',
-// 只有跟着 BASE_URL 走，两种环境下的图片路径才都正确。
-const assetPath = (file: string): string => `${import.meta.env.BASE_URL}images/${file}`
-/** 品牌图标同理：站内 <img> 的 /favicon.ico 不会被 Vite 自动改写，需手动带上前缀。 */
-const faviconUrl = `${import.meta.env.BASE_URL}favicon.ico`
+const assetPath = (file: string): string => `/images/${file}`
 /**
  * 首屏暖暖氛围美照轮播（16:9 横向原图，建议宽度 2400px+）。
  * 浅色模式读取 1.jpeg ~ 10.jpeg，深色模式读取 11.jpeg ~ 20.jpeg，各最多 10 张。
@@ -761,7 +756,7 @@ onBeforeUnmount(() => {
     <motion.div class="reading-progress" aria-hidden="true" :style="{ scaleX: pageScrollProgress }" />
     <header class="site-header">
       <a class="brand" href="#top" :aria-label="language === 'zh' ? '暖立方首页' : 'NikkiCube home'" @click="closeMenu">
-        <span class="brand-mark"><img :src="faviconUrl" alt="" /></span>
+        <span class="brand-mark"><img src="/favicon.ico" alt="" /></span>
         <span class="brand-name">{{ language === 'zh' ? '暖立方' : 'NikkiCube' }}<small>{{ language === 'zh' ? '无限暖暖工具集' : 'Infinity Nikki Toolkit' }}</small></span>
       </a>
       <nav class="desktop-nav" :aria-label="language === 'zh' ? '页面导航' : 'Page navigation'">
@@ -925,7 +920,7 @@ onBeforeUnmount(() => {
 
     <footer class="site-footer">
       <div class="footer-main">
-        <a class="brand footer-brand" href="#top"><span class="brand-mark"><img :src="faviconUrl" alt="" /></span><span class="brand-name">{{ language === 'zh' ? '暖立方' : 'NikkiCube' }}<small>{{ language === 'zh' ? '无限暖暖工具集' : 'Infinity Nikki Toolkit' }}</small></span></a>
+        <a class="brand footer-brand" href="#top"><span class="brand-mark"><img src="/favicon.ico" alt="" /></span><span class="brand-name">{{ language === 'zh' ? '暖立方' : 'NikkiCube' }}<small>{{ language === 'zh' ? '无限暖暖工具集' : 'Infinity Nikki Toolkit' }}</small></span></a>
         <p>{{ copy.footerLine }}</p>
         <a class="back-top" href="#top" :aria-label="language === 'zh' ? '返回顶部' : 'Back to top'"><ArrowDown :size="17" /></a>
       </div>

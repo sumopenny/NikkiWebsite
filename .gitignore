@@ -1,7 +1,5 @@
 node_modules/
 dist/
-dist-ghpages/
 .wrangler/
 .DS_Store
 Thumbs.db
-.verify
