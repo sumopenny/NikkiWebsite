@@ -5,6 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#fbf9ff" />
     <meta name="description" content="为 无限暖暖 玩家打造的在线相册与搭配管理工具。整理、收藏、解析和清理游戏照片，文件留在自己的设备中。" />
+    <script>
+      /*
+       * 主题与首图预加载必须在「解析 HTML 时」就决定，不能等 App.vue：
+       * 1) data-theme 提前落到 <html> 上，深色用户不再先闪一帧白底
+       *    （App.vue 的 onMounted 会再设一次，取值相同，幂等）；
+       * 2) 首图的 preload 只能在这里发起 —— 等 JS 打包下载并执行完就太晚了，
+       *    而它正是首屏的 LCP 图。
+       * ⚠️ 下面的主题存储键、素材后缀 '.webp'、深色组起始序号 11，
+       *    分别镜像 src/App.vue 的 'nikki-website-theme' / IMAGE_EXT / heroSlotBase()，
+       *    改动时需三处同步。这段是本项目唯一允许重复这几个字面量的地方。
+       */
+      (function () {
+        var theme = 'light'
+        try {
+          if (localStorage.getItem('nikki-website-theme') === 'dark') theme = 'dark'
+        } catch (e) {
+          /* 存储被禁用时沿用默认浅色 */
+        }
+        document.documentElement.dataset.theme = theme
+        var link = document.createElement('link')
+        link.rel = 'preload'
+        link.as = 'image'
+        link.href = '/images/' + (theme === 'dark' ? '11' : '1') + '.webp'
+        link.setAttribute('fetchpriority', 'high')
+        document.head.appendChild(link)
+      })()
+    </script>
     <link rel="icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -1,0 +1,24 @@
+# Cloudflare Pages 响应头配置。
+# Vite 会把 public/ 下的文件原样拷到 dist/ 根，而 Cloudflare Pages 会读取
+# **构建输出根目录**的 _headers —— 所以这个文件要放在 public/ 下。
+# 格式：行首不缩进的是路径匹配模式，# 开头是注释，缩进的是响应头。
+#
+# 背景：Pages 对静态资源默认发 `cache-control: max-age=0, must-revalidate`，
+# 每次访问每张图都要回一次校验请求。首屏那 8 张 4K 图因此要等 8 个连续的
+# 校验来回（在把探测改成并发之前尤其明显）。这里给它们真正的缓存时长。
+
+# /assets/* 是 Vite 的构建产物，文件名自带内容哈希（如 index-D7JY0zpg.js），
+# 内容一变文件名跟着变，所以可以永久缓存 —— 这是唯一能用 immutable 的地方。
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# /images/* 的文件名**不带内容哈希**（1.webp、gallery-3.webp、screenshots/1-album-timeline.webp…），
+# 所以绝不能用 immutable —— 否则你换了图，老访客在缓存过期前一直看到旧图。
+# 7 天是折中：省掉绝大部分校验请求，换图后也能在可接受的时间内生效。
+/images/*
+  Cache-Control: public, max-age=604800
+
+# HTML 入口每次都校验，保证发布后用户立刻能拿到新版本（与 Pages 默认值一致，
+# 写出来是为了防止将来默认值变化时被静默改掉）。
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate

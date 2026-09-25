@@ -3,8 +3,8 @@
 无限暖暖相册管理工具的**营销站**（Vue 3 + TS + Vite 单页）。长期约定，逐次补充。
 
 ## 结构约定
-- **核心文件只有 4 个**：`src/App.vue`（约 1000 行，几乎整个站点）、`src/style.css`（全站样式 + 所有断点）、`src/main.ts`、`src/components/ScreenshotPreviewPlaceholder.vue`。
-  改样式几乎都在 `src/style.css`；改逻辑/常量都在 `src/App.vue`。
+- **核心文件只有 5 个**：`src/App.vue`（约 1000 行，几乎整个站点）、`src/style.css`（全站样式 + 所有断点）、`src/main.ts`、`src/components/ScreenshotPreviewPlaceholder.vue`、**`index.html`**（`<head>` 里有一段不能删的内联脚本：主题提前生效 + 首图 preload，见下方「首屏加载链路」）。
+  改样式几乎都在 `src/style.css`；改逻辑/常量都在 `src/App.vue`；`public/_headers` 管 Cloudflare 缓存头。
 - **断点只有 4 个**：`max-width: 1100px` / `900px` / `640px` / `380px`（另有一个 `prefers-reduced-motion`）。
   ≤900px 起 `.gallery-inner` 等区块变单栏 —— **改"某一栏"的样式前先确认它在不在单栏区间内**，否则会波及全宽。
 - **主题**：`theme: 'light' | 'dark'` ref + `document.documentElement.dataset.theme`；CSS 侧选择器是 `:root[data-theme='dark']`，令牌在 `src/style.css` 顶部。
@@ -17,8 +17,7 @@
   - ⚠️ `originals/` 在 `public/` 下 → **会被整包打进 `dist/`**（`dist` 因此从 ~6.5 MB 变 81.8 MB）。页面**从不请求**它们，线上性能不受影响，只是部署上传慢。想精简就把该文件夹移出 `public/`。
 - **重新生成 WebP**：`D:\py\python.exe scripts\convert_webp.py`（读 `originals/` 写 `public/images/`，照片 q82 / 截图 q88 / method 6 / **不缩放**）。用本机 `D:\py\python.exe` 的 Pillow 11.0.0，无需装依赖。
 - **首屏轮播**：浅色 `1.webp`~`10.webp`、深色 `11.webp`~`20.webp`（分组序号即全局文件名序号）。当前实际存在 **浅色 8 张（1–8）、深色 9 张（11–19）**，`9/10/20` 缺失。
-  **允许跳号** —— 探测收集"清单里存在的全部"，缺号只跳过那一张，不中断后续。上限 = `HERO_SLIDE_LIMIT`。
-- **画廊**：`gallery-1.webp`~`gallery-10.webp`，固定 10 张卡位（当前 10 张全有）。
+  **允许跳号** —— 探测收集"清单里存在的全部"，缺号只跳过那一张，不中断后续。上限 = `HERO_SLIDE_LIMIT`。- **画廊**：`gallery-1.webp`~`gallery-10.webp`，固定 10 张卡位（当前 10 张全有）。
 - **应用截图**：`screenshots/序号-英文短名.webp`，6 张全有。
 - 体积基线：全部 33 张 webp 合计 **13.96 MB**（原 jpeg/jpg 为 67.55 MB）。单独改图后可用 `.verify/inspect_images.py` 重新核对。
 
@@ -48,6 +47,7 @@
 **首屏只 mount 2 个 `<img>`**（current + next，其余不进 DOM）→ **数 DOM 图片数量永远只有 2 张，别据此判断轮播是否正常**；要采一整个循环的 active src 取并集。
 
 **首屏右下角 `NN —— NN` 小标已改为动态**：`heroIndexCurrent`（当前张，随轮播变）+ `heroIndexTotal`（当前主题组实际张数），模板上有 `v-if="heroHasPhoto"` 兜住探测前的空档，且保留 `aria-hidden="true"`（数字每 3 秒变一次，给读屏会持续打断）。
+⚠️ `heroIndexTotal` 取的是「**当前已探测到的**张数」而不是最终张数：首图提前放行后，总数会在几百毫秒内从 `/01` 爬到 `/08`。这是「首图不等整组」换来的代价，**属已知且已告知用户可接受的表现**。若哪天想消掉，需要给"整组探完"单独加一个标记（别复用 `heroProbed`）。
 
 ## 构建与验证
 - **`tsconfig` 开了 `noUnusedLocals`** → 删函数/变量必须连带清掉引用，否则 `vue-tsc` 报 TS6133、构建直接失败。
@@ -57,9 +57,38 @@
 - **本机 `vite preview` 不可用**（探测 502）→ 验证走自写静态服务。**但不要单独起后台服务**（`node .verify/server.cjs &` 活不过一条命令，健康检查能过、下一条命令就 connection refused）→ **把 http 服务写在验证脚本内部自起自停**（见 `.verify/verify_webp.mjs`）。
   - 写静态服务时 **SPA 回退必须限定「无扩展名的路由」**，否则缺失的图片会返回 `index.html`+200 制造假阳性。
 - **本机构建有一个 bulk-delete 守卫**：同一轮第二次 build 会失败并掏空 `dist/assets/`。稳妥做法：先 `[System.IO.Directory]::Delete(dist,$true)` 清空 `dist`，再 `vite build` 到默认目录（此时删除数为 0，不触发守卫）。绕过细节见 `~/.workbuddy/MEMORY.md`。
-- Playwright：`playwright-core` 在 `C:\Users\Penny\.workbuddy\binaries\node\workspace\node_modules\`，**项目内没有装**。用 `await import('file:///C:/Users/Penny/.workbuddy/binaries/node/workspace/node_modules/playwright-core/index.js')`（ESM 不认 `NODE_PATH`），Chromium 在 `%LOCALAPPDATA%\ms-playwright\chromium-1208\chrome-win64\chrome.exe`。
-- 可复用脚本：`.verify/server.cjs`（`SERVE_DIR` 可指向任意构建目录）、`.verify/verify_webp.mjs`（图片链路全量验证，PASS/CHECK 退出码）、`.verify/inspect_images.py`（尺寸体积清单）、`.verify/dump.py`（日志解码）、`.verify/move_originals.py`（带 sha256 校验的迁移）。**这些是 scratch，不保证长期存在；丢失时可据本文件重建。**
+- Playwright：`playwright-core` 在 `C:\Users\Penny\.workbuddy\binaries\node\workspace\node_modules\`，**项目内没有装**。Chromium 在 `%LOCALAPPDATA%\ms-playwright\chromium-1208\chrome-win64\chrome.exe`（传 `executablePath` 给 `chromium.launch`）。
+  ⚠️ **它是 CJS 包，`const { chromium } = await import('file:///…/playwright-core/index.js')` 会拿到 `undefined`**（cjs-module-lexer 认不出命名导出）→ 必须 `const pw = await import(...)` 然后 `const chromium = pw.chromium ?? pw.default?.chromium`。（ESM 不认 `NODE_PATH`，只能用 file:// 绝对路径 import。）
+- 可复用脚本（2026-09-25 重建过一轮，此前整批丢失）：`.verify/server.cjs`（`SERVE_DIR` 可指向任意构建目录）、`.verify/verify_webp.mjs`（图片链路全量验证）、`.verify/inspect_images.py`（尺寸体积清单）、`.verify/verify_perf.mjs`（**首屏性能 + 行为回归，22 项 PASS/FAIL + 退出码，带 CDP 限速**）、`.verify/shots.mjs`（浅色/深色首屏与画廊截图）。**这些是 scratch，不保证长期存在；丢失时可据本文件重建。**
+- **验证「并发 vs 串行」必须人为限速**（CDP `Network.emulateNetworkConditions`）：本机零延迟下整组图 130ms 就下完，比 `waitForSelector` 的轮询间隔还短，时序类断言会失去意义甚至误判失败。同理，**要证明 preload 抢在 JS 之前，得把 JS 包用 `page.route` 延迟 ~800ms**，否则两者只差几毫秒。
+- `node .verify/xxx.mjs > log.txt 2>&1` 重定向出来的日志**是干净的 UTF-8**，Read 工具可直接读（此前记的「构建日志非 UTF-8」只适用于 `vite build` 那条链路，别一概而论）。
 - **验证首屏轮播要采满一整组：采样窗口 ≥ 张数 × `HERO_SLIDE_INTERVAL`**（浅色 8 张 × 3s = 24s），否则会漏采并误判。也可直接读 `.hero-index` 的 `NN —— NN` 角标交叉验证（浅色应显示 `/08`、深色 `/09`）。
+
+## 首屏加载链路（2026-09-25 优化后，改动这几处前必读）
+
+线上曾出现「首屏图片加载慢、画廊/截图快」——**根因是加载策略差异，与 Cloudflare 和 webp 格式无关**（素材层面三组体积/分辨率基本持平，画廊总量反而更大）。已做四项优化：
+
+1. **`probeAvailable()` 是并发的**（`App.vue` 约 L498–543）。第 4 个参数 `priorityFor: (slot) => 'high' | 'low'` 控制 `fetchpriority`，默认全 `low`。
+   ⚠️ **别把它改回串行**（曾用 `image.onload → index+=1 → step()` 的递归）：本地零延迟看不出差别，一上线就是 N 个首尾相接的 RTT 来回。并发下用 `remaining` 计数 + `settle()`，**全部落定后才 `onDone`**。
+   ⚠️ 写优先级用 `image.setAttribute('fetchpriority', …)`，**不要用 `image.fetchPriority`**（旧版 lib.dom 无该类型定义）。
+   全项目只有 `probeHeroSlides` 一个调用点。画廊 `probeGallerySlides()` 本来就是并发（`forEach` + 立刻赋 `src`），未改。
+2. **首图不等整组探完**：`probeHeroSlides()` 的 `onHit` 里 `if (slot === 1) markProbed()`，组内 **第 1 张** 一到就解锁渲染。
+   - `heroVisibleSlides` / `heroHasPhoto` 两行**没改**，语义自动跟随。
+   - **`heroProbed` 语义已变**：不是「整组探完」，而是「可以开始渲染了 / 不必重复探测」。别再拿它判断"探测是否完成"。
+   - 以「第 1 张」而非「任何一张」为条件，是为了避免乱序到达时先拿第 5 张当首图再换一次的闪动。
+   - 首屏优先级策略：前 2 张 `high`（第 1 张是 LCP、第 2 张 3s 后要用），其余 `low` 只预热。
+3. **`index.html` 有一段内联脚本**（`<head>` 内、favicon 之前）：提前 `documentElement.dataset.theme`（顺带修掉深色闪白），并按主题注入首图 `rel=preload as=image fetchpriority=high`。
+   ⚠️ **这里刻意重复 3 个字面量**：`nikki-website-theme`、`.webp`、深色起始序号 `11` —— 镜像 `App.vue` 的存储键 / `IMAGE_EXT` / `heroSlotBase()`。**改动要三处同步**（preload 必须抢在 JS 之前，只能写死在 HTML 里）。
+4. **`public/_headers`**（Vite 拷到 `dist/` 根，Cloudflare Pages 读输出根的 `_headers`）：
+   - `/assets/*` → `max-age=31536000, immutable`（Vite 产物带内容哈希，唯一能用 immutable 的地方）
+   - `/images/*` → `max-age=604800` —— **文件名不带哈希，绝不能用 immutable**，否则换图不更新
+   - `/index.html` → `max-age=0, must-revalidate`
+   - 格式已核对：**无 BOM、纯 LF、pattern 顶格、header 缩进 2 空格**。
+
+**性能基线（`.verify/verify_perf.mjs`，CDP 限速 800KB/s + 100ms）**：8 张探测请求起始跨度 **0ms**（全并发）；首图进入 DOM **1666ms**，末张 **9677ms**。
+**认知更新**：现在首图进入 DOM 的时间**已由「JS 包加载 + Vue 挂载」决定**（1666ms 里约 1s 在等 JS），图像本身不再是瓶颈（preload 在 685ms 就备好了）。**再要提速得动 JS 体积或做 SSG，属于另一个课题。**
+
+**未做的第 5 步（响应式多尺寸）**：全部源图 3456/3840×2160，但 `.hero-art` 上限 `--content-width: 1200px`、`.preview-photo` = `min(1200px,100%)`、`.art-gallery` ≈500–680px → **2× 屏最多只需 2400px，约 60% 像素是浪费**。方案是出 1280/1920/2560 三档 + `srcset`/`sizes`（探测仍用最小档当探针），预期首屏单张再降约 55%。详见根目录 `首屏图片加载优化方案.md`。
 
 ## 色彩令牌（`src/style.css` 顶部）
 

@@ -143,6 +143,11 @@ const heroArtMotionStyle = computed(() => ({ y: prefersReducedMotion.value ? 0 :
  * 浅色组 1~10、深色组 11~20 都走这一个 map，互不干扰。
  */
 const heroAvailable = ref<Record<number, boolean>>({})
+/**
+ * 该主题组「可以开始渲染了」的开关，同时兼作「不必重复探测」的标记。
+ * 置位时机有两处：组内**第 1 张** onload（提前放行），或整轮探测 onDone（兜住第 1 张缺失的情况）。
+ * 因此它**不等于**「整组都探完了」—— 放行之后剩余的图仍会陆续补进 heroAvailable。
+ */
 const heroProbed = ref<Record<Theme, boolean>>({ light: false, dark: false })
 /** 深色模式读取 11~20，浅色模式读取 1~10。 */
 const heroSlides = computed(() => (theme.value === 'dark' ? heroSlidesDark : heroSlidesLight))
@@ -164,6 +169,10 @@ function heroSlotKey(index: number, group: Theme = theme.value): number {
  * 目录里实际存在的全部文件，**允许中间跳号**。
  * 例如只放了 1、3、5，三张都会进列表并依次轮播（不会因缺 2 就断在第 1 张）。
  * 顺序仍按文件名序号从小到大。
+ *
+ * 用 heroProbed 当门禁是为了避免乱序到达时「先拿第 5 张当首图、随后换成第 1 张」的闪动；
+ * 该标记会在第 1 张到达时立即置位（见 probeHeroSlides），所以首图不必等整组下载完。
+ * 放行时列表里可能只有前几张，之后会随探测进展自动补全。
  */
 const heroVisibleSlides = computed(() => {
   if (!heroProbed.value[theme.value]) return []
@@ -178,6 +187,10 @@ const heroHasPhoto = computed(() => heroProbed.value[theme.value] && heroSlideCo
  * - `heroIndexTotal` 取当前主题组里探测到的实际张数（深色与浅色可能不同）。
  * 用 `% count` 兜一层：探测可能晚于首帧完成、切主题时索引会归零，
  * 极端时序下 activeHeroSlide 也可能短暂超出新张数。
+ *
+ * 注意 `heroIndexTotal` 取的是「当前已探测到的张数」而不是最终张数：
+ * 首图提前放行后，总数会在几百毫秒内从 /01 逐步爬到最终值（如 /08）。
+ * 这是为了让首图不必等整组下载完而付的代价，属已知且可接受的表现。
  */
 const heroIndexCurrent = computed(() => {
   const count = heroSlideCount.value
@@ -487,42 +500,71 @@ function showNextHeroSlideForTimer(): void {
  * 于是「实际张数」= 目录里存在的所有文件数，允许中间跳号
  * （例如只有 1、3、5，三张都会播，而不是只播第 1 张）。
  * 每张之间仍保持原有的先后顺序，只是不再遇缺即停。
+ *
+ * **必须并发，不能串行**：串行（等上一张 onload 再发下一个）会让 N 张图首尾相接，
+ * 吃掉 N 个完整的「RTT + 传输」来回 —— 本地零延迟看不出来，一上线单次请求的延迟
+ * 成为主导后就成倍变慢。并发不改变总字节数，只是把等待重叠掉。
+ *
+ * `priorityFor` 决定各请求在浏览器里的优先级。注意 `new Image()` 不在 DOM 里，
+ * 浏览器默认按低优先级处理，和 JS/CSS/字体抢带宽时会排在最后，所以首屏那几张要显式抬高。
  * 探测用的 Image 与模板中的图同 URL，浏览器缓存命中，不会重复下载。
  */
-function probeAvailable(slots: string[], onHit: (slot: number) => void, onDone: () => void): void {
-  let index = 0
-
-  const step = (): void => {
-    if (index >= slots.length) {
-      onDone()
-      return
-    }
-    const image = new Image()
-    const slot = index + 1
-    image.onload = () => {
-      onHit(slot)
-      index += 1
-      step()
-    }
-    // 缺失就跳过这一张，继续探测下一个，不再中断整轮探测
-    image.onerror = () => {
-      index += 1
-      step()
-    }
-    image.src = slots[index]!
+function probeAvailable(
+  slots: string[],
+  onHit: (slot: number) => void,
+  onDone: () => void,
+  priorityFor: (slot: number) => 'high' | 'low' = () => 'low'
+): void {
+  let remaining = slots.length
+  if (remaining === 0) {
+    onDone()
+    return
   }
 
-  step()
+  /** 全部落定（成功或失败）之后才 onDone —— 并发下必须自己计数。 */
+  const settle = (): void => {
+    remaining -= 1
+    if (remaining === 0) onDone()
+  }
+
+  slots.forEach((src, index) => {
+    const slot = index + 1
+    const image = new Image()
+    // 用 setAttribute 而不是 image.fetchPriority：后者在旧版 lib.dom 里没有类型定义
+    image.setAttribute('fetchpriority', priorityFor(slot))
+    image.onload = () => {
+      onHit(slot)
+      settle()
+    }
+    // 缺失就跳过这一张，其余照常 —— 不再中断整轮探测
+    image.onerror = settle
+    image.src = src
+  })
 }
 
-/** 探测首屏某一主题组（浅色 1~10 / 深色 11~20）。 */
+/**
+ * 探测首屏某一主题组（浅色 1~10 / 深色 11~20）。
+ *
+ * 优先级策略：前 2 张给 high —— 第 1 张是首屏的 LCP，第 2 张 3 秒后就要用；
+ * 其余 6 张给 low，只做预热，不去和 JS/CSS/字体抢带宽。
+ */
 function probeHeroSlides(group: Theme): void {
   const slots = group === 'dark' ? heroSlidesDark : heroSlidesLight
   const base = heroSlotBase(group)
+  const markProbed = (): void => { heroProbed.value = { ...heroProbed.value, [group]: true } }
+
   probeAvailable(
     slots,
-    (slot) => { heroAvailable.value = { ...heroAvailable.value, [base + slot - 1]: true } },
-    () => { heroProbed.value = { ...heroProbed.value, [group]: true } }
+    (slot) => {
+      heroAvailable.value = { ...heroAvailable.value, [base + slot - 1]: true }
+      // 第 1 张一到就解锁渲染，不再等整组探测跑完 ——
+      // 否则 heroVisibleSlides 会一直返回空数组，首屏要空等整组全部下载完才显示第一张。
+      // 仍以「第 1 张」而不是「任何一张」为解锁条件：并发下图片可能乱序到达，
+      // 若第 5 张先到就拿它当首图、随后第 1 张到了再换一次，会出现可见闪动。
+      if (slot === 1) markProbed()
+    },
+    markProbed,
+    (slot) => (slot <= 2 ? 'high' : 'low')
   )
 }
 
