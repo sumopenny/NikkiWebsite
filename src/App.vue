@@ -252,7 +252,8 @@ const links = {
   fallback: 'https://infinity-nikki-album-manager.vercel.app/',
   github: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager',
   githubReleases: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager/releases',
-  githubIssues: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager/issues',
+  // 反馈入口：小红书主页（原 GitHub Issues 已不再作为对外反馈渠道）
+  feedback: 'https://xhslink.cn/o/57r27sFj6zH',
   githubReadme: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md',
   gitee: 'https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager',
   giteeReleases: 'https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager/releases',
@@ -329,7 +330,7 @@ const copy = computed(() => language.value === 'zh'
         { q: '手机上可以使用吗？', a: '手机端无法使用相册管理功能，但可以使用参数与搭配码解析工具。' },
         { q: '项目是官方应用吗？', a: '不是。这是独立的开源社区工具，与《无限暖暖》官方及其发行方没有隶属、授权或背书关系。' }
       ],
-      readme: '阅读完整 README', report: '反馈问题',
+      readme: '阅读完整 README', report: '反馈问题-小红书',
       footerLine: '为每一张心动留个位置。', disclaimer: '独立社区项目 · 与《无限暖暖》官方无隶属或背书关系',
       themeLight: '浅色主题', themeDark: '深色主题', languageLabel: '切换语言',
       openImage: '放大查看界面预览', closeImage: '关闭图片预览', menuOpen: '打开导航菜单', menuClose: '关闭导航菜单',
@@ -383,7 +384,7 @@ const copy = computed(() => language.value === 'zh'
         { q: 'Can I use it on a phone?', a: 'Album management is unavailable on mobile, but parameter and outfit-code parsing tools can be used there.' },
         { q: 'Is this an official app?', a: 'No. This is an independent open-source community tool. It is not affiliated with, authorized, or endorsed by the Infinity Nikki team or publisher.' }
       ],
-      readme: 'Read the full README', report: 'Report an issue',
+      readme: 'Read the full README', report: 'Feedback on Xiaohongshu',
       footerLine: 'A little place for every lovely moment.', disclaimer: 'Independent community project · Not affiliated with or endorsed by Infinity Nikki',
       themeLight: 'Light theme', themeDark: 'Dark theme', languageLabel: 'Switch language',
       openImage: 'Open interface preview', closeImage: 'Close image preview', menuOpen: 'Open navigation menu', menuClose: 'Close navigation menu',
@@ -451,9 +452,8 @@ function toggleTheme(): void {
 function setLanguage(value: Language): void {
   language.value = value
   document.documentElement.lang = value === 'zh' ? 'zh-CN' : 'en'
-  document.title = value === 'zh'
-    ? '暖立方 Nikki³ | 为每一张心动留个位置'
-    : 'NikkiCube | Infinity Nikki Toolkit'
+  // 标签页标题中英文统一，不再随语言切换
+  document.title = 'Nikki³官网-为每一张心动留个位置'
   document.querySelector('meta[name="description"]')?.setAttribute('content', value === 'zh'
     ? '为《无限暖暖》玩家打造的本地相册与搭配管理工具。整理、收藏、解析和清理游戏照片，文件留在自己的设备中。'
     : 'A local-first photo and outfit manager for Infinity Nikki. Organize, save, parse, and clean up game photos on your own device.')
@@ -958,7 +958,7 @@ onBeforeUnmount(() => {
 
       <section id="faq" class="faq-section">
         <div class="section faq-inner">
-          <motion.div class="faq-heading" v-bind="sectionReveal"><span class="eyebrow">{{ copy.questionsKicker }}</span><h2>{{ copy.questionsTitle }}</h2><p><CircleHelp :size="17" /> {{ language === 'zh' ? '遇到问题？' : 'Need more help?' }} <a :href="links.githubIssues" target="_blank" rel="noreferrer">{{ copy.report }}</a></p></motion.div>
+          <motion.div class="faq-heading" v-bind="sectionReveal"><span class="eyebrow">{{ copy.questionsKicker }}</span><h2>{{ copy.questionsTitle }}</h2><p><CircleHelp :size="17" /> {{ language === 'zh' ? '遇到问题？' : 'Need more help?' }} <a :href="links.feedback" target="_blank" rel="noreferrer">{{ copy.report }}</a></p></motion.div>
           <motion.div class="faq-list" v-bind="sectionReveal">
             <motion.details v-for="item in copy.questions" :key="item.q" :layout="!prefersReducedMotion" :transition="{ layout: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } }"><summary>{{ item.q }}<ChevronDown :size="18" /></summary><p>{{ item.a }}</p></motion.details>
           </motion.div>
