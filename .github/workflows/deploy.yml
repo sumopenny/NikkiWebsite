@@ -1,0 +1,69 @@
+name: Deploy to GitHub Pages
+
+# 触发条件：推送到 main 就自动构建 + 发布；也支持在 Actions 页面手动点按钮跑一次。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# GitHub Actions 默认的 GITHUB_TOKEN 权限很窄，发布 Pages 必须显式声明确认这三项：
+#   contents: read  —— 允许 checkout 拉代码
+#   pages: write    —— 允许写入 Pages 环境
+#   id-token: write —— 允许用 OIDC 令牌向 Pages 证明身份（deploy-pages 需要）
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时刻只跑一个部署任务。这里故意用 cancel-in-progress: false：
+# 允许「排队等待」而不是「打断正在进行的部署」，避免发布到一半被掐断留下半成品。
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ---------- 第一步：在干净的 Linux 机器上构建 ----------
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          # 20 是 LTS；cache: npm 会把依赖缓存起来，后续构建通常快 30 秒以上
+          node-version: 20
+          cache: npm
+
+      - name: 安装依赖
+        # 用 ci 而不是 install：严格按 package-lock.json 还原，保证 CI 与本地依赖完全一致
+        run: npm ci
+
+      - name: 构建
+        # npm run build = vue-tsc --noEmit && vite build
+        # 类型检查不通过这里就会失败，等于强制给每次发布做了一次类型体检
+        run: npm run build
+
+      - name: 读取 Pages 站点信息
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: 上传构建产物
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 上传的就是 Vite 的输出目录（wrangler.toml 里也是这个）
+          path: dist
+
+  # ---------- 第二步：把上一步的产物发布出去 ----------
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      # 部署完成后，这次运行的摘要页会显示线上地址
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: 发布到 GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -3,7 +3,7 @@
 无限暖暖相册管理工具的**营销站**（Vue 3 + TS + Vite 单页）。长期约定，逐次补充。
 
 ## 结构约定
-- **核心文件只有 4 个**：`src/App.vue`（约 1000 行，几乎整个站点）、`src/style.css`（全站样式 + 所有断点）、`src/main.ts`、`src/components/ScreenshotPreviewPlaceholder.vue`。
+- **核心文件只有 5 个**：`src/App.vue`（约 1000 行，几乎整个站点）、`src/style.css`（全站样式 + 所有断点）、`src/main.ts`、`src/components/ScreenshotPreviewPlaceholder.vue`、`src/vite-env.d.ts`（只有一行 `/// <reference types="vite/client" />`，别删 —— 删了 `import.meta.env` 会报 TS2339 导致构建失败）。
   改样式几乎都在 `src/style.css`；改逻辑/常量都在 `src/App.vue`。
 - **断点只有 4 个**：`max-width: 1100px` / `900px` / `640px` / `380px`（另有一个 `prefers-reduced-motion`）。
   ≤900px 起 `.gallery-inner` 等区块变单栏 —— **改"某一栏"的样式前先确认它在不在单栏区间内**，否则会波及全宽。
@@ -47,9 +47,25 @@
 ## 构建与验证
 - **`tsconfig` 开了 `noUnusedLocals`** → 删函数/变量必须连带清掉引用，否则 `vue-tsc` 报 TS6133、构建直接失败。
 - 改完跑 `npm run build`（= `vue-tsc --noEmit && vite build`）确认。
-- **本机 `vite preview` 不可用**（探测 502）→ 验证走自写静态服务 `.verify/server.cjs`（读 `dist/`，未命中回退 `index.html`；**支持 `SERVE_DIR` 环境变量**指向任意构建目录）。
+- **本机 `vite preview` 不可用**（探测 502）→ 验证走自写静态服务：`.verify/server.cjs`（读 `dist/`，未命中回退 `index.html`；支持 `SERVE_DIR`）或 **`.verify/ghpages-server.cjs`（模拟 GitHub Pages 子路径，支持 `SERVE_DIR`/`PREFIX`/`PORT`，未带前缀直接 404）**。
+  ⚠️ **验证子路径问题必须用带前缀的服务器** —— 挂在根路径上测永远通过，测不出问题。
+- **`.verify/ghpages-check.mjs`**：Playwright 真浏览器验证脚本，输出 JSON（`httpErrors` / `pageErrors` / `failedImages`（判据 `naturalWidth > 0`）/ `allSrcsPrefixed` / `heroSrcs` / `darkHeroSrcs`）+ 浅深两张截图。新增素材或改动路径后跑它。
 - **本机构建有一个 bulk-delete 守卫**：同一轮第二次 `npm run build` 会失败并掏空 `dist/assets/`。绕过办法见 `~/.workbuddy/MEMORY.md` 的「Vite / 前端构建」一节。
+- **本机 `npx` 被 WSL 劫持**（报「没有已安装的 WSL 分发版」）→ **一律用 `node node_modules/<pkg>/bin/<cli>.js`**，如 `node node_modules/vue-tsc/bin/vue-tsc.js --noEmit`。
 - Playwright 在 `.verify/*.mjs`，用 `import pw from 'file:///.../playwright-core/index.js'`（ESM 不认 `NODE_PATH`），Chromium 在 `AppData\Local\ms-playwright\chromium-1208\chrome-win64\chrome.exe`。
+
+## 部署（GitHub Pages + GitHub Actions）
+
+- **仓库**：`github.com/sumopenny/NikkiWebsite`，主分支 `main`。**线上地址 `https://sumopenny.github.io/NikkiWebsite/`**。
+- **工作流** `.github/workflows/deploy.yml`：push main 或手动触发 → `npm ci` → `npm run build` → 发布 `dist`。需要 `permissions: contents:read / pages:write / id-token:write`。
+  **必须在仓库 Settings → Pages → Source 选 `GitHub Actions`**（工作流不会自己开启 Pages）。私有仓库需付费计划。
+- **🔴 子路径是本站部署的核心约束**：GitHub Pages 项目站挂在 `/NikkiWebsite/` 下，**不是根路径**。相关约定：
+  - `vite.config.ts` 用 `command === 'build' ? '/NikkiWebsite/' : '/'` —— **dev 必须留在根路径**，因为 `Start-Website.bat` 硬编码打开 `http://localhost:<port>`；写成常量会让本地启动脚本 404。绑定自定义域名时把 `BUILD_BASE` 改回 `'/'`。
+  - 运行时素材路径一律走 `import.meta.env.BASE_URL`（`App.vue` 的 `assetPath()` 与 `faviconUrl`）。**新增任何素材引用都必须带上 BASE_URL**，别写死 `/images/...`。
+  - **Vue 模板里的根绝对路径不会被 Vite 加前缀，`index.html` 里的会** —— 两处行为不一致，改素材路径时最容易漏。
+  - 故障特征：**HTML/JS/CSS 正常但所有图片空白** = 前缀问题（先看 Network 里图片请求是否少了 `/NikkiWebsite`）。
+- **完整教学文档**：`DEPLOY_GITHUB_PAGES.md`（含 7 类故障排查表）。
+- **Cloudflare Pages 未废弃**：`wrangler.toml`（`pages_build_output_dir = "./dist"`）保留不动，与 GitHub Pages 互不干扰。
 
 ## 色彩令牌（`src/style.css` 顶部）
 
