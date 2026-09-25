@@ -8,11 +8,15 @@ defineProps<{
   slotLabel: string
   note: string
   ratio: string
+  /** 真实素材路径；提供后直接渲染图片，素材缺失时回退到占位骨架。 */
+  src?: string | null
+  alt?: string
 }>()
 </script>
 
 <template>
-  <div class="preview-placeholder" :class="`preview-placeholder--${kind}`" role="img" :aria-label="`${title}. ${note}. ${ratio}.`">
+  <img v-if="src" class="preview-photo" :src="src" :alt="alt || `${title}. ${note}. ${ratio}.`" />
+  <div v-else class="preview-placeholder" :class="`preview-placeholder--${kind}`" role="img" :aria-label="`${title}. ${note}. ${ratio}.`">
     <div class="preview-placeholder__window" aria-hidden="true">
       <div class="preview-placeholder__chrome">
         <span class="preview-placeholder__brand"><component :is="icon" :size="15" /> Nikki³</span>
@@ -30,6 +34,15 @@ defineProps<{
 </template>
 
 <style scoped>
+/* 真实截图：与 .showcase-image-button img / .lightbox > img 保持同样的呈现方式 */
+.preview-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.55;
+  object-fit: cover;
+  object-position: top left;
+}
+
 .preview-placeholder {
   --slot-accent: var(--accent-deep);
   --slot-tint: var(--accent-soft);
@@ -150,7 +163,13 @@ defineProps<{
   line-height: 1.3;
 }
 
+@media (max-width: 900px) {
+  .preview-photo { aspect-ratio: 1.6; }
+}
+
 @media (max-width: 640px) {
+  .preview-photo { aspect-ratio: 1.35; }
+
   .preview-placeholder__chrome {
     min-height: 32px;
     padding-inline: 10px;
