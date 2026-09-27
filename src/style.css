@@ -126,8 +126,19 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
  * 桌面端左基准边距统一用 --hero-gutter，卡片比照片左边缘再往左多出 --hero-overlap。
  * 移动端（≤900px）在两个断点里各自复位，保持原有的竖向堆叠版式。
  */
-.hero-section { --hero-gutter: max(48px, calc((100vw - 1200px) / 2)); --hero-overlap: clamp(56px, 6vw, 96px); }
-.hero-art { position: relative; width: min(var(--content-width), calc(100% - var(--hero-gutter))); min-height: 540px; max-height: calc(100svh - var(--header-height) - 52px); aspect-ratio: 16 / 9; margin-left: calc(var(--hero-gutter) + var(--hero-overlap)); margin-right: var(--hero-gutter); overflow: hidden; border-radius: 28px; background: var(--surface-tint); }
+.hero-section { --hero-gutter: max(48px, calc((100vw - 1200px) / 2)); --hero-overlap: clamp(56px, 6vw, 96px); --hero-right-gap: 48px; }
+/*
+ * ★ 宽度必须把 --hero-overlap 一起减掉 —— 这一侧的左边距已经吃了 gutter + overlap，
+ *   少减一个 overlap，照片右缘就会顶出视口被 .site-shell 的 overflow: clip 裁掉
+ *   （实测 1300px 裁 28px、1200px 裁 62px，一路裁到 900px 才结束）。
+ *   减掉之后：宽屏仍是 1200px 满宽（版式与改动前逐像素一致），窄屏才随空间自动收窄。
+ * ★ --hero-right-gap 是照片右缘与窗口之间刻意保留的间距。
+ *   不留的话，窗口一窄照片右缘就一路顶到窗口边上、圆角贴着边框 ——
+ *   别指望 margin-right: var(--hero-gutter) 去兜：过约束时 CSS 会把 margin-right 丢弃。
+ *   取值抄正文栏 .section 的左右边距（>1100px 为 48px、≤1100px 为 32px），
+ *   这样照片右缘正好与 .trust-strip / 正文栏右缘对齐；≤900px 单栏流式下必须归 0（照片居中）。
+ */
+.hero-art { position: relative; width: min(var(--content-width), calc(100% - var(--hero-gutter) - var(--hero-overlap) - var(--hero-right-gap))); min-height: 540px; max-height: calc(100svh - var(--header-height) - 52px); aspect-ratio: 16 / 9; margin-left: calc(var(--hero-gutter) + var(--hero-overlap)); margin-right: var(--hero-gutter); overflow: hidden; border-radius: 28px; background: var(--surface-tint); }
 /*
  * 深色模式：给首屏照片加一圈亮色外发光（柔光、无方向）。
  * ★ 落点必须在 .hero-art 上，不要挪到 .hero-photo —— 后者是铺满的 <img>，
@@ -158,11 +169,14 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .hero-placeholder .art-placeholder-code { top: calc(31% + 112px); }
 /*
  * 卡片水平位置：left 内联展开，不额外引入变量。
- * ★ 想单独挪动文字卡片，改下面 left 里最后那个偏移量（+40px），正数往右、负数往左。
- *   注意 left 与 width 两处的表达式必须同步修改，否则窄窗口下卡片会顶出右边界。
- *   不要直接去减 max() 里的 48px —— 它在 1200px 以下恒为 48px，减多了 left 变负数卡片会被推出屏幕。
+ * ★ 想单独挪动文字卡片，改 left 里最后那个偏移量（-90px），数值越大卡片越靠左。
+ *   最外层 max(48px, …) 是防出屏下限：max() 里的 48px 在窗口 < 1380px 时恒取 48，
+ *   原式于是算成负数，卡片左缘被 .site-shell 的 overflow: clip 裁掉
+ *   （1366px 裁 7px、1300px 裁 40px、≤1200px 恒裁 42px）。套上限后最窄也不会贴出屏幕。
+ *   下限取 48px 而不是 0，是为了让卡片左缘和全站 .section 的 48px 边距对齐。
+ *   left 只管左缘，width 只管右缘，两者独立 —— 只想挪位置就只改 left 里的偏移量。
  */
-.hero-copy { position: absolute; z-index: 2; top: calc(clamp(84px, 8vw, 112px) + 100px); left: calc(max(48px, (100vw - 1200px) / 2) - 90px); width: min(500px, calc(100% - max(48px, (100vw - 1200px) / 2) - 88px)); padding: 30px 34px; border: 1px solid color-mix(in srgb, var(--line) 78%, transparent); border-radius: 28px; background: color-mix(in srgb, var(--page) 66%, transparent); box-shadow: var(--shadow); backdrop-filter: blur(10px); }
+.hero-copy { position: absolute; z-index: 2; top: calc(clamp(84px, 8vw, 112px) + 100px); left: max(48px, calc(max(48px, (100vw - 1200px) / 2) - 90px)); width: min(500px, calc(100% - max(48px, (100vw - 1200px) / 2) - 88px)); padding: 30px 34px; border: 1px solid color-mix(in srgb, var(--line) 78%, transparent); border-radius: 28px; background: color-mix(in srgb, var(--page) 66%, transparent); box-shadow: var(--shadow); backdrop-filter: blur(10px); }
 .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--accent-deep); font-size: 11px; font-weight: 700; line-height: 1.5; }
 .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 0 4px var(--mint-soft); }
 .hero-copy h1 { max-width: 570px; margin: 17px 0 14px; white-space: pre-line; font-size: 60px; font-weight: 650; line-height: 1.14; }
@@ -336,7 +350,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .brand { min-width: 190px; }
   .desktop-nav { gap: 18px; }
   .section, .trust-strip { width: calc(100% - 64px); }
-  .hero-section { --hero-gutter: 40px; --hero-overlap: clamp(48px, 5vw, 76px); }
+  .hero-section { --hero-gutter: 40px; --hero-overlap: clamp(48px, 5vw, 76px); --hero-right-gap: 32px; }
   .hero-copy { top: 72px; left: 52px; width: calc(100% - 492px); padding: 26px 30px; }
   .hero-copy h1 { margin-block: 14px 12px; font-size: 54px; }
   .hero-index { right: 40px; }
@@ -358,11 +372,29 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .mobile-nav a { display: flex; min-height: 50px; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); color: var(--ink-soft); font-size: 14px; }
   .mobile-nav a:last-child { border-bottom: 0; }
   .mobile-nav a.active, .mobile-nav a svg { color: var(--accent-deep); }
-  /* ≤900px 起取消错位重叠，恢复「照片在上、卡片居中叠压」的原有版式 */
-  .hero-section { --hero-overlap: 0px; }
-  .hero-art { min-height: 600px; margin-inline: auto; }
-  .hero-copy { top: 88px; left: 40px; width: min(580px, calc(100% - 80px)); }
+  /*
+   * ≤900px 起放弃桌面端的「照片右移、卡片叠压」错位版式，改为竖向依次排列：
+   * 照片（保持 16:9 完整显示）→ 文字卡片 → 信任条。
+   * 卡片改成 static 回到文档流后会自己撑开 .hero-section，信任条随即被顶到卡片下方，
+   * 所以「卡片下移压住信任条」的问题从根上消失，不再需要靠 top 数值去躲避。
+   * min-height / max-height 必须一并复位：基础规则的 540px 最小高度会把 16:9 容器顶高，
+   * 多出来的高度又被 object-fit: cover 裁掉，照片就又不完整了。
+   */
+  .hero-section { --hero-overlap: 0px; --hero-right-gap: 0px; }
+  .hero-art { min-height: auto; max-height: none; margin-inline: auto; }
+  /*
+   * 卡片与照片同宽同轴（共用 --hero-gutter 推出的同一个宽度表达式），两者间距 20px。
+   * 背景换成实心 --surface 并关掉 backdrop-filter —— 卡片不再压在照片上，
+   * 背后只剩纯色页面底色，毛玻璃已无可透之物，留着只是白白消耗一次合成。
+   */
+  .hero-copy { position: static; width: min(var(--content-width), calc(100% - var(--hero-gutter))); margin: 20px auto 0; background: var(--surface); backdrop-filter: none; }
   .hero-copy h1 { font-size: 54px; }
+  /*
+   * 单栏下这行角标锚在 .hero-section 底部，而 section 现在由「照片 + 卡片」共同撑高，
+   * 它会落到卡片下方的空白里、脱离照片下缘；移动端本来也没有"贴着左边文字"的对照需求，
+   * 所以 ≤900px 起不再显示（原先只在 ≤640px 隐藏）。
+   */
+  .hero-index { display: none; }
   .trust-strip { grid-template-columns: 1fr; }
   .trust-item { min-height: 82px; padding: 14px 18px; }
   .trust-item + .trust-item { border-top: 1px solid var(--line); border-left: 0; }
@@ -399,7 +431,11 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .icon-button { width: 38px; height: 38px; }
   .section, .trust-strip { width: calc(100% - 36px); }
   .hero-section { padding: 10px 10px 0; --hero-gutter: 0px; --hero-overlap: 0px; }
-  .hero-art { width: 100%; min-height: 720px; max-height: none; aspect-ratio: auto; border-radius: 28px; }
+  /*
+   * .hero-art 在这里不再单独覆写：原先的 min-height: 720px + aspect-ratio: auto 会把容器
+   * 拉成一根竖长条，16:9 素材被裁得只剩中间一条。现在直接继承 ≤900px 的 16:9 完整显示，
+   * 宽度由上面 --hero-gutter: 0px 推出 100%（即 section 的内容宽）。
+   */
   .hero-placeholder::before { inset: 12px; }
   .hero-placeholder::after { top: 16%; right: 8%; width: 42%; height: 34%; transform: none; }
   .hero-placeholder .art-placeholder-title, .hero-placeholder .art-placeholder-ratio, .hero-placeholder .art-placeholder-code, .hero-placeholder > svg { right: 8%; width: 42%; }
@@ -407,7 +443,8 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .hero-placeholder .art-placeholder-title { top: calc(18% + 35px); font-size: 13px; }
   .hero-placeholder .art-placeholder-ratio { top: calc(18% + 62px); font-size: 11px; }
   .hero-placeholder .art-placeholder-code { top: calc(18% + 104px); font-size: 9px; }
-  .hero-copy { top: 210px; left: 16px; width: calc(100% - 32px); padding: 22px 19px; border-radius: 28px; background: color-mix(in srgb, var(--page) 93%, transparent); }
+  /* 宽度与位置已在 ≤900px 统一为「与照片同宽 + 20px 间距」，卡片已回到文档流，这里只收窄内边距 */
+  .hero-copy { padding: 22px 19px; }
   .eyebrow { gap: 7px; font-size: 10px; }
   .hero-copy h1 { margin: 13px 0 12px; font-size: 43px; line-height: 1.2; }
   .hero-description { font-size: 15px; line-height: 1.75; }
@@ -415,12 +452,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .button-primary { min-height: 46px; padding-inline: 13px; font-size: 13px; }
   .button-secondary { font-size: 13px; }
   .hero-note { align-items: flex-start; margin-top: 16px; font-size: 11px; line-height: 1.5; }
-  /*
-   * 单栏时 .hero-art 被固定成 min-height: 720px，整个首屏区拉到 730px 以上，
-   * 这行锚在区域底部就必然掉出首屏（640×700 下要下滚 87px 才看得到）。
-   * 移动端本来就没有"贴着左边文字"的问题，这个小装饰直接不显示。
-   */
-  .hero-index { display: none; }
   .trust-item { gap: 12px; padding-inline: 5px; }
   .trust-icon { width: 38px; height: 38px; }
   .trust-item strong { font-size: 13px; }
@@ -488,9 +519,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .header-tools { gap: 5px; }
   .icon-button { width: 35px; height: 35px; }
   .section, .trust-strip { width: calc(100% - 28px); }
-  .hero-art { min-height: 820px; }
-  .hero-copy { top: 220px; }
-  .hero-copy { left: 13px; width: calc(100% - 26px); padding: 19px 15px; }
+  .hero-copy { padding: 19px 15px; }
   .hero-copy h1 { font-size: 39px; }
   .hero-placeholder .art-placeholder-ratio { font-size: 10px; }
   .gallery-arrow, .gallery-autoplay { width: 35px; height: 35px; }
