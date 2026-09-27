@@ -128,6 +128,20 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
  */
 .hero-section { --hero-gutter: max(48px, calc((100vw - 1200px) / 2)); --hero-overlap: clamp(56px, 6vw, 96px); }
 .hero-art { position: relative; width: min(var(--content-width), calc(100% - var(--hero-gutter))); min-height: 540px; max-height: calc(100svh - var(--header-height) - 52px); aspect-ratio: 16 / 9; margin-left: calc(var(--hero-gutter) + var(--hero-overlap)); margin-right: var(--hero-gutter); overflow: hidden; border-radius: 28px; background: var(--surface-tint); }
+/*
+ * 深色模式：给首屏照片加一圈亮色外发光（柔光、无方向）。
+ * ★ 落点必须在 .hero-art 上，不要挪到 .hero-photo —— 后者是铺满的 <img>，
+ *   而 .hero-art 带 overflow:hidden + 28px 圆角，会把它的 box-shadow 整个裁掉（inset 也会被图片内容盖住），页面上一丝都看不见。
+ *   自身的外阴影不受自身 overflow 裁剪，所以放在这一层才生效。
+ * 光色用 --accent（深色模式下即 #c29ae8），与站内其他高亮同源；内中外三档叠出柔和的衰减。
+ * 想调强弱就改百分比（越小越淡），想调范围就改第 2/3 档的模糊半径。
+ */
+:root[data-theme='dark'] .hero-art {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent),
+    0 0 14px color-mix(in srgb, var(--accent) 20%, transparent),
+    0 0 28px color-mix(in srgb, var(--accent) 6%, transparent);
+}
 .hero-art-frame { position: relative; width: 100%; height: 100%; min-height: inherit; }
 .hero-placeholder { position: absolute; inset: 0; background-color: var(--surface-tint); background-image: linear-gradient(125deg, color-mix(in srgb, var(--sun-soft) 62%, transparent), transparent 45%), linear-gradient(310deg, color-mix(in srgb, var(--accent-soft) 72%, transparent), transparent 58%); }
 .hero-placeholder::before { position: absolute; inset: 24px; border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: 6px; content: ''; pointer-events: none; }
