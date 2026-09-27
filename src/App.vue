@@ -96,7 +96,7 @@ const gallerySlideCount = GALLERY_SLIDE_LIMIT
  * （值绑在 .hero-photo--current / --next 的 transition 里）。
  * 间隔不要小于过渡时长，否则会看起来像一直在闪。
  */
-const HERO_SLIDE_INTERVAL = 3000
+const HERO_SLIDE_INTERVAL = 2600
 /** ★ 画廊轮播切换间隔（毫秒），默认 2 秒。 */
 const GALLERY_SLIDE_INTERVAL = 2000
 
