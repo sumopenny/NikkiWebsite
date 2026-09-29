@@ -94,6 +94,12 @@ D:\py\python.exe scripts\convert_webp.py
 
 > 旧目录 `public/screenshots/`（`1.webp` / `搭配码.webp` / `搭配码编辑.webp`）已不再被代码引用，保留仅作备份。
 
+## 页面教程配图
+
+| 文件名 | 用途 | 显示方式 |
+| --- | --- | --- |
+| `public/images/auto-update-outfit-code.webp` | 自动更新搭配码教程 | 界面预览区之后展示，保留原始纵向比例；点击可打开完整图片 |
+
 ## 注意事项
 
 - **后缀统一 `.webp`**。三个目录（根目录首屏 / 根目录画廊 / `screenshots/`）都用同一后缀，靠 `IMAGE_EXT` 统一拼路径。要改格式改那一行，并把 `originals/` 里的原图重新转一份。

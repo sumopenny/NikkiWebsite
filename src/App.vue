@@ -297,6 +297,19 @@ const copy = computed(() => language.value === 'zh'
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER',
       galleryTitle: '留一块位置，给你镜头里的暖暖。',
       galleryBody: '尽情欣赏暖暖美照，让官网也像一本小小的旅途画册。',
+      tutorialKicker: 'OUTFIT CODE · AUTO UPDATE',
+      tutorialTitle: '自动更新搭配码，几步就能设好。',
+      tutorialBody: '授权当前游戏目录后，在游戏中生成搭配码，再回到网页即可自动接收。',
+      tutorialSteps: [
+        { no: '01', title: '授权游戏目录', body: '在网页右上角当前相册下拉菜单中，授权当前游戏的 X6Game 文件夹。' },
+        { no: '02', title: '在游戏中框选搭配', body: '点击分享，再点搭配截图右下角的框选按钮，调整展示区域并确认。' },
+        { no: '03', title: '生成搭配码并返回', body: '点击“生成搭配码”，然后回到网页。网站会检查搭配码和游戏搭配图片的更新时间。' }
+      ],
+      tutorialNote: '只有新搭配码且游戏搭配图片的最后修改时间也已更新时才会导入。相同搭配码、图片未更新或找不到图片时会跳过并提示。',
+      tutorialImageAlt: '三张游戏截图展示框选搭配截图并生成搭配码的操作步骤。',
+      tutorialImageCaption: '游戏内框选与生成搭配码步骤图',
+      tutorialImageOpen: '打开完整操作步骤图',
+      tutorialAppLink: '打开相册工具',
       artPortrait: '暖暖游戏美照', artRatioPortrait: '建议比例 16:10 · 横幅原图',
       galleryLabel: '暖暖美照轮播', gallerySlide: (index: number) => `第 ${index} 张，共 ${gallerySlideCount} 张`,
       galleryControlsLabel: '画廊控制', galleryPrevious: '上一张美照', galleryNext: '下一张美照',
@@ -354,6 +367,19 @@ const copy = computed(() => language.value === 'zh'
       previewAssetNote: 'Real app screenshot to come', previewAssetRatio: 'Suggested source ratio: 16:10',
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER', galleryTitle: 'A little space for Nikki in your frame.',
       galleryBody: "Enjoy Nikki's beautiful photos, and let this site feel like a little travel album.",
+      tutorialKicker: 'OUTFIT CODE · AUTO UPDATE',
+      tutorialTitle: 'Set up automatic outfit-code updates in a few steps.',
+      tutorialBody: 'Authorize the current game folder once. Then create an outfit code in game and return to the website to import it.',
+      tutorialSteps: [
+        { no: '01', title: 'Authorize the game folder', body: 'Open the current album menu at the top right and grant access to the current game’s X6Game folder.' },
+        { no: '02', title: 'Select the outfit in game', body: 'Tap Share, choose the selection button at the bottom right of the outfit screenshot, adjust the frame, and confirm.' },
+        { no: '03', title: 'Generate the code and return', body: 'Tap Generate Outfit Code, then return to the website. It checks the code and the outfit image’s modified time.' }
+      ],
+      tutorialNote: 'An outfit is imported only when the code is new and the game image has a newer modified time. Existing codes, unchanged images, and missing images are skipped with a status message.',
+      tutorialImageAlt: 'Three in-game screenshots showing how to select an outfit image before generating its outfit code.',
+      tutorialImageCaption: 'In-game selection and outfit-code steps',
+      tutorialImageOpen: 'Open the full tutorial image',
+      tutorialAppLink: 'Open the album tool',
       artPortrait: 'Infinity Nikki in-game photo', artRatioPortrait: 'Suggested 16:10 landscape original',
       galleryLabel: 'Infinity Nikki photo carousel', gallerySlide: (index: number) => `Image ${index} of ${gallerySlideCount}`,
       galleryControlsLabel: 'Gallery controls', galleryPrevious: 'Previous photo', galleryNext: 'Next photo',
@@ -900,6 +926,30 @@ onBeforeUnmount(() => {
             <a class="text-link" :href="links.app" target="_blank" rel="noreferrer">{{ copy.useNow }} <ArrowUpRight :size="15" /></a>
           </div>
         </motion.div>
+      </section>
+
+      <section id="outfit-code-guide" class="tutorial-band">
+        <div class="section tutorial-inner">
+          <motion.div class="tutorial-copy" v-bind="sectionReveal">
+            <span class="eyebrow">{{ copy.tutorialKicker }}</span>
+            <h2>{{ copy.tutorialTitle }}</h2>
+            <p class="tutorial-intro">{{ copy.tutorialBody }}</p>
+            <ol class="tutorial-steps">
+              <li v-for="step in copy.tutorialSteps" :key="step.no">
+                <span class="tutorial-step-number">{{ step.no }}</span>
+                <div><h3>{{ step.title }}</h3><p>{{ step.body }}</p></div>
+              </li>
+            </ol>
+            <p class="tutorial-note"><CircleHelp :size="18" />{{ copy.tutorialNote }}</p>
+            <a class="button-primary tutorial-cta" :href="links.app" target="_blank" rel="noreferrer"><ArrowUpRight :size="18" />{{ copy.tutorialAppLink }}</a>
+          </motion.div>
+          <motion.figure class="tutorial-figure" v-bind="sectionReveal">
+            <a class="tutorial-figure-link" href="/images/auto-update-outfit-code.webp" target="_blank" rel="noreferrer" :aria-label="copy.tutorialImageOpen">
+              <img class="tutorial-image" src="/images/auto-update-outfit-code.webp" :alt="copy.tutorialImageAlt" />
+            </a>
+            <figcaption>{{ copy.tutorialImageCaption }}</figcaption>
+          </motion.figure>
+        </div>
       </section>
 
       <section id="gallery" class="gallery-band">
