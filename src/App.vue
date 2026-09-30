@@ -15,6 +15,7 @@ import {
   ExternalLink,
   FileImage,
   Heart,
+  House,
   Menu,
   Moon,
   Pause,
@@ -23,7 +24,6 @@ import {
   ShieldCheck,
   Sparkles,
   Sun,
-  Trash2,
   Upload,
   WandSparkles,
   X
@@ -33,7 +33,7 @@ import ScreenshotPreviewPlaceholder from './components/ScreenshotPreviewPlacehol
 
 type Language = 'zh' | 'en'
 type Theme = 'light' | 'dark'
-type ScreenshotKind = 'album-timeline' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'image-parameters' | 'lucky-times'
+type ScreenshotKind = 'album-timeline' | 'image-parameters' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'outfit-parts' | 'home-plan' | 'home-plan-detail' | 'lucky-times'
 type ScreenshotPreview = {
   src: string | null
   title: Record<Language, string>
@@ -76,11 +76,14 @@ const galleryAvailable = ref<Record<number, boolean>>({})
  */
 const screenshotPhotos: Record<ScreenshotKind, string> = {
   'album-timeline': assetPath(`screenshots/1-album-timeline${IMAGE_EXT}`),
-  'outfit-library': assetPath(`screenshots/2-outfit-library${IMAGE_EXT}`),
-  'outfit-editor': assetPath(`screenshots/3-outfit-editor${IMAGE_EXT}`),
-  'outfit-code': assetPath(`screenshots/4-outfit-code${IMAGE_EXT}`),
-  'image-parameters': assetPath(`screenshots/5-image-parameters${IMAGE_EXT}`),
-  'lucky-times': assetPath(`screenshots/6-lucky-times${IMAGE_EXT}`)
+  'image-parameters': assetPath(`screenshots/2-image-parameters${IMAGE_EXT}`),
+  'outfit-library': assetPath(`screenshots/3-outfit-library${IMAGE_EXT}`),
+  'outfit-editor': assetPath(`screenshots/4-outfit-editor${IMAGE_EXT}`),
+  'outfit-code': assetPath(`screenshots/5-outfit-code${IMAGE_EXT}`),
+  'outfit-parts': assetPath(`screenshots/6-outfit-parts${IMAGE_EXT}`),
+  'home-plan': assetPath(`screenshots/7-home-plan${IMAGE_EXT}`),
+  'home-plan-detail': assetPath(`screenshots/8-home-plan-detail${IMAGE_EXT}`),
+  'lucky-times': assetPath(`screenshots/9-lucky-times${IMAGE_EXT}`)
 }
 /**
  * 画廊堆叠卡片数固定为 5 —— 与原始设计一致：始终渲染 5 张叠放的卡片，
@@ -262,10 +265,13 @@ const links = {
 
 const screenshots: ScreenshotPreview[] = [
   { src: null, title: { zh: '相册时间轴', en: 'Album timeline' }, alt: { zh: '相册管理界面与照片时间轴', en: 'Album manager with a photo timeline' }, icon: CalendarDays, kind: 'album-timeline' },
+  { src: null, title: { zh: '图片参数解析', en: 'Photo parameter parser' }, alt: { zh: '图片参数解析界面素材位，等待真实截图', en: 'Photo parameter parser screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'image-parameters' },
   { src: null, title: { zh: '搭配方案', en: 'Outfit library' }, alt: { zh: '搭配码方案管理界面', en: 'Outfit code library interface' }, icon: WandSparkles, kind: 'outfit-library' },
   { src: null, title: { zh: '方案编辑', en: 'Outfit editor' }, alt: { zh: '搭配方案编辑界面', en: 'Outfit plan editor interface' }, icon: FileImage, kind: 'outfit-editor' },
   { src: null, title: { zh: '搭配码解析', en: 'Outfit code parser' }, alt: { zh: '搭配码解析界面素材位，等待真实截图', en: 'Outfit code parser screenshot slot, awaiting the real interface' }, icon: ScanSearch, kind: 'outfit-code' },
-  { src: null, title: { zh: '图片参数解析', en: 'Photo parameter parser' }, alt: { zh: '图片参数解析界面素材位，等待真实截图', en: 'Photo parameter parser screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'image-parameters' },
+  { src: null, title: { zh: '搭配码部件详情', en: 'Outfit code parts' }, alt: { zh: '搭配码部件详情界面素材位，等待真实截图', en: 'Outfit code parts screenshot slot, awaiting the real interface' }, icon: WandSparkles, kind: 'outfit-parts' },
+  { src: null, title: { zh: '家园方案', en: 'Home plan' }, alt: { zh: '家园方案界面素材位，等待真实截图', en: 'Home plan screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'home-plan' },
+  { src: null, title: { zh: '家园方案详情', en: 'Home plan details' }, alt: { zh: '家园方案详情界面素材位，等待真实截图', en: 'Home plan details screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'home-plan-detail' },
   { src: null, title: { zh: '抽卡吉时', en: 'Lucky pull times' }, alt: { zh: '抽卡吉时界面素材位，等待真实截图', en: 'Lucky pull times screenshot slot, awaiting the real interface' }, icon: Sparkles, kind: 'lucky-times' }
 ]
 
@@ -290,7 +296,7 @@ const copy = computed(() => language.value === 'zh'
       actions: '抽卡吉时参考', actionsBody: '查看娱乐向时刻表，实际出率仍以游戏概率为准。',
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: '从相册时光，到趁手的小工具。',
-      previewBody: '切换预览，浏览相册时间轴、搭配方案、搭配码解析、图片参数解析与抽卡吉时。',
+      previewBody: '切换预览，浏览相册、搭配、解析与其他实用工具。',
       shotHint: '点击缩略图切换预览，点击大图放大查看',
       previewShotLabel: '真实应用界面', previewPlaceholderLabel: '截图素材位',
       previewAssetNote: '真实应用截图待提供', previewAssetRatio: '建议原图比例 16:10',
@@ -321,10 +327,10 @@ const copy = computed(() => language.value === 'zh'
         { icon: CalendarDays, no: '01', title: '按时间，找回那一刻', body: '按年、月、日整理照片，折叠时间轴并快速跳转。用搜索找到文件名或备注，通过收藏、筛选和批量选择整理照片。大图预览支持缩放、拖动和键盘翻页。', items: ['时间轴与日期跳转', '搜索、备注和收藏', '多比例缩略图和大图预览'] },
         { icon: WandSparkles, no: '02', title: '把喜欢的搭配，也收好', body: '保存搭配图片、搭配码、备注和标签；管理待填写方案，自动接收游戏新搭配图。支持 ZIP 备份与合并导入，JPG/PNG 图片在本地转换为 WebP。', items: ['搭配码解析与复制', '标签、备注和待填写方案', 'ZIP 导入导出与自动接收'] },
         { icon: ScanSearch, no: '03', title: '读懂镜头背后的参数', body: '从照片查看拍摄时间、天气、焦距、光圈、画面调整、动作、灯光与滤镜，并读取可导入游戏的相机参数。也支持从电脑或手机临时选择原图解析，照片不会上传或加入相册。', items: ['照片相机参数解析', '原图本地临时解析', '搭配码独立解析工具'] },
-        { icon: Heart, no: '04', title: '小工具和项目动态，都在手边', body: '查看当前版本的抽卡吉时表（仅供娱乐，概率以游戏为准）、站内帮助、更新记录，并从应用内提交反馈。', items: ['抽卡吉时表', '使用帮助与版本更新', '反馈入口和开源仓库'] },
-        { icon: ShieldCheck, no: '05', title: '清理之前，先看清范围', body: '专项清理可处理低画质照片、截图、崩溃快照、运行日志和游戏内置浏览器缓存。需要授权 X6Game 文件夹，并在执行前展示清理范围。', items: ['低画质照片与截图', '崩溃记录、日志、网页缓存', '清理范围与后果说明'] },
-        { icon: Upload, no: '06', title: '导入、导出，都有章法', body: '批量导入本地图片，也可以导出整本相册或选中的照片。导出成功后可选择把源照片移入最近删除；中途取消时会保留源照片。', items: ['批量导入与进度提示', '整本或选中照片导出', '取消时保留源文件'] },
-        { icon: Trash2, no: '07', title: '删错了，还能找回来', body: '普通删除会将照片移入当前相册的 trash 文件夹，可预览、恢复或手动永久删除。恢复遇到重名文件会自动改名，不覆盖已有照片。', items: ['最近删除与恢复', '重名保护', '永久删除需要确认'] }
+        { icon: House, no: '04', title: '把家园方案，也收进相册', body: '高效管理家园码和组合码，输入方案码后自动解析方案名称、封面、码类型、版本和家具数量。支持备注、搜索、标签筛选、编辑、删除，以及家园方案的 ZIP 备份导入导出。', items: ['家园码与组合码解析', '备注、搜索和标签筛选', '家园方案 ZIP 导入导出'] },
+        { icon: Heart, no: '05', title: '小工具和项目动态，都在手边', body: '查看当前版本的抽卡吉时表（仅供娱乐，概率以游戏为准）、站内帮助、更新记录，并从应用内提交反馈。', items: ['抽卡吉时表', '使用帮助与版本更新', '反馈入口和开源仓库'] },
+        { icon: ShieldCheck, no: '06', title: '清理之前，先看清范围', body: '专项清理可处理低画质照片、截图、崩溃快照、运行日志和游戏内置浏览器缓存。需要授权 X6Game 文件夹，并在执行前展示清理范围。', items: ['低画质照片与截图', '崩溃记录、日志、网页缓存', '清理范围与后果说明'] },
+        { icon: Upload, no: '07', title: '导入、导出，都有章法', body: '批量导入本地图片，也可以导出整本相册或选中的照片。导出成功后可选择把源照片移入最近删除；中途取消时会保留源照片。', items: ['批量导入与进度提示', '整本或选中照片导出', '取消时保留源文件'] }
       ],
       startKicker: 'READY WHEN YOU ARE',
       startTitle: '从打开应用开始，把相册交还给自己。',
@@ -361,7 +367,7 @@ const copy = computed(() => language.value === 'zh'
       actions: 'Lucky pull times', actionsBody: 'Check an entertainment-only timing table; actual odds follow the game.',
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: 'From album memories to handy little tools.',
-      previewBody: 'Switch previews to explore the album timeline, outfit library, outfit code parser, photo parameters, and lucky pull times.',
+      previewBody: 'Switch previews to explore the album, outfit tools, parsers, and other handy features.',
       shotHint: 'Choose a thumbnail to switch views, then open the preview',
       previewShotLabel: 'REAL APP INTERFACE', previewPlaceholderLabel: 'SCREENSHOT SLOT',
       previewAssetNote: 'Real app screenshot to come', previewAssetRatio: 'Suggested source ratio: 16:10',
@@ -390,10 +396,10 @@ const copy = computed(() => language.value === 'zh'
         { icon: CalendarDays, no: '01', title: 'Find the moment by date', body: 'Browse photos by year, month, and day with a collapsible timeline. Search filenames or notes, filter favorites, and select items in batches. Full-size previews support zoom, pan, and keyboard navigation.', items: ['Timeline and date jump', 'Search, notes, and favorites', 'Thumbnail ratios and full-size preview'] },
         { icon: WandSparkles, no: '02', title: 'Keep your outfit ideas together', body: 'Save outfit images, codes, notes, and tags; manage pending plans and automatically receive new in-game outfit images. ZIP backups merge without replacing existing plans. JPG and PNG convert to WebP locally.', items: ['Parse and copy outfit codes', 'Tags, notes, and pending plans', 'ZIP backup and automatic intake'] },
         { icon: ScanSearch, no: '03', title: 'Read the details behind a shot', body: 'Inspect capture time, weather, focal length, aperture, image adjustments, poses, lights, and filters. You can also temporarily select an original image on desktop or phone; it is not uploaded or added to the album.', items: ['Camera parameter parsing', 'Temporary local original parsing', 'Separate outfit code parser'] },
-        { icon: Heart, no: '04', title: 'Useful extras, always close by', body: 'Check the current entertainment-only lucky pull timing table (game odds still apply), in-app help, release history, and issue feedback.', items: ['Lucky pull times', 'Help and release history', 'Feedback and open-source repository'] },
-        { icon: ShieldCheck, no: '05', title: 'Know the scope before cleanup', body: 'Special Cleanup can remove low-quality photos, screenshots, crash snapshots, runtime logs, and the game’s built-in browser cache. It requires X6Game folder access and explains the selected scope first.', items: ['Low-quality photos and screenshots', 'Crash records, logs, and web cache', 'Clear scope and impact'] },
-        { icon: Upload, no: '06', title: 'Import and export with care', body: 'Import local images in batches, then export an entire album or selected photos. After a successful export, you can move source photos to Recently Deleted. Cancelling keeps the originals.', items: ['Batch import with progress', 'Export all or selected photos', 'Source files stay when cancelled'] },
-        { icon: Trash2, no: '07', title: 'Recover a photo you removed', body: 'Regular deletes move photos to the current album’s trash folder, where you can preview, restore, or permanently delete them. Name conflicts are renamed on restore, never overwritten.', items: ['Recently Deleted and restore', 'Name conflict protection', 'Confirmation before permanent deletion'] }
+        { icon: House, no: '04', title: 'Keep home plans with your album', body: 'Manage home codes and combo codes below the outfit-code tools. Enter a plan code to parse its name, type, version, and furniture count, then add notes, tags, and an optional cover. Home plans support search, filtering, editing, deletion, and ZIP backup import/export.', items: ['Home and combo code parsing', 'Notes, search, and tag filters', 'ZIP backup import and export'] },
+        { icon: Heart, no: '05', title: 'Useful extras, always close by', body: 'Check the current entertainment-only lucky pull timing table (game odds still apply), in-app help, release history, and issue feedback.', items: ['Lucky pull times', 'Help and release history', 'Feedback and open-source repository'] },
+        { icon: ShieldCheck, no: '06', title: 'Know the scope before cleanup', body: 'Special Cleanup can remove low-quality photos, screenshots, crash snapshots, runtime logs, and the game’s built-in browser cache. It requires X6Game folder access and explains the selected scope first.', items: ['Low-quality photos and screenshots', 'Crash records, logs, and web cache', 'Clear scope and impact'] },
+        { icon: Upload, no: '07', title: 'Import and export with care', body: 'Import local images in batches, then export an entire album or selected photos. After a successful export, you can move source photos to Recently Deleted. Cancelling keeps the originals.', items: ['Batch import with progress', 'Export all or selected photos', 'Source files stay when cancelled'] }
       ],
       startKicker: 'READY WHEN YOU ARE', startTitle: 'Open the app and make your album yours.',
       startBody: 'On desktop, use a Chromium-based browser and choose the folder where your photos are stored. Album management is unavailable on mobile, but parameter and outfit-code parsing still works.',

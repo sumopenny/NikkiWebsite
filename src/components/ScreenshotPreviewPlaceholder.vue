@@ -4,7 +4,7 @@ import type { Component } from 'vue'
 defineProps<{
   title: string
   icon: Component
-  kind: 'album-timeline' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'image-parameters' | 'lucky-times'
+  kind: 'album-timeline' | 'image-parameters' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'outfit-parts' | 'home-plan' | 'home-plan-detail' | 'lucky-times'
   slotLabel: string
   note: string
   ratio: string
