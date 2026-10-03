@@ -33,7 +33,7 @@ import ScreenshotPreviewPlaceholder from './components/ScreenshotPreviewPlacehol
 
 type Language = 'zh' | 'en'
 type Theme = 'light' | 'dark'
-type ScreenshotKind = 'album-timeline' | 'image-parameters' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'outfit-parts' | 'home-plan' | 'home-plan-detail' | 'lucky-times'
+type ScreenshotKind = 'album-timeline' | 'album-actions' | 'image-parameters' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'outfit-parts' | 'home-plan' | 'home-plan-detail' | 'lucky-times'
 type ScreenshotPreview = {
   src: string | null
   title: Record<Language, string>
@@ -72,18 +72,19 @@ const galleryPhotoSlots: string[] = Array.from({ length: GALLERY_SLIDE_LIMIT }, 
 const galleryAvailable = ref<Record<number, boolean>>({})
 /**
  * 应用界面截图（16:10 原图），统一放在 public/images/screenshots/ 下。
- * 命名规则：`序号-英文短名 + IMAGE_EXT`，序号与下方 screenshots 数组（页面展示顺序）一一对应。
+ * 命名规则：英文短名 + IMAGE_EXT，不在文件名中编码页面展示顺序。
  */
 const screenshotPhotos: Record<ScreenshotKind, string> = {
-  'album-timeline': assetPath(`screenshots/1-album-timeline${IMAGE_EXT}`),
-  'image-parameters': assetPath(`screenshots/2-image-parameters${IMAGE_EXT}`),
-  'outfit-library': assetPath(`screenshots/3-outfit-library${IMAGE_EXT}`),
-  'outfit-editor': assetPath(`screenshots/4-outfit-editor${IMAGE_EXT}`),
-  'outfit-code': assetPath(`screenshots/5-outfit-code${IMAGE_EXT}`),
-  'outfit-parts': assetPath(`screenshots/6-outfit-parts${IMAGE_EXT}`),
-  'home-plan': assetPath(`screenshots/7-home-plan${IMAGE_EXT}`),
-  'home-plan-detail': assetPath(`screenshots/8-home-plan-detail${IMAGE_EXT}`),
-  'lucky-times': assetPath(`screenshots/9-lucky-times${IMAGE_EXT}`)
+  'album-timeline': assetPath(`screenshots/album-timeline${IMAGE_EXT}`),
+  'album-actions': assetPath(`screenshots/album-actions${IMAGE_EXT}`),
+  'image-parameters': assetPath(`screenshots/image-parameters${IMAGE_EXT}`),
+  'outfit-library': assetPath(`screenshots/outfit-library${IMAGE_EXT}`),
+  'outfit-editor': assetPath(`screenshots/outfit-editor${IMAGE_EXT}`),
+  'outfit-code': assetPath(`screenshots/outfit-code${IMAGE_EXT}`),
+  'outfit-parts': assetPath(`screenshots/outfit-parts${IMAGE_EXT}`),
+  'home-plan': assetPath(`screenshots/home-plan${IMAGE_EXT}`),
+  'home-plan-detail': assetPath(`screenshots/home-plan-detail${IMAGE_EXT}`),
+  'lucky-times': assetPath(`screenshots/lucky-times${IMAGE_EXT}`)
 }
 /**
  * 画廊堆叠卡片数固定为 5 —— 与原始设计一致：始终渲染 5 张叠放的卡片，
@@ -265,6 +266,7 @@ const links = {
 
 const screenshots: ScreenshotPreview[] = [
   { src: null, title: { zh: '相册时间轴', en: 'Album timeline' }, alt: { zh: '相册管理界面与照片时间轴', en: 'Album manager with a photo timeline' }, icon: CalendarDays, kind: 'album-timeline' },
+  { src: null, title: { zh: '相册动作轴', en: 'Album activity timeline' }, alt: { zh: '相册管理界面与照片动作时间轴', en: 'Album manager with a photo activity timeline' }, icon: Sparkles, kind: 'album-actions' },
   { src: null, title: { zh: '图片参数解析', en: 'Photo parameter parser' }, alt: { zh: '图片参数解析界面素材位，等待真实截图', en: 'Photo parameter parser screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'image-parameters' },
   { src: null, title: { zh: '搭配方案', en: 'Outfit library' }, alt: { zh: '搭配码方案管理界面', en: 'Outfit code library interface' }, icon: WandSparkles, kind: 'outfit-library' },
   { src: null, title: { zh: '方案编辑', en: 'Outfit editor' }, alt: { zh: '搭配方案编辑界面', en: 'Outfit plan editor interface' }, icon: FileImage, kind: 'outfit-editor' },

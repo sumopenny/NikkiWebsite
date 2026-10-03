@@ -35,7 +35,7 @@ npm run preview
 - `public/images/` 是首屏与画廊美照的投放目录，图片统一为 **`.webp`**，文件名规则在 `src/App.vue` 顶部（后缀由 `IMAGE_EXT` 常量统一控制）：首屏轮播浅色模式读 `1.webp` ~ `10.webp`、深色模式读 `11.webp` ~ `20.webp`（各最多 10 张，每 3 秒切换并循环），画廊为 `gallery-1.webp` ~ `gallery-10.webp`（16:10）。**张数由目录内容决定**——启动时逐个探测文件，缺号只跳过那一张、不中断整轮探测，所以有几张就播几张，不会去请求不存在的文件或凑满上限。画廊 10 个卡位各自独立探测，缺号会显示占位骨架。原始 jpeg/jpg 已归档到 `public/images/originals/`（不参与页面加载），需要重新生成 WebP 时跑 `scripts/convert_webp.py`。命名与规格详见 `public/images/README.md`。
 - `public/screenshots/` 内是从主项目复制的界面截图，用于展示真实应用。
 - 自动更新搭配码教程图为 `public/images/auto-update-outfit-code.webp`，从界面预览区后展示，图片保持原始纵向比例。
-- 预览区中的搭配码解析、图片参数解析和抽卡吉时目前是截图素材位；把截图按 `public/images/screenshots/` 下的约定文件名放入即可自动替换，建议原图比例 16:10。
+- 预览区按“相册时间轴 → 相册动作轴 → 其他工具”展示界面截图；把截图按 `public/images/screenshots/` 下不带数字前缀的约定文件名放入即可自动替换，建议原图比例 16:10。
 - 页面中标有 `ASSET SLOT` 的区域是待替换素材位，当前没有放入游戏美术。替换前请确认素材有权用于公开展示。
 - 替换时保留对应容器比例，并为图片提供描述性替代文本。
 

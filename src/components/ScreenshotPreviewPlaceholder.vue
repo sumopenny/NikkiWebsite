@@ -4,7 +4,7 @@ import type { Component } from 'vue'
 defineProps<{
   title: string
   icon: Component
-  kind: 'album-timeline' | 'image-parameters' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'outfit-parts' | 'home-plan' | 'home-plan-detail' | 'lucky-times'
+  kind: 'album-timeline' | 'album-actions' | 'image-parameters' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'outfit-parts' | 'home-plan' | 'home-plan-detail' | 'lucky-times'
   slotLabel: string
   note: string
   ratio: string
@@ -61,6 +61,11 @@ defineProps<{
 .preview-placeholder--album-timeline {
   --slot-accent: var(--accent-deep);
   --slot-tint: var(--accent-soft);
+}
+
+.preview-placeholder--album-actions {
+  --slot-accent: var(--mint);
+  --slot-tint: var(--mint-soft);
 }
 
 .preview-placeholder--outfit-library {

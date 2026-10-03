@@ -75,23 +75,24 @@ D:\py\python.exe scripts\convert_webp.py
 
 ## 应用界面截图（「从相册时光，到趁手的小工具。」）
 
-9 张截图，**全部放在 `public/images/screenshots/`**（注意不是 `public/screenshots/`）。
+10 张截图，**全部放在 `public/images/screenshots/`**（注意不是 `public/screenshots/`）。
 
-命名规则统一为 **`序号-英文短名.webp`**，序号就是它们在页面上从左到右的展示顺序：
+命名规则统一为 **`英文短名.webp`**，文件名不带数字前缀；页面展示顺序由 `src/App.vue` 中的数组决定：
 
 | 文件名 | 对应界面 | 建议规格 |
 | --- | --- | --- |
-| `public/images/screenshots/1-album-timeline.webp` | 相册时间轴 | 16:10 原图，宽度 1600px+ |
-| `public/images/screenshots/2-image-parameters.webp` | 图片参数解析 | 同上 |
-| `public/images/screenshots/3-outfit-library.webp` | 搭配方案 | 同上 |
-| `public/images/screenshots/4-outfit-editor.webp` | 方案编辑 | 同上 |
-| `public/images/screenshots/5-outfit-code.webp` | 搭配码解析 | 同上 |
-| `public/images/screenshots/6-outfit-parts.webp` | 搭配码部件详情 | 同上 |
-| `public/images/screenshots/7-home-plan.webp` | 家园方案 | 同上 |
-| `public/images/screenshots/8-home-plan-detail.webp` | 家园方案详情 | 同上 |
-| `public/images/screenshots/9-lucky-times.webp` | 抽卡吉时 | 同上 |
+| `public/images/screenshots/album-timeline.webp` | 相册时间轴 | 16:10 原图，宽度 1600px+ |
+| `public/images/screenshots/album-actions.webp` | 相册动作轴 | 同上 |
+| `public/images/screenshots/image-parameters.webp` | 图片参数解析 | 同上 |
+| `public/images/screenshots/outfit-library.webp` | 搭配方案 | 同上 |
+| `public/images/screenshots/outfit-editor.webp` | 方案编辑 | 同上 |
+| `public/images/screenshots/outfit-code.webp` | 搭配码解析 | 同上 |
+| `public/images/screenshots/outfit-parts.webp` | 搭配码部件详情 | 同上 |
+| `public/images/screenshots/home-plan.webp` | 家园方案 | 同上 |
+| `public/images/screenshots/home-plan-detail.webp` | 家园方案详情 | 同上 |
+| `public/images/screenshots/lucky-times.webp` | 抽卡吉时 | 同上 |
 
-9 张各自独立探测：放了的显示真实截图，没放的显示占位骨架 —— **可以只放其中任意几张，缺号不影响其他张**。
+10 张各自独立探测：放了的显示真实截图，没放的显示占位骨架。
 
 **显示比例：16:10**（所有屏幕尺寸统一）。主预览区用 `object-fit: cover` + `object-position: top left` 呈现，即**按 16:10 裁剪、优先保留左上角**；所以按 16:10 导出的原图不会被裁，点开灯箱则完整显示不裁剪。
 
