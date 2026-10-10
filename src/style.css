@@ -15,9 +15,9 @@
   --line: #eedbd9;
   --line-strong: #e4c8ca;
   --accent: #cf6486;
-  --accent-deep: #a84266;
+  --accent-deep: #a8424b;
   --accent-button: #e97d92;  /* 品牌图标主色（浅樱花粉）。白字对比度仅 2.69:1（低于 AA 4.5）—— 用户知情后的刻意取舍，别擅自把底色改深或换文字色 */
-  --accent-soft: #ffe3eb;
+  --accent-soft: #fedcdd;
   --mint: #43876f;
   --mint-soft: #e1f1e8;
   --sun: #a97419;
@@ -313,6 +313,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .steps-list h3 { margin: 0 0 5px; font-size: 15px; font-weight: 650; }
 .steps-list p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
 .steps-list li > svg { color: var(--muted); }
+.guide-routes li { padding-block: 18px; }
 
 .faq-section { padding: 94px 0 100px; border-top: 1px solid var(--line); background: var(--surface-soft); }
 .faq-inner { display: grid; grid-template-columns: .7fr 1.3fr; gap: 75px; }

@@ -1,47 +1,30 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import type { Component } from 'vue'
 import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
   BookOpen,
-  CalendarDays,
-  Check,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
   ExternalLink,
   FileImage,
-  Heart,
-  House,
   Menu,
   Moon,
   Pause,
   Play,
   ScanSearch,
-  ShieldCheck,
   Sparkles,
   Sun,
-  Upload,
-  WandSparkles,
   X
 } from 'lucide-vue-next'
-import { MotionConfig, motion, useMotionValue, useScroll, useSpring, useTransform } from 'motion-v'
-import ScreenshotPreviewPlaceholder from './components/ScreenshotPreviewPlaceholder.vue'
+import { MotionConfig, motion, useScroll, useTransform } from 'motion-v'
+import FeatureShowcase from './components/FeatureShowcase.vue'
 
 type Language = 'zh' | 'en'
 type Theme = 'light' | 'dark'
-type ScreenshotKind = 'album-timeline' | 'album-actions' | 'image-parameters' | 'outfit-library' | 'outfit-editor' | 'outfit-code' | 'outfit-parts' | 'home-plan' | 'home-plan-detail' | 'lucky-times'
-type ScreenshotPreview = {
-  src: string | null
-  title: Record<Language, string>
-  alt: Record<Language, string>
-  icon: Component
-  kind?: ScreenshotKind
-}
-
 /**
  * 素材统一扩展名 —— **换图片格式只改这一行**。
  * 首屏 / 画廊 / 截图在 public/images 下都是同名文件，只有后缀不同，
@@ -71,22 +54,6 @@ const galleryPhotoSlots: string[] = Array.from({ length: GALLERY_SLIDE_LIMIT }, 
 /** 画廊探测结果：第 N 个卡位是否有真实照片。 */
 const galleryAvailable = ref<Record<number, boolean>>({})
 /**
- * 应用界面截图（16:10 原图），统一放在 public/images/screenshots/ 下。
- * 命名规则：英文短名 + IMAGE_EXT，不在文件名中编码页面展示顺序。
- */
-const screenshotPhotos: Record<ScreenshotKind, string> = {
-  'album-timeline': assetPath(`screenshots/album-timeline${IMAGE_EXT}`),
-  'album-actions': assetPath(`screenshots/album-actions${IMAGE_EXT}`),
-  'image-parameters': assetPath(`screenshots/image-parameters${IMAGE_EXT}`),
-  'outfit-library': assetPath(`screenshots/outfit-library${IMAGE_EXT}`),
-  'outfit-editor': assetPath(`screenshots/outfit-editor${IMAGE_EXT}`),
-  'outfit-code': assetPath(`screenshots/outfit-code${IMAGE_EXT}`),
-  'outfit-parts': assetPath(`screenshots/outfit-parts${IMAGE_EXT}`),
-  'home-plan': assetPath(`screenshots/home-plan${IMAGE_EXT}`),
-  'home-plan-detail': assetPath(`screenshots/home-plan-detail${IMAGE_EXT}`),
-  'lucky-times': assetPath(`screenshots/lucky-times${IMAGE_EXT}`)
-}
-/**
  * 画廊堆叠卡片数固定为 5 —— 与原始设计一致：始终渲染 5 张叠放的卡片，
  * 靠 activeGalleryIndex 做堆叠转场与循环。这里不要跟着实际照片数变化，
  * 否则照片少/没照片时堆叠动画就没了。
@@ -107,7 +74,6 @@ const GALLERY_SLIDE_INTERVAL = 2000
 const language = ref<Language>('zh')
 const theme = ref<Theme>('light')
 const mobileMenuOpen = ref(false)
-const activeShotIndex = ref(0)
 const activeGalleryIndex = ref(0)
 /**
  * 画廊自动播放唯一的暂停开关：由播放/暂停按钮切换。
@@ -117,16 +83,13 @@ const galleryAutoplayRequested = ref(true)
 const pageVisible = ref(true)
 const pageReady = ref(false)
 const prefersReducedMotion = ref(false)
-const lightboxOpen = ref(false)
-const activeSection = ref('')
+const navigationSections = ['top', 'screenshots', 'start', 'faq'] as const
+const activeSection = ref<string>('top')
 const activeHeroSlide = ref(0)
 const heroInView = ref(true)
 const heroSection = ref<HTMLElement | null>(null)
 const heroRegion = ref<HTMLElement | null>(null)
-const screenshotTabList = ref<HTMLElement | null>(null)
-const lightboxTrigger = ref<HTMLButtonElement | null>(null)
-const lightboxCloseButton = ref<HTMLButtonElement | null>(null)
-let sectionObserver: IntersectionObserver | undefined
+let sectionUpdateFrame: number | undefined
 let heroObserver: IntersectionObserver | undefined
 let galleryTimer: number | undefined
 let heroTimer: number | undefined
@@ -135,12 +98,6 @@ let motionPreferenceQuery: MediaQueryList | undefined
 const { scrollYProgress: pageScrollProgress } = useScroll()
 const heroScroll = useScroll({ target: heroSection, offset: ['start start', 'end start'] })
 const heroParallax = useTransform(heroScroll.scrollYProgress, [0, 1], [0, 22])
-const pointerX = useMotionValue(0)
-const pointerY = useMotionValue(0)
-const smoothPointerX = useSpring(pointerX, { stiffness: 180, damping: 24, mass: 0.55 })
-const smoothPointerY = useSpring(pointerY, { stiffness: 180, damping: 24, mass: 0.55 })
-const screenshotRotateX = useTransform(smoothPointerY, [-1, 1], [2.2, -2.2])
-const screenshotRotateY = useTransform(smoothPointerX, [-1, 1], [-2.2, 2.2])
 const heroArtMotionStyle = computed(() => ({ y: prefersReducedMotion.value ? 0 : heroParallax }))
 /**
  * 探测结果：实际存在的前 N 张。key 是「第几张」（从 1 开始），
@@ -264,30 +221,12 @@ const links = {
   giteeReadme: 'https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager/blob/master/README.md'
 }
 
-const screenshots: ScreenshotPreview[] = [
-  { src: null, title: { zh: '相册时间轴', en: 'Album timeline' }, alt: { zh: '相册管理界面与照片时间轴', en: 'Album manager with a photo timeline' }, icon: CalendarDays, kind: 'album-timeline' },
-  { src: null, title: { zh: '相册动作轴', en: 'Album activity timeline' }, alt: { zh: '相册管理界面与照片动作时间轴', en: 'Album manager with a photo activity timeline' }, icon: Sparkles, kind: 'album-actions' },
-  { src: null, title: { zh: '图片参数解析', en: 'Photo parameter parser' }, alt: { zh: '图片参数解析界面素材位，等待真实截图', en: 'Photo parameter parser screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'image-parameters' },
-  { src: null, title: { zh: '搭配方案', en: 'Outfit library' }, alt: { zh: '搭配码方案管理界面', en: 'Outfit code library interface' }, icon: WandSparkles, kind: 'outfit-library' },
-  { src: null, title: { zh: '方案编辑', en: 'Outfit editor' }, alt: { zh: '搭配方案编辑界面', en: 'Outfit plan editor interface' }, icon: FileImage, kind: 'outfit-editor' },
-  { src: null, title: { zh: '搭配码解析', en: 'Outfit code parser' }, alt: { zh: '搭配码解析界面素材位，等待真实截图', en: 'Outfit code parser screenshot slot, awaiting the real interface' }, icon: ScanSearch, kind: 'outfit-code' },
-  { src: null, title: { zh: '搭配码部件详情', en: 'Outfit code parts' }, alt: { zh: '搭配码部件详情界面素材位，等待真实截图', en: 'Outfit code parts screenshot slot, awaiting the real interface' }, icon: WandSparkles, kind: 'outfit-parts' },
-  { src: null, title: { zh: '家园方案', en: 'Home plan' }, alt: { zh: '家园方案界面素材位，等待真实截图', en: 'Home plan screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'home-plan' },
-  { src: null, title: { zh: '家园方案详情', en: 'Home plan details' }, alt: { zh: '家园方案详情界面素材位，等待真实截图', en: 'Home plan details screenshot slot, awaiting the real interface' }, icon: FileImage, kind: 'home-plan-detail' },
-  { src: null, title: { zh: '抽卡吉时', en: 'Lucky pull times' }, alt: { zh: '抽卡吉时界面素材位，等待真实截图', en: 'Lucky pull times screenshot slot, awaiting the real interface' }, icon: Sparkles, kind: 'lucky-times' }
-]
-
-/** 素材位对应的真实截图路径；留空（null）时继续显示占位骨架。 */
-function screenshotPhoto(shot: ScreenshotPreview): string | null {
-  return shot.kind ? screenshotPhotos[shot.kind] : null
-}
-
 const copy = computed(() => language.value === 'zh'
   ? {
-      nav: ['界面预览', '功能', '快速开始', '常见问题'],
+      nav: ['首页', '功能预览', '使用指南', '常见问题'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
-      title: '把每一段心动，\n好好收进相册。',
-      heroBody: '为 无限暖暖 玩家打造的本地相册与搭配管理工具。浏览、收藏、解析和整理游戏照片，让珍贵瞬间留在自己的设备里。',
+      title: '把每一段心动，\n好好珍藏。',
+      heroBody: '为 无限暖暖 玩家打造的实用工具集。整理照片、珍藏搭配与家园灵感、解析参数、记录共鸣，让珍贵瞬间留在自己的设备里。',
       useNow: '打开网站',
       viewFeatures: '看看它能做什么',
       heroNote: '免费使用 · 无需注册 · 无需下载',
@@ -298,7 +237,7 @@ const copy = computed(() => language.value === 'zh'
       actions: '抽卡吉时参考', actionsBody: '查看娱乐向时刻表，实际出率仍以游戏概率为准。',
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: '从相册时光，到趁手的小工具。',
-      previewBody: '切换预览，浏览相册、搭配、解析与其他实用工具。',
+      previewBody: '整理照片、珍藏搭配与家园灵感，也把每一次共鸣好好记录。',
       shotHint: '点击缩略图切换预览，点击大图放大查看',
       previewShotLabel: '真实应用界面', previewPlaceholderLabel: '截图素材位',
       previewAssetNote: '真实应用截图待提供', previewAssetRatio: '建议原图比例 16:10',
@@ -322,33 +261,24 @@ const copy = computed(() => language.value === 'zh'
       galleryLabel: '暖暖美照轮播', gallerySlide: (index: number) => `第 ${index} 张，共 ${gallerySlideCount} 张`,
       galleryControlsLabel: '画廊控制', galleryPrevious: '上一张美照', galleryNext: '下一张美照',
       galleryPause: '暂停自动播放', galleryPlay: '继续自动播放', galleryMotionOff: '系统减少动态效果已关闭自动播放',
-      featureKicker: 'MADE FOR YOUR ALBUM',
-      featureTitle: '从整理照片，到珍藏灵感。',
-      featureIntro: '常用能力一目了然，打开主应用即可开始整理。',
-      featureGroups: [
-        { icon: CalendarDays, no: '01', title: '按时间，找回那一刻', body: '按年、月、日整理照片，折叠时间轴并快速跳转。用搜索找到文件名或备注，通过收藏、筛选和批量选择整理照片。大图预览支持缩放、拖动和键盘翻页。', items: ['时间轴与日期跳转', '搜索、备注和收藏', '多比例缩略图和大图预览'] },
-        { icon: WandSparkles, no: '02', title: '把喜欢的搭配，也收好', body: '保存搭配图片、搭配码、备注和标签；管理待填写方案，自动接收游戏新搭配图。支持 ZIP 备份与合并导入，JPG/PNG 图片在本地转换为 WebP。', items: ['搭配码解析与复制', '标签、备注和待填写方案', 'ZIP 导入导出与自动接收'] },
-        { icon: ScanSearch, no: '03', title: '读懂镜头背后的参数', body: '从照片查看拍摄时间、天气、焦距、光圈、画面调整、动作、灯光与滤镜，并读取可导入游戏的相机参数。也支持从电脑或手机临时选择原图解析，照片不会上传或加入相册。', items: ['照片相机参数解析', '原图本地临时解析', '搭配码独立解析工具'] },
-        { icon: House, no: '04', title: '把家园方案，也收进相册', body: '高效管理家园码和组合码，输入方案码后自动解析方案名称、封面、码类型、版本和家具数量。支持备注、搜索、标签筛选、编辑、删除，以及家园方案的 ZIP 备份导入导出。', items: ['家园码与组合码解析', '备注、搜索和标签筛选', '家园方案 ZIP 导入导出'] },
-        { icon: Heart, no: '05', title: '小工具和项目动态，都在手边', body: '查看当前版本的抽卡吉时表（仅供娱乐，概率以游戏为准）、站内帮助、更新记录，并从应用内提交反馈。', items: ['抽卡吉时表', '使用帮助与版本更新', '反馈入口和开源仓库'] },
-        { icon: ShieldCheck, no: '06', title: '清理之前，先看清范围', body: '专项清理可处理低画质照片、截图、崩溃快照、运行日志和游戏内置浏览器缓存。需要授权 X6Game 文件夹，并在执行前展示清理范围。', items: ['低画质照片与截图', '崩溃记录、日志、网页缓存', '清理范围与后果说明'] },
-        { icon: Upload, no: '07', title: '导入、导出，都有章法', body: '批量导入本地图片，也可以导出整本相册或选中的照片。导出成功后可选择把源照片移入最近删除；中途取消时会保留源照片。', items: ['批量导入与进度提示', '整本或选中照片导出', '取消时保留源文件'] }
-      ],
-      startKicker: 'READY WHEN YOU ARE',
-      startTitle: '从打开应用开始，把相册交还给自己。',
-      startBody: '电脑端使用 Chromium 内核的浏览器，选择存放照片的目录即可开始。手机端无法使用相册管理功能，但可以使用参数与搭配码解析工具。',
+      startKicker: 'USAGE GUIDE',
+      startTitle: '找到你的上手方式。',
+      startBody: '相册与方案管理需要电脑端目录授权；独立解析和共鸣记录可以直接从工具集进入。选择适合你的入口开始。',
       startSteps: [
-        { no: '01', title: '打开应用', body: '访问在线网站，使用 Chromium 内核的浏览器。' },
-        { no: '02', title: '选择照片目录', body: '选择存放照片的目录，不要选择磁盘根目录或游戏安装上级目录。' },
-        { no: '03', title: '开始整理', body: '浏览、收藏、解析或管理搭配方案；离开时可随时撤销网站权限。' }
+        { no: '01', title: '整理相册、搭配与家园', body: '在支持目录授权的电脑浏览器中打开工具集，选择照片目录，再进入相册、搭配或家园方案。游戏搭配自动接收的设置见下方教程。' },
+        { no: '02', title: '解析原图或参数码', body: '在工具菜单打开解析入口，选择本地游戏原图，或输入相机参数、搭配码。无需先授权相册目录，电脑和手机都可使用独立解析。' },
+        { no: '03', title: '查看和备份共鸣记录', body: '进入共鸣记录，按应用内引导从美鸭梨奇想手账或 JSON 备份导入。记录保存在当前浏览器，定期导出 JSON 可便于迁移与备份。' }
       ],
       questionsKicker: 'GOOD TO KNOW',
       questionsTitle: '开始前，几个常见问题。',
       questions: [
-        { q: '照片会上传到服务器吗？', a: '不会。照片浏览与相机参数解析在本地浏览器/WASM 中处理，所选原图也只会临时读取，不上传、不加入相册。' },
-        { q: '为什么浏览器没有显示相册？', a: '请使用 Chromium 内核的浏览器，并选择存放照片的目录。浏览器授权失效时，需要重新选择文件夹。' },
-        { q: '删除的照片能恢复吗？', a: '相册普通删除会移入 trash，可在最近删除恢复。最近删除的永久删除和专项清理会直接修改电脑文件，无法恢复。' },
-        { q: '手机上可以使用吗？', a: '手机端无法使用相册管理功能，但可以使用参数与搭配码解析工具。' },
+        { q: '照片会上传到服务器吗？', a: '照片浏览与相机参数解析在本地浏览器中完成。临时选择的游戏原图只用于本次解析，不会上传，也不会自动加入相册。' },
+        { q: '哪些功能需要授权文件夹？', a: '相册整理、搭配与家园方案管理需要选择本地相册目录；游戏搭配自动接收与专项清理还需要相应的 X6Game 目录授权。独立照片与代码解析、共鸣记录无需先授权相册目录。' },
+        { q: '为什么无法授权文件夹，或相册没有显示？', a: '请使用支持目录授权的电脑端 Chromium 浏览器，选择实际存放照片的文件夹；授权失效时重新选择。若浏览器拒绝访问系统或受保护目录，可先将需要整理的照片复制到普通文件夹后授权。不要选择磁盘根目录。' },
+        { q: '手机上可以使用哪些功能？', a: '手机可使用独立照片参数与搭配码解析。相册、搭配和家园方案的目录管理，以及专项清理，需要支持目录授权的电脑浏览器。' },
+        { q: '共鸣记录保存在哪里，如何备份？', a: '记录保存在当前浏览器中。更换浏览器、设备或清除网站数据前，请先导出 JSON 备份，再通过导入恢复记录；请妥善保留备份文件。' },
+        { q: '清除网站数据会删除电脑里的照片吗？', a: '不会删除电脑里的照片，但会影响浏览器中保存的记录、缓存和授权。清除前请备份共鸣记录；之后可能需要重新授权相册目录。这与最近删除的永久删除、专项清理不同。' },
+        { q: '删除的照片能恢复吗？', a: '相册普通删除会移入最近删除，可从中恢复。最近删除中的永久删除、清空全部和专项清理会直接修改电脑文件，无法通过最近删除恢复。' },
         { q: '项目是官方应用吗？', a: '不是。这是独立的开源社区工具，与《无限暖暖》官方及其发行方没有隶属、授权或背书关系。' }
       ],
       readme: '阅读完整 README', report: '反馈问题-小红书',
@@ -358,10 +288,10 @@ const copy = computed(() => language.value === 'zh'
       imageModalLabel: '应用界面大图预览', appUnavailableNote: '若主站暂时无法访问，可试用备用站点。'
     }
   : {
-      nav: ['Screenshots', 'Features', 'Get started', 'FAQ'],
+      nav: ['Home', 'Features', 'Usage guide', 'FAQ'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: 'Keep every lovely\nmoment close.',
-      heroBody: 'A local-first photo and outfit manager for Infinity Nikki. Browse, save, parse, and organize your in-game memories right on your device.',
+      heroBody: 'A practical toolkit for Infinity Nikki players. Organize photos, save outfit and home ideas, parse parameters, and track resonance records, keeping precious moments on your own device.',
       useNow: 'Open the app', viewFeatures: 'Explore the features', heroNote: 'Free to use · No sign-up · No download',
       artHero: 'Infinity Nikki hero artwork', artRatioWide: 'Carousel · light 1-10 / dark 11-20 · 16:9 landscape · 2400px+ wide',
       local: 'Photos stay on device', localBody: 'Browsing, parsing, and organizing happen in your browser.',
@@ -369,7 +299,7 @@ const copy = computed(() => language.value === 'zh'
       actions: 'Lucky pull times', actionsBody: 'Check an entertainment-only timing table; actual odds follow the game.',
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: 'From album memories to handy little tools.',
-      previewBody: 'Switch previews to explore the album, outfit tools, parsers, and other handy features.',
+      previewBody: 'Organize photos, save outfit and home ideas, and keep track of each resonance.',
       shotHint: 'Choose a thumbnail to switch views, then open the preview',
       previewShotLabel: 'REAL APP INTERFACE', previewPlaceholderLabel: 'SCREENSHOT SLOT',
       previewAssetNote: 'Real app screenshot to come', previewAssetRatio: 'Suggested source ratio: 16:10',
@@ -392,30 +322,22 @@ const copy = computed(() => language.value === 'zh'
       galleryLabel: 'Infinity Nikki photo carousel', gallerySlide: (index: number) => `Image ${index} of ${gallerySlideCount}`,
       galleryControlsLabel: 'Gallery controls', galleryPrevious: 'Previous photo', galleryNext: 'Next photo',
       galleryPause: 'Pause autoplay', galleryPlay: 'Resume autoplay', galleryMotionOff: 'Autoplay is off because reduced motion is enabled',
-      featureKicker: 'MADE FOR YOUR ALBUM', featureTitle: 'From organizing photos to keeping inspiration.',
-      featureIntro: 'Everyday tools at a glance. Open the app when you are ready.',
-      featureGroups: [
-        { icon: CalendarDays, no: '01', title: 'Find the moment by date', body: 'Browse photos by year, month, and day with a collapsible timeline. Search filenames or notes, filter favorites, and select items in batches. Full-size previews support zoom, pan, and keyboard navigation.', items: ['Timeline and date jump', 'Search, notes, and favorites', 'Thumbnail ratios and full-size preview'] },
-        { icon: WandSparkles, no: '02', title: 'Keep your outfit ideas together', body: 'Save outfit images, codes, notes, and tags; manage pending plans and automatically receive new in-game outfit images. ZIP backups merge without replacing existing plans. JPG and PNG convert to WebP locally.', items: ['Parse and copy outfit codes', 'Tags, notes, and pending plans', 'ZIP backup and automatic intake'] },
-        { icon: ScanSearch, no: '03', title: 'Read the details behind a shot', body: 'Inspect capture time, weather, focal length, aperture, image adjustments, poses, lights, and filters. You can also temporarily select an original image on desktop or phone; it is not uploaded or added to the album.', items: ['Camera parameter parsing', 'Temporary local original parsing', 'Separate outfit code parser'] },
-        { icon: House, no: '04', title: 'Keep home plans with your album', body: 'Manage home codes and combo codes below the outfit-code tools. Enter a plan code to parse its name, type, version, and furniture count, then add notes, tags, and an optional cover. Home plans support search, filtering, editing, deletion, and ZIP backup import/export.', items: ['Home and combo code parsing', 'Notes, search, and tag filters', 'ZIP backup import and export'] },
-        { icon: Heart, no: '05', title: 'Useful extras, always close by', body: 'Check the current entertainment-only lucky pull timing table (game odds still apply), in-app help, release history, and issue feedback.', items: ['Lucky pull times', 'Help and release history', 'Feedback and open-source repository'] },
-        { icon: ShieldCheck, no: '06', title: 'Know the scope before cleanup', body: 'Special Cleanup can remove low-quality photos, screenshots, crash snapshots, runtime logs, and the game’s built-in browser cache. It requires X6Game folder access and explains the selected scope first.', items: ['Low-quality photos and screenshots', 'Crash records, logs, and web cache', 'Clear scope and impact'] },
-        { icon: Upload, no: '07', title: 'Import and export with care', body: 'Import local images in batches, then export an entire album or selected photos. After a successful export, you can move source photos to Recently Deleted. Cancelling keeps the originals.', items: ['Batch import with progress', 'Export all or selected photos', 'Source files stay when cancelled'] }
-      ],
-      startKicker: 'READY WHEN YOU ARE', startTitle: 'Open the app and make your album yours.',
-      startBody: 'On desktop, use a Chromium-based browser and choose the folder where your photos are stored. Album management is unavailable on mobile, but parameter and outfit-code parsing still works.',
+      startKicker: 'USAGE GUIDE', startTitle: 'Find the right way to get started.',
+      startBody: 'Album and scheme management need desktop folder access. Open the standalone parsers or resonance records directly in the toolkit. Choose the route that fits your task.',
       startSteps: [
-        { no: '01', title: 'Open the app', body: 'Visit the website in a Chromium-based browser.' },
-        { no: '02', title: 'Choose your photo folder', body: 'Select the folder where your photos are stored. Do not select a drive root or parent game folder.' },
-        { no: '03', title: 'Start organizing', body: 'Browse, save, parse, or manage outfits. You can revoke the website’s folder access at any time.' }
+        { no: '01', title: 'Organize albums, outfits and home schemes', body: 'Open the toolkit in a desktop browser with folder access, choose your photo folder, then enter the album or scheme views. Follow the tutorial below to set up automatic outfit imports.' },
+        { no: '02', title: 'Parse an original photo or a code', body: 'Open the parser from the tools menu. Select an original game photo, or enter camera parameters or an outfit code. Standalone parsing works on desktop and mobile without album access.' },
+        { no: '03', title: 'Review and back up resonance records', body: 'Open resonance records and follow the in-app instructions to import from Pear-Pal Whim-Log or a JSON backup. Records stay in the current browser. Export JSON regularly for backups and migration.' }
       ],
       questionsKicker: 'GOOD TO KNOW', questionsTitle: 'A few things before you begin.',
       questions: [
-        { q: 'Are my photos uploaded?', a: 'No. Photo browsing and camera parameter parsing run locally in the browser/WASM. An original you select is read temporarily; it is not uploaded or added to the album.' },
-        { q: 'Why is my album empty?', a: 'Use a Chromium-based browser and select the folder where your photos are stored. If access expires, choose the folder again.' },
-        { q: 'Can I restore deleted photos?', a: 'Regular album deletes move to trash and can be restored. Permanent deletion in Recently Deleted and Special Cleanup directly affect local files and cannot be undone.' },
-        { q: 'Can I use it on a phone?', a: 'Album management is unavailable on mobile, but parameter and outfit-code parsing tools can be used there.' },
+        { q: 'Are my photos uploaded?', a: 'Photo browsing and camera parameter parsing run in your local browser. An original selected for temporary parsing is not uploaded or automatically added to the album.' },
+        { q: 'Which features need folder access?', a: 'Album, outfit and home scheme management need a local album folder. Automatic game outfit imports and Special Cleanup also need the relevant X6Game access. Standalone photo and code parsing and resonance records do not need album access first.' },
+        { q: 'Why is folder access denied or my album missing?', a: 'Use a desktop Chromium browser with folder access and select the folder that contains your photos. Choose it again if access expires. If the browser blocks a system or protected folder, copy the photos you want to organize into an ordinary folder and authorize that folder. Do not select a drive root.' },
+        { q: 'Which features work on a phone?', a: 'Standalone photo parameter and outfit-code parsing work on mobile. Folder-based album, outfit and home scheme management and Special Cleanup require a desktop browser with folder access.' },
+        { q: 'Where are resonance records saved, and how do I back them up?', a: 'Records are saved in the current browser. Export a JSON backup before changing browsers or devices or clearing site data, then import it to restore your records. Keep your backup file safe.' },
+        { q: 'Does clearing site data delete photos on my computer?', a: 'It does not delete your computer photos, but it affects records, caches and permissions saved in the browser. Back up resonance records first and be ready to authorize your album again. Permanent deletion and Special Cleanup are separate file operations.' },
+        { q: 'Can I restore deleted photos?', a: 'Regular album deletion moves photos to Recently Deleted, where they can be restored. Permanent deletion, clearing Recently Deleted and Special Cleanup directly affect local files and cannot be restored from Recently Deleted.' },
         { q: 'Is this an official app?', a: 'No. This is an independent open-source community tool. It is not affiliated with, authorized, or endorsed by the Infinity Nikki team or publisher.' }
       ],
       readme: 'Read the full README', report: 'Feedback on Xiaohongshu',
@@ -425,7 +347,6 @@ const copy = computed(() => language.value === 'zh'
       imageModalLabel: 'Full-size app interface preview', appUnavailableNote: 'If the main site is temporarily unavailable, try the alternate site.'
     })
 
-const currentScreenshot = computed(() => screenshots[activeShotIndex.value]!)
 
 function getMotionElement<T extends HTMLElement>(instance: unknown): T | null {
   const candidate = instance instanceof HTMLElement
@@ -467,10 +388,6 @@ const galleryStackStep = computed(() => {
 
 function setHeroRegion(instance: unknown): void {
   heroRegion.value = getMotionElement<HTMLDivElement>(instance)
-}
-
-function setLightboxTrigger(instance: unknown): void {
-  lightboxTrigger.value = getMotionElement<HTMLButtonElement>(instance)
 }
 
 function setTheme(value: Theme): void {
@@ -692,38 +609,8 @@ function handleGalleryKeydown(event: KeyboardEvent): void {
   }
 }
 
-function handleScreenshotKeydown(event: KeyboardEvent, index: number): void {
-  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
-  event.preventDefault()
-  const direction = event.key === 'ArrowRight' ? 1 : -1
-  activeShotIndex.value = (index + direction + screenshots.length) % screenshots.length
-  nextTick(() => screenshotTabList.value
-    ?.querySelector<HTMLButtonElement>(`[data-shot-index="${activeShotIndex.value}"]`)
-    ?.focus())
-}
-
-function handleScreenshotPointerMove(event: PointerEvent): void {
-  if (event.pointerType !== 'mouse' || prefersReducedMotion.value) return
-  const bounds = event.currentTarget instanceof HTMLElement
-    ? event.currentTarget.getBoundingClientRect()
-    : undefined
-  if (!bounds?.width || !bounds.height) return
-  pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2)
-  pointerY.set(((event.clientY - bounds.top) / bounds.height - 0.5) * 2)
-}
-
-function resetScreenshotTilt(): void {
-  pointerX.set(0)
-  pointerY.set(0)
-}
-
-function closeLightbox(): void {
-  lightboxOpen.value = false
-}
-
 function handleMotionPreferenceChange(event: MediaQueryListEvent): void {
   prefersReducedMotion.value = event.matches
-  if (event.matches) resetScreenshotTilt()
 }
 
 function handleVisibilityChange(): void {
@@ -750,22 +637,27 @@ function restartGalleryTimer(): void {
 
 watch(galleryCanAutoplay, () => { restartGalleryTimer() })
 
-watch(lightboxOpen, async (open) => {
-  await nextTick()
-  if (open) lightboxCloseButton.value?.focus()
-  else lightboxTrigger.value?.focus()
-})
+function updateActiveSection(): void {
+  const activationLine = (document.querySelector('.site-header')?.getBoundingClientRect().bottom ?? 72) + 48
+  let current: string = 'top'
+  for (const id of navigationSections) {
+    const section = document.getElementById(id)
+    if (section && section.getBoundingClientRect().top <= activationLine) current = id
+  }
+  if (window.scrollY > 0 && window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2) current = 'faq'
+  activeSection.value = current
+}
+
+function requestSectionUpdate(): void {
+  if (sectionUpdateFrame !== undefined) return
+  sectionUpdateFrame = window.requestAnimationFrame(() => {
+    sectionUpdateFrame = undefined
+    updateActiveSection()
+  })
+}
 
 function handleKeydown(event: KeyboardEvent): void {
-  if (lightboxOpen.value && event.key === 'Tab') {
-    event.preventDefault()
-    lightboxCloseButton.value?.focus()
-    return
-  }
-  if (event.key === 'Escape') {
-    if (lightboxOpen.value) closeLightbox()
-    mobileMenuOpen.value = false
-  }
+  if (event.key === 'Escape') mobileMenuOpen.value = false
 }
 
 onMounted(async () => {
@@ -785,19 +677,14 @@ onMounted(async () => {
   pageVisible.value = document.visibilityState === 'visible'
   document.addEventListener('visibilitychange', handleVisibilityChange)
   window.addEventListener('keydown', handleKeydown)
+  window.addEventListener('scroll', requestSectionUpdate, { passive: true })
+  window.addEventListener('resize', requestSectionUpdate)
+  window.addEventListener('hashchange', requestSectionUpdate)
   // 当前主题这一组先探测，另一组等切到该主题时再探测，避免无谓请求。
   probeHeroSlides(theme.value)
   probeGallerySlides()
   await nextTick()
   if ('IntersectionObserver' in window) {
-    sectionObserver = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue
-        const id = (entry.target as HTMLElement).id
-        if (['features', 'screenshots', 'start', 'faq'].includes(id)) activeSection.value = id
-      }
-    }, { threshold: 0.1, rootMargin: '-18% 0px -60% 0px' })
-    document.querySelectorAll('#features, #screenshots, #start, #faq').forEach((element) => sectionObserver?.observe(element))
     if (heroRegion.value) {
       heroObserver = new IntersectionObserver(([entry]) => {
         heroInView.value = entry?.isIntersecting ?? false
@@ -806,6 +693,7 @@ onMounted(async () => {
     }
   }
   pageReady.value = true
+  requestSectionUpdate()
 })
 
 /**
@@ -825,7 +713,10 @@ onBeforeUnmount(() => {
   if (heroTimer !== undefined) window.clearInterval(heroTimer)
   motionPreferenceQuery?.removeEventListener('change', handleMotionPreferenceChange)
   document.removeEventListener('visibilitychange', handleVisibilityChange)
-  sectionObserver?.disconnect()
+  window.removeEventListener('scroll', requestSectionUpdate)
+  window.removeEventListener('resize', requestSectionUpdate)
+  window.removeEventListener('hashchange', requestSectionUpdate)
+  if (sectionUpdateFrame !== undefined) window.cancelAnimationFrame(sectionUpdateFrame)
   heroObserver?.disconnect()
   artGalleryObserver.disconnect()
 })
@@ -842,10 +733,7 @@ onBeforeUnmount(() => {
         <span class="brand-name">{{ language === 'zh' ? '暖立方' : 'NikkiCube' }}<small>{{ language === 'zh' ? '无限暖暖工具集' : 'Infinity Nikki Toolkit' }}</small></span>
       </a>
       <nav class="desktop-nav" :aria-label="language === 'zh' ? '页面导航' : 'Page navigation'">
-        <a href="#screenshots" :class="{ active: activeSection === 'screenshots' }">{{ copy.nav[0] }}</a>
-        <a href="#features" :class="{ active: activeSection === 'features' }">{{ copy.nav[1] }}</a>
-        <a href="#start" :class="{ active: activeSection === 'start' }">{{ copy.nav[2] }}</a>
-        <a href="#faq" :class="{ active: activeSection === 'faq' }">{{ copy.nav[3] }}</a>
+        <a v-for="(id, index) in navigationSections" :key="id" :href="`#${id}`" :class="{ active: activeSection === id }" :aria-current="activeSection === id ? 'location' : undefined">{{ copy.nav[index] }}</a>
       </nav>
       <div class="header-tools">
         <div class="language-switch" role="group" :aria-label="copy.languageLabel">
@@ -863,10 +751,7 @@ onBeforeUnmount(() => {
       </div>
       <Transition name="mobile-nav">
         <nav v-if="mobileMenuOpen" id="mobile-navigation" class="mobile-nav" :aria-label="language === 'zh' ? '页面导航' : 'Page navigation'">
-          <a href="#screenshots" :class="{ active: activeSection === 'screenshots' }" @click="closeMenu">{{ copy.nav[0] }} <ArrowRight :size="16" /></a>
-          <a href="#features" :class="{ active: activeSection === 'features' }" @click="closeMenu">{{ copy.nav[1] }} <ArrowRight :size="16" /></a>
-          <a href="#start" :class="{ active: activeSection === 'start' }" @click="closeMenu">{{ copy.nav[2] }} <ArrowRight :size="16" /></a>
-          <a href="#faq" :class="{ active: activeSection === 'faq' }" @click="closeMenu">{{ copy.nav[3] }} <ArrowRight :size="16" /></a>
+          <a v-for="(id, index) in navigationSections" :key="id" :href="`#${id}`" :class="{ active: activeSection === id }" :aria-current="activeSection === id ? 'location' : undefined" @click="closeMenu">{{ copy.nav[index] }} <ArrowRight :size="16" /></a>
         </nav>
       </Transition>
     </header>
@@ -892,7 +777,7 @@ onBeforeUnmount(() => {
           <motion.p class="hero-description" :variants="heroItemVariants">{{ copy.heroBody }}</motion.p>
           <motion.div class="hero-actions" :variants="heroItemVariants">
             <a class="button-primary" :href="links.app" target="_blank" rel="noreferrer"><ArrowUpRight :size="18" />{{ copy.useNow }}</a>
-            <a class="button-secondary" href="#features">{{ copy.viewFeatures }} <ArrowDown :size="16" /></a>
+            <a class="button-secondary" href="#screenshots">{{ copy.viewFeatures }} <ArrowDown :size="16" /></a>
           </motion.div>
           <motion.p class="hero-note" :variants="heroItemVariants"><Sparkles :size="14" /> {{ copy.heroNote }}</motion.p>
         </motion.div>
@@ -911,29 +796,17 @@ onBeforeUnmount(() => {
           <div><span class="eyebrow">{{ copy.previewKicker }}</span><h2>{{ copy.previewTitle }}</h2></div>
           <p>{{ copy.previewBody }}</p>
         </motion.div>
-        <motion.div class="showcase-layout" v-bind="sectionReveal">
-          <motion.button :ref="setLightboxTrigger" class="showcase-image-button" :aria-label="`${copy.openImage}: ${currentScreenshot.title[language]}`" :style="{ rotateX: screenshotRotateX, rotateY: screenshotRotateY, transformPerspective: 1200 }" :while-hover="{ scale: 1.008 }" @pointermove="handleScreenshotPointerMove" @pointerleave="resetScreenshotTilt" @click="lightboxOpen = true">
-            <Transition name="screenshot-switch" mode="out-in">
-              <img v-if="currentScreenshot.src" :key="currentScreenshot.src" :src="currentScreenshot.src" :alt="currentScreenshot.alt[language]" />
-              <ScreenshotPreviewPlaceholder v-else :key="currentScreenshot.title.en" :title="currentScreenshot.title[language]" :icon="currentScreenshot.icon" :kind="currentScreenshot.kind ?? 'outfit-code'" :slot-label="copy.previewPlaceholderLabel" :note="copy.previewAssetNote" :ratio="copy.previewAssetRatio" :src="screenshotPhoto(currentScreenshot)" :alt="currentScreenshot.alt[language]" />
-            </Transition>
-            <span class="image-open-hint"><ArrowUpRight :size="17" /> {{ copy.openImage }}</span>
-          </motion.button>
-          <div class="showcase-side">
-            <span class="eyebrow">{{ currentScreenshot.src || currentScreenshot.kind ? copy.previewShotLabel : copy.previewPlaceholderLabel }}</span>
-            <Transition name="screenshot-caption" mode="out-in"><h3 :key="currentScreenshot.title.en">{{ currentScreenshot.title[language] }}</h3></Transition>
-            <p>{{ copy.shotHint }}</p>
-            <div ref="screenshotTabList" class="shot-list" role="tablist" :aria-label="language === 'zh' ? '选择界面截图' : 'Choose a screenshot'">
-              <button v-for="(shot, index) in screenshots" :key="shot.title.en" type="button" :data-shot-index="index" role="tab" :tabindex="activeShotIndex === index ? 0 : -1" :aria-selected="activeShotIndex === index" :class="{ active: activeShotIndex === index }" @click="activeShotIndex = index" @keydown="handleScreenshotKeydown($event, index)">
-                <img v-if="shot.src || screenshotPhoto(shot)" :src="shot.src || screenshotPhoto(shot) || undefined" :alt="shot.alt[language]" />
-                <span v-else class="shot-art-thumb" aria-hidden="true"><component :is="shot.icon" :size="18" /></span>
-                <span class="shot-label">{{ shot.title[language] }}</span>
-                <ArrowRight :size="16" />
-              </button>
-            </div>
-            <a class="text-link" :href="links.app" target="_blank" rel="noreferrer">{{ copy.useNow }} <ArrowUpRight :size="15" /></a>
-          </div>
+        <motion.div v-bind="sectionReveal">
+          <FeatureShowcase :language="language" :reduced-motion="prefersReducedMotion" :app-url="links.app" />
         </motion.div>
+      </section>
+
+      <div id="start" class="usage-guide" role="region" :aria-label="copy.nav[2]">
+      <section class="section start-section" aria-labelledby="usage-guide-title">
+        <motion.div class="start-header" v-bind="sectionReveal"><span class="eyebrow">{{ copy.startKicker }}</span><h2 id="usage-guide-title">{{ copy.startTitle }}</h2><p>{{ copy.startBody }}</p><a class="button-primary" :href="links.app" target="_blank" rel="noreferrer"><ArrowUpRight :size="18" />{{ copy.useNow }}</a><small>{{ copy.appUnavailableNote }} <a :href="links.fallback" target="_blank" rel="noreferrer">{{ language === 'zh' ? '备用网站' : 'Alternate site' }}</a></small></motion.div>
+        <motion.ul class="steps-list guide-routes" :initial="'hidden'" :while-in-view="'visible'" :variants="featureGridVariants" :in-view-options="{ once: true, amount: 0.25 }">
+          <motion.li v-for="step in copy.startSteps" :key="step.no" :variants="featureCardVariants"><span>{{ step.no }}</span><div><h3>{{ step.title }}</h3><p>{{ step.body }}</p></div><ArrowRight :size="18" /></motion.li>
+        </motion.ul>
       </section>
 
       <section id="outfit-code-guide" class="tutorial-band">
@@ -959,6 +832,8 @@ onBeforeUnmount(() => {
           </motion.figure>
         </div>
       </section>
+
+      </div>
 
       <section id="gallery" class="gallery-band">
         <div class="section gallery-inner">
@@ -992,28 +867,6 @@ onBeforeUnmount(() => {
         </div>
       </section>
 
-      <section id="features" class="section feature-section">
-        <motion.div class="section-heading" v-bind="sectionReveal">
-          <div><span class="eyebrow">{{ copy.featureKicker }}</span><h2>{{ copy.featureTitle }}</h2></div>
-          <p>{{ copy.featureIntro }}</p>
-        </motion.div>
-        <motion.div class="feature-grid" :initial="'hidden'" :while-in-view="'visible'" :variants="featureGridVariants" :in-view-options="{ once: true, amount: 0.12 }">
-          <motion.article v-for="(feature, index) in copy.featureGroups" :key="feature.no" class="feature-item" :class="{ 'feature-item-lead': index < 2, 'feature-item-wide': index > 4 }" :variants="featureCardVariants">
-            <div class="feature-top"><span class="feature-number">{{ feature.no }} / 07</span><component :is="feature.icon" :size="21" stroke-width="1.6" /></div>
-            <h3>{{ feature.title }}</h3>
-            <p>{{ feature.body }}</p>
-            <ul><li v-for="item in feature.items" :key="item"><Check :size="14" />{{ item }}</li></ul>
-          </motion.article>
-        </motion.div>
-      </section>
-
-      <section id="start" class="section start-section">
-        <motion.div class="start-header" v-bind="sectionReveal"><span class="eyebrow">{{ copy.startKicker }}</span><h2>{{ copy.startTitle }}</h2><p>{{ copy.startBody }}</p><a class="button-primary" :href="links.app" target="_blank" rel="noreferrer"><ArrowUpRight :size="18" />{{ copy.useNow }}</a><small>{{ copy.appUnavailableNote }} <a :href="links.fallback" target="_blank" rel="noreferrer">{{ language === 'zh' ? '备用网站' : 'Alternate site' }}</a></small></motion.div>
-        <motion.ol class="steps-list" :initial="'hidden'" :while-in-view="'visible'" :variants="featureGridVariants" :in-view-options="{ once: true, amount: 0.25 }">
-          <motion.li v-for="step in copy.startSteps" :key="step.no" :variants="featureCardVariants"><span>{{ step.no }}</span><div><h3>{{ step.title }}</h3><p>{{ step.body }}</p></div><ArrowRight :size="18" /></motion.li>
-        </motion.ol>
-      </section>
-
       <section id="faq" class="faq-section">
         <div class="section faq-inner">
           <motion.div class="faq-heading" v-bind="sectionReveal"><span class="eyebrow">{{ copy.questionsKicker }}</span><h2>{{ copy.questionsTitle }}</h2><p><CircleHelp :size="17" /> {{ language === 'zh' ? '遇到问题？' : 'Need more help?' }} <a :href="links.feedback" target="_blank" rel="noreferrer">{{ copy.report }}</a></p></motion.div>
@@ -1033,13 +886,6 @@ onBeforeUnmount(() => {
       <div class="footer-bottom"><span>© {{ new Date().getFullYear() }} NikkiCube</span><span>{{ copy.disclaimer }}</span><div class="footer-links"><a :href="links.github" target="_blank" rel="noreferrer">GitHub <ExternalLink :size="13" /></a><a :href="links.gitee" target="_blank" rel="noreferrer">Gitee <ExternalLink :size="13" /></a><a :href="links.app" target="_blank" rel="noreferrer">{{ language === 'zh' ? '访问' : 'Visit app' }} <ExternalLink :size="13" /></a><a :href="language === 'zh' ? links.githubReadme : links.giteeReadme" target="_blank" rel="noreferrer"><BookOpen :size="13" /> README</a></div></div>
     </footer>
 
-    <Transition name="lightbox">
-      <div v-if="lightboxOpen" class="lightbox" role="dialog" aria-modal="true" :aria-label="copy.imageModalLabel" @click.self="closeLightbox">
-        <button ref="lightboxCloseButton" class="icon-button lightbox-close" :aria-label="copy.closeImage" @click="closeLightbox"><X :size="21" /></button>
-        <img v-if="currentScreenshot.src" :src="currentScreenshot.src" :alt="currentScreenshot.alt[language]" />
-        <ScreenshotPreviewPlaceholder v-else :title="currentScreenshot.title[language]" :icon="currentScreenshot.icon" :kind="currentScreenshot.kind ?? 'outfit-code'" :slot-label="copy.previewPlaceholderLabel" :note="copy.previewAssetNote" :ratio="copy.previewAssetRatio" :src="screenshotPhoto(currentScreenshot)" :alt="currentScreenshot.alt[language]" />
-      </div>
-    </Transition>
   </div>
   </MotionConfig>
 </template>
