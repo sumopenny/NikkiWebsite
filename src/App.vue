@@ -186,25 +186,26 @@ const galleryCanAutoplay = computed(() => pageReady.value
 const galleryAutoplayActive = galleryCanAutoplay
 
 const sectionReveal = {
-  initial: { opacity: 0, y: 20 },
+  // 静态正文从首帧即可阅读，保留滚动位移但不以透明状态等待脚本。
+  initial: { opacity: 1, y: 20 },
   whileInView: { opacity: 1, y: 0 },
   inViewOptions: { once: true, amount: 0.14 },
   transition: { duration: 0.68, ease: [0.22, 1, 0.36, 1] }
 } as const
 const heroVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 1, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.72, ease: [0.22, 1, 0.36, 1], delayChildren: 0.08, staggerChildren: 0.08 } }
 }
 const heroItemVariants = {
-  hidden: { opacity: 0, y: 12 },
+  hidden: { opacity: 1, y: 12 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }
 }
 const featureGridVariants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: { opacity: 1, transition: { staggerChildren: 0.075, delayChildren: 0.06 } }
 }
 const featureCardVariants = {
-  hidden: { opacity: 0, y: 18 },
+  hidden: { opacity: 1, y: 18 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.58, ease: [0.22, 1, 0.36, 1] } }
 }
 
@@ -226,7 +227,7 @@ const copy = computed(() => language.value === 'zh'
       nav: ['首页', '功能预览', '使用指南', '常见问题'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: '把每一段心动，\n好好珍藏。',
-      heroBody: '为 无限暖暖 玩家打造的实用工具集。整理照片、珍藏搭配与家园灵感、解析参数、记录共鸣，让珍贵瞬间留在自己的设备里。',
+      heroBody: '暖立方（Nikki³）是为无限暖暖玩家打造的实用工具集。支持无限暖暖相册管理、搭配码解析、家园方案管理、相机参数收藏与共鸣记录统计，让珍贵瞬间留在自己的设备里。',
       useNow: '打开网站',
       viewFeatures: '看看它能做什么',
       heroNote: '免费使用 · 无需注册 · 无需下载',
@@ -276,7 +277,7 @@ const copy = computed(() => language.value === 'zh'
         { q: '哪些功能需要授权文件夹？', a: '相册整理、搭配与家园方案管理需要选择本地相册目录；游戏搭配自动接收与专项清理还需要相应的 X6Game 目录授权。独立照片与代码解析、共鸣记录无需先授权相册目录。' },
         { q: '为什么无法授权文件夹，或相册没有显示？', a: '请使用支持目录授权的电脑端 Chromium 浏览器，选择实际存放照片的文件夹；授权失效时重新选择。若浏览器拒绝访问系统或受保护目录，可先将需要整理的照片复制到普通文件夹后授权。不要选择磁盘根目录。' },
         { q: '手机上可以使用哪些功能？', a: '手机可使用独立照片参数与搭配码解析。相册、搭配和家园方案的目录管理，以及专项清理，需要支持目录授权的电脑浏览器。' },
-        { q: '共鸣记录保存在哪里，如何备份？', a: '记录保存在当前浏览器中。更换浏览器、设备或清除网站数据前，请先导出 JSON 备份，再通过导入恢复记录；请妥善保留备份文件。' },
+        { q: '无限暖暖共鸣记录保存在哪里，如何备份？', a: '记录保存在当前浏览器中。更换浏览器、设备或清除网站数据前，请先导出 JSON 备份，再通过导入恢复记录；请妥善保留备份文件。' },
         { q: '清除网站数据会删除电脑里的照片吗？', a: '不会删除电脑里的照片，但会影响浏览器中保存的记录、缓存和授权。清除前请备份共鸣记录；之后可能需要重新授权相册目录。这与最近删除的永久删除、专项清理不同。' },
         { q: '删除的照片能恢复吗？', a: '相册普通删除会移入最近删除，可从中恢复。最近删除中的永久删除、清空全部和专项清理会直接修改电脑文件，无法通过最近删除恢复。' },
         { q: '项目是官方应用吗？', a: '不是。这是独立的开源社区工具，与《无限暖暖》官方及其发行方没有隶属、授权或背书关系。' }
@@ -291,7 +292,7 @@ const copy = computed(() => language.value === 'zh'
       nav: ['Home', 'Features', 'Usage guide', 'FAQ'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: 'Keep every lovely\nmoment close.',
-      heroBody: 'A practical toolkit for Infinity Nikki players. Organize photos, save outfit and home ideas, parse parameters, and track resonance records, keeping precious moments on your own device.',
+      heroBody: 'NikkiCube (Nikki³) is a practical toolkit for Infinity Nikki players. Manage photo albums, parse outfit codes, save home plans and camera presets, and track resonance records, keeping precious moments on your own device.',
       useNow: 'Open the app', viewFeatures: 'Explore the features', heroNote: 'Free to use · No sign-up · No download',
       artHero: 'Infinity Nikki hero artwork', artRatioWide: 'Carousel · light 1-10 / dark 11-20 · 16:9 landscape · 2400px+ wide',
       local: 'Photos stay on device', localBody: 'Browsing, parsing, and organizing happen in your browser.',
@@ -404,10 +405,10 @@ function setLanguage(value: Language): void {
   language.value = value
   document.documentElement.lang = value === 'zh' ? 'zh-CN' : 'en'
   // 标签页标题中英文统一，不再随语言切换
-  document.title = 'Nikki³官网-为每一张心动留个位置'
+  document.title = '暖立方（Nikki³）｜无限暖暖工具集'
   document.querySelector('meta[name="description"]')?.setAttribute('content', value === 'zh'
-    ? '为《无限暖暖》玩家打造的本地相册与搭配管理工具。整理、收藏、解析和清理游戏照片，文件留在自己的设备中。'
-    : 'A local-first photo and outfit manager for Infinity Nikki. Organize, save, parse, and clean up game photos on your own device.')
+    ? '暖立方（Nikki³）是无限暖暖玩家工具集，提供无限暖暖相册管理、搭配码解析、家园方案管理、相机参数收藏与共鸣记录统计。查看功能介绍、使用指南并进入在线工具。'
+    : 'NikkiCube (Nikki³) is an Infinity Nikki toolkit for photo albums, outfit codes, home plans, camera presets and resonance records. Explore features, guides and the online app.')
   try { localStorage.setItem('nikki-website-language', value) } catch { /* Language still applies for this session. */ }
   mobileMenuOpen.value = false
 }
@@ -700,11 +701,13 @@ onMounted(async () => {
  * 监听 .art-gallery 的尺寸变化，同步堆叠位移的基准宽度。
  * 窗口缩放、断点切换都会触发，保证位移占比始终一致。
  */
-const artGalleryObserver = new ResizeObserver(() => { syncArtGalleryWidth() })
+let artGalleryObserver: ResizeObserver | undefined
 
 onMounted(() => {
+  // 构建时没有浏览器尺寸 API，挂载后才建立观察器。
+  artGalleryObserver = new ResizeObserver(() => { syncArtGalleryWidth() })
   if (artGalleryEl) artGalleryObserver.observe(artGalleryEl)
-  else nextTick(() => { if (artGalleryEl) artGalleryObserver.observe(artGalleryEl) })
+  else nextTick(() => { if (artGalleryEl) artGalleryObserver?.observe(artGalleryEl) })
 })
 
 onBeforeUnmount(() => {
@@ -718,7 +721,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('hashchange', requestSectionUpdate)
   if (sectionUpdateFrame !== undefined) window.cancelAnimationFrame(sectionUpdateFrame)
   heroObserver?.disconnect()
-  artGalleryObserver.disconnect()
+  artGalleryObserver?.disconnect()
 })
 </script>
 

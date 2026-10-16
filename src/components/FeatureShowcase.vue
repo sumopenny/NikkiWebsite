@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ArrowUpRight, Check, ChevronDown, House, Images, ScanSearch, Shirt, Sparkles, X } from 'lucide-vue-next'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion-v'
 import { showcaseCategories, showcaseSupport, showcaseUi, type CategoryId, type Language } from '../data/showcase'
@@ -14,6 +14,15 @@ const viewNumber = computed(() => category.value.views.indexOf(view.value) + 1)
 const imageState = ref<'loading' | 'ready' | 'failed'>('loading')
 const imageReady = computed(() => !!view.value.image && imageState.value === 'ready')
 const dialog = ref<HTMLDialogElement | null>(null)
+const previewImage = ref<HTMLImageElement | null>(null)
+// 弹窗不参与静态正文；接管完成后再挂载到 body，避免 Teleport 水合错位。
+const mounted = ref(false)
+onMounted(() => {
+  mounted.value = true
+  // 预渲染图片可能在事件绑定前已下载完成，补读状态以恢复放大入口。
+  const image = previewImage.value
+  if (image?.complete) imageState.value = image.naturalWidth > 0 ? 'ready' : 'failed'
+})
 const closeButton = ref<HTMLButtonElement | null>(null)
 let trigger: HTMLButtonElement | null = null
 let previousOverflow: string | null = null
@@ -88,7 +97,7 @@ onBeforeUnmount(() => { dialog.value?.close(); restoreDialog() })
         <!-- Keep the original image shell, 16:10 crop, hover tilt and screenshot transition. -->
         <motion.button v-if="view.image && imageState !== 'failed'" type="button" class="showcase-image-button" :aria-label="`${showcaseUi.openImage[language]}: ${view.caption[language]}`" :aria-disabled="!imageReady" :style="{ rotateX, rotateY, transformPerspective: 1200 }" :while-hover="reducedMotion ? undefined : { scale: 1.008 }" @pointermove="movePointer" @pointerleave="resetTilt" @click="openImage">
           <Transition name="screenshot-switch" mode="out-in">
-            <img :key="view.id" :data-view-id="view.id" :src="view.image" :alt="view.alt[language]" decoding="async" @load="imageLoaded" @error="failImage" />
+            <img ref="previewImage" :key="view.id" :data-view-id="view.id" :src="view.image" :alt="view.alt[language]" decoding="async" @load="imageLoaded" @error="failImage" />
           </Transition>
           <span v-if="imageReady" class="image-open-hint"><ArrowUpRight :size="17" /> {{ showcaseUi.openImage[language] }}</span>
         </motion.button>
@@ -121,7 +130,7 @@ onBeforeUnmount(() => { dialog.value?.close(); restoreDialog() })
       <div class="showcase-support-grid"><div v-for="item in showcaseSupport.items" :key="item.title.en"><h4>{{ item.title[language] }}</h4><p>{{ item.body[language] }}</p></div></div>
       <p class="showcase-cloud-status">{{ showcaseSupport.cloudStatus[language] }}</p>
     </details>
-    <Teleport to="body">
+    <Teleport v-if="mounted" to="body">
       <dialog ref="dialog" class="lightbox showcase-dialog" :aria-label="showcaseUi.dialogLabel[language]" @click.self="closeImage" @close="restoreDialog" @keydown.tab.prevent="closeButton?.focus()">
         <button ref="closeButton" type="button" class="icon-button lightbox-close" :aria-label="showcaseUi.closeImage[language]" @click="closeImage"><X :size="21" /></button>
         <img v-if="view.image" :data-view-id="view.id" :src="view.image" :alt="view.alt[language]" @error="failImage" />

@@ -30,6 +30,14 @@ Create a separate Cloudflare Pages project connected to this website repository 
 
 The included `wrangler.toml` declares the Pages output directory. This is a static single-page site and does not need D1, secrets, or an API proxy. Bind a domain in the Cloudflare Pages project after deployment.
 
+## Search indexing
+
+The canonical website is `https://nikki3.pages.dev/`; the online toolkit remains at `https://infinity-nikki-album-manager.pages.dev/`. The title and copy use the brand 暖立方 (Nikki³) and the actual Infinity Nikki album management and resonance record features.
+
+After type checking and client bundling, `npm run build` prerenders the Chinese homepage from the same Vue components. Deploy `dist` as before; no server or new dependency is required. The initial HTML includes the introduction, default feature preview, usage guide and FAQ. Hydration preserves language, theme, category selection and screenshot previews. Text is visible initially: entrance movement remains, but text no longer starts fully transparent. Carousels and other interactive animations remain. Saved language preferences are restored after hydration. Prerender failures stop the build; temporary modules stay in the ignored `.verify/prerender/` directory and are not deployed.
+
+The homepage has a self-referencing canonical; `public/robots.txt` references `public/sitemap.xml`, which lists only the homepage. Update `index.html` and both files when changing the website domain. Crawling is allowed without manual submission, but indexing and rankings are not guaranteed; public links to the website help discovery. After deployment, check that page source contains the introduction, `/robots.txt` and `/sitemap.xml` serve the correct content, and the site is accessible in mainland China. This project does not change the toolkit's canonical.
+
 ## Assets
 
 - All site imagery is served as `.webp` from `public/images/` — hero and gallery photos at the root, app screenshots under `screenshots/`. To retarget the format, change the single `IMAGE_EXT` constant at the top of `src/App.vue`.

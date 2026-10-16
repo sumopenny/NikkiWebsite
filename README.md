@@ -30,6 +30,14 @@ npm run preview
 
 本项目的 `wrangler.toml` 声明了 Pages 输出目录。官网为静态单页，不需要配置 D1、Secrets 或应用 API 代理。部署后可在 Cloudflare Pages 项目中绑定独立域名。
 
+## 搜索收录
+
+官网主网址为 `https://nikki3.pages.dev/`，在线工具仍为 `https://infinity-nikki-album-manager.pages.dev/`。首页标题与介绍使用“暖立方（Nikki³）”“无限暖暖相册管理”“无限暖暖共鸣记录”等真实品牌与功能名称。
+
+`npm run build` 在类型检查和前端打包后，使用同一套 Vue 组件预渲染中文首页；发布目录仍为 `dist`，无需服务器或新增依赖。原始 HTML 包含介绍、默认功能预览、使用指南与常见问题，浏览器接管后保留语言、主题、分类切换和截图预览。正文初始可见，入场保留位移、取消从全透明开始；轮播和其他交互动效保留。已保存的语言偏好在接管后恢复。预渲染失败会终止构建，临时模块位于忽略的 `.verify/prerender/`，不会发布。
+
+首页声明自身 canonical；`public/robots.txt` 引用仅列首页的 `public/sitemap.xml`。更换官网域名时同步更新 `index.html` 和这两个文件。无需主动提交也允许抓取，但收录和排名不作保证；公开项目中的官网链接有助于发现页面。部署后确认首页源代码含介绍、`/robots.txt` 与 `/sitemap.xml` 返回正确内容，并检查国内访问情况。此项目不会修改工具站的 canonical。
+
 ## 素材
 
 - `public/images/` 是首屏与画廊美照的投放目录，图片统一为 **`.webp`**，文件名规则在 `src/App.vue` 顶部（后缀由 `IMAGE_EXT` 常量统一控制）：首屏轮播浅色模式读 `1.webp` ~ `10.webp`、深色模式读 `11.webp` ~ `20.webp`（各最多 10 张，每 3 秒切换并循环），画廊为 `gallery-1.webp` ~ `gallery-10.webp`（16:10）。**张数由目录内容决定**——启动时逐个探测文件，缺号只跳过那一张、不中断整轮探测，所以有几张就播几张，不会去请求不存在的文件或凑满上限。画廊 10 个卡位各自独立探测，缺号会显示占位骨架。原始 jpeg/jpg 已归档到 `public/images/originals/`（不参与页面加载），需要重新生成 WebP 时跑 `scripts/convert_webp.py`。命名与规格详见 `public/images/README.md`。
