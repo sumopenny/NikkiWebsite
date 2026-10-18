@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { ArrowUpRight, Check, ChevronDown, House, Images, ScanSearch, Shirt, Sparkles, X } from 'lucide-vue-next'
+import { imageSource, imageSrcset, setImageRequest } from '../imageAssets'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion-v'
 import { showcaseCategories, showcaseSupport, showcaseUi, type CategoryId, type Language } from '../data/showcase'
 
-const props = defineProps<{ language: Language; reducedMotion: boolean; appUrl: string }>()
+const props = defineProps<{ language: Language; reducedMotion: boolean; appUrl: string; preloadReady: boolean }>()
 const categoryIcons = { album: Images, outfit: Shirt, home: House, resonance: Sparkles, tools: ScanSearch }
 const activeCategoryId = ref<CategoryId>('album')
 const rememberedViews = ref<Record<string, string>>(Object.fromEntries(showcaseCategories.map(category => [category.id, category.defaultViewId])))
@@ -19,10 +20,65 @@ const previewImage = ref<HTMLImageElement | null>(null)
 const mounted = ref(false)
 onMounted(() => {
   mounted.value = true
+  connection = (navigator as Navigator & { connection?: ConnectionInfo }).connection
+  connection?.addEventListener('change', scheduleScreenshots)
+  scheduleScreenshots()
   // 预渲染图片可能在事件绑定前已下载完成，补读状态以恢复放大入口。
   const image = previewImage.value
   if (image?.complete) imageState.value = image.naturalWidth > 0 ? 'ready' : 'failed'
 })
+
+// Background screenshots share browser cache with the rendered image.
+const screenshotRequests = new Map<string, HTMLImageElement>()
+const failedScreenshots = new Set<string>()
+let screenshotQueue: string[] = []
+let activePreloads = 0
+let preloadStarted = false
+let preloadStopped = false
+type ConnectionInfo = EventTarget & { saveData?: boolean; effectiveType?: string }
+let connection: ConnectionInfo | undefined
+function limitedConnection(): boolean {
+  return !!connection?.saveData || ['slow-2g', '2g', '3g'].includes(connection?.effectiveType ?? '')
+}
+function preloadScreenshot(src: string): void {
+  if (screenshotRequests.has(src)) return
+  const image = new Image()
+  screenshotRequests.set(src, image)
+  activePreloads++
+  image.setAttribute('fetchpriority', 'low')
+  const settle = (failed: boolean) => {
+    image.onload = image.onerror = null
+    activePreloads--
+    if (failed) {
+      failedScreenshots.add(src)
+      if (view.value.image === src) imageState.value = 'failed'
+    }
+    pumpScreenshots()
+  }
+  image.onload = () => settle(false)
+  image.onerror = () => settle(true)
+  setImageRequest(image, src, '(max-width: 900px) 100vw, 65vw')
+}
+function pumpScreenshots(): void {
+  if (preloadStopped || !preloadStarted) return
+  while (activePreloads < 5 && screenshotQueue.length) {
+    const src = screenshotQueue.shift()!
+    if (!screenshotRequests.has(src)) preloadScreenshot(src)
+  }
+}
+function scheduleScreenshots(): void {
+  if (!mounted.value || !props.preloadReady || preloadStopped) return
+  preloadStarted = true
+  const categories = limitedConnection() ? [category.value] : showcaseCategories
+  const defaults = categories.map(c => c.views.find(v => v.id === c.defaultViewId)?.image)
+  const images = [...defaults, ...categories.flatMap(c => c.views.map(v => v.image))]
+  screenshotQueue = [...new Set(images.filter((src): src is string => !!src))]
+    .filter(src => src !== view.value.image && !screenshotRequests.has(src))
+  pumpScreenshots()
+}
+watch(() => props.preloadReady, scheduleScreenshots)
+watch(activeCategoryId, scheduleScreenshots)
+
 const closeButton = ref<HTMLButtonElement | null>(null)
 let trigger: HTMLButtonElement | null = null
 let previousOverflow: string | null = null
@@ -79,9 +135,24 @@ function failImage(event: Event): void {
   imageState.value = 'failed'
   if (dialog.value?.open) closeImage()
 }
-watch(() => view.value.id, () => { imageState.value = 'loading'; resetTilt() })
+watch(() => view.value.id, () => {
+  const src = view.value.image
+  imageState.value = src && failedScreenshots.has(src) ? 'failed' : 'loading'
+  if (src) {
+    screenshotQueue = screenshotQueue.filter(url => url !== src)
+    screenshotRequests.get(src)?.setAttribute('fetchpriority', 'high')
+  }
+  resetTilt()
+})
 watch(() => props.reducedMotion, reduced => { if (reduced) resetTilt() })
-onBeforeUnmount(() => { dialog.value?.close(); restoreDialog() })
+onBeforeUnmount(() => {
+  preloadStopped = true
+  screenshotQueue = []
+  connection?.removeEventListener('change', scheduleScreenshots)
+  for (const image of screenshotRequests.values()) image.onload = image.onerror = null
+  dialog.value?.close()
+  restoreDialog()
+})
 </script>
 
 <template>
@@ -97,7 +168,7 @@ onBeforeUnmount(() => { dialog.value?.close(); restoreDialog() })
         <!-- Keep the original image shell, 16:10 crop, hover tilt and screenshot transition. -->
         <motion.button v-if="view.image && imageState !== 'failed'" type="button" class="showcase-image-button" :aria-label="`${showcaseUi.openImage[language]}: ${view.caption[language]}`" :aria-disabled="!imageReady" :style="{ rotateX, rotateY, transformPerspective: 1200 }" :while-hover="reducedMotion ? undefined : { scale: 1.008 }" @pointermove="movePointer" @pointerleave="resetTilt" @click="openImage">
           <Transition name="screenshot-switch" mode="out-in">
-            <img ref="previewImage" :key="view.id" :data-view-id="view.id" :src="view.image" :alt="view.alt[language]" decoding="async" @load="imageLoaded" @error="failImage" />
+            <img ref="previewImage" :key="view.id" :data-view-id="view.id" :src="imageSource(view.image)" :srcset="imageSrcset(view.image)" sizes="(max-width: 900px) 100vw, 65vw" :alt="view.alt[language]" decoding="async" fetchpriority="high" @load="imageLoaded" @error="failImage" />
           </Transition>
           <span v-if="imageReady" class="image-open-hint"><ArrowUpRight :size="17" /> {{ showcaseUi.openImage[language] }}</span>
         </motion.button>
@@ -133,7 +204,7 @@ onBeforeUnmount(() => { dialog.value?.close(); restoreDialog() })
     <Teleport v-if="mounted" to="body">
       <dialog ref="dialog" class="lightbox showcase-dialog" :aria-label="showcaseUi.dialogLabel[language]" @click.self="closeImage" @close="restoreDialog" @keydown.tab.prevent="closeButton?.focus()">
         <button ref="closeButton" type="button" class="icon-button lightbox-close" :aria-label="showcaseUi.closeImage[language]" @click="closeImage"><X :size="21" /></button>
-        <img v-if="view.image" :data-view-id="view.id" :src="view.image" :alt="view.alt[language]" @error="failImage" />
+        <img v-if="view.image" :data-view-id="view.id" :src="imageSource(view.image)" :alt="view.alt[language]" @error="failImage" />
       </dialog>
     </Teleport>
   </div>

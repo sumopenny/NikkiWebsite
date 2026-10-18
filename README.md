@@ -65,3 +65,13 @@ npm run preview
 - 源码与发布：[GitHub](https://github.com/sumopenny/Infinity-Nikki-Album-Manager)，[Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager)
 
 项目是独立社区工具，与《无限暖暖》官方及其发行方没有隶属、授权或背书关系。
+
+
+## 图片加载与更新
+
+- 继续替换 `public/images/` 下原有名称的 WebP 图片；不要手动修改 `optimized/`。
+- `npm run dev` 与 `npm run build` 会先运行 `scripts/prepare-images.mjs`，生成内容哈希地址、960px 图片及清单。替换原图后重新运行启动或构建命令，新地址可避免旧缓存。
+- 首屏前两张优先加载，同主题最多两张并发；功能预览首屏就绪后最多五张后台并发。
+- 美照区域距离视口 600px 时开始加载当前及后续四张，随后随轮播补充；教程图使用懒加载。
+- 响应式图片由浏览器结合显示宽度与像素密度选择；放大功能截图时使用原尺寸图片。
+- `node scripts/verify-image-loading.mjs` 验证加载队列与生成图片（先运行构建）。

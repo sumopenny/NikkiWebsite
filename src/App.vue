@@ -26,6 +26,7 @@ import {
 } from 'lucide-vue-next'
 import { MotionConfig, motion, useScroll, useTransform } from 'motion-v'
 import FeatureShowcase from './components/FeatureShowcase.vue'
+import { imageSource, imageSrcset, setImageRequest } from './imageAssets'
 
 type Language = 'zh' | 'en'
 type Theme = 'light' | 'dark'
@@ -36,7 +37,7 @@ type Theme = 'light' | 'dark'
  */
 const IMAGE_EXT = '.webp'
 // 真实素材路径：把同名图片放进 public/images/ 对应子目录即可自动启用。
-const assetPath = (file: string): string => `/images/${file}`
+const assetPath = (file: string): string => imageSource(`/images/${file}`)
 /**
  * 首屏暖暖氛围美照轮播（16:9 横向原图，建议宽度 2400px+）。
  * 浅色模式读取 1.webp ~ 10.webp，深色模式读取 11.webp ~ 20.webp，各最多 10 张。
@@ -86,6 +87,9 @@ const activeGalleryIndex = ref(0)
 const galleryAutoplayRequested = ref(true)
 const pageVisible = ref(true)
 const pageReady = ref(false)
+const galleryStarted = ref(false)
+let galleryLoadObserver: IntersectionObserver | undefined
+let imageLoadingStopped = false
 const prefersReducedMotion = ref(false)
 const navigationSections = ['top', 'screenshots', 'start', 'faq'] as const
 const activeSection = ref<string>('top')
@@ -179,6 +183,7 @@ const heroCanAutoplay = computed(() => pageReady.value
  * 悬停 / 聚焦 / 滚出视口 / 手动切图都不再暂停。
  */
 const galleryCanAutoplay = computed(() => pageReady.value
+  && galleryStarted.value
   && galleryAutoplayRequested.value
   && !prefersReducedMotion.value
   && pageVisible.value)
@@ -513,51 +518,28 @@ function showNextHeroSlideForTimer(): void {
   showNextHeroSlide()
 }
 
-/**
- * 通用素材探测：把清单里的每个文件名都试一遍，某个缺失**不会**中断后续探测。
- * 于是「实际张数」= 目录里存在的所有文件数，允许中间跳号
- * （例如只有 1、3、5，三张都会播，而不是只播第 1 张）。
- * 每张之间仍保持原有的先后顺序，只是不再遇缺即停。
- *
- * **必须并发，不能串行**：串行（等上一张 onload 再发下一个）会让 N 张图首尾相接，
- * 吃掉 N 个完整的「RTT + 传输」来回 —— 本地零延迟看不出来，一上线单次请求的延迟
- * 成为主导后就成倍变慢。并发不改变总字节数，只是把等待重叠掉。
- *
- * `priorityFor` 决定各请求在浏览器里的优先级。注意 `new Image()` 不在 DOM 里，
- * 浏览器默认按低优先级处理，和 JS/CSS/字体抢带宽时会排在最后，所以首屏那几张要显式抬高。
- * 探测用的 Image 与模板中的图同 URL，浏览器缓存命中，不会重复下载。
- */
-function probeAvailable(
-  slots: string[],
-  onHit: (slot: number) => void,
-  onDone: () => void,
-  priorityFor: (slot: number) => 'high' | 'low' = () => 'low'
-): void {
-  let remaining = slots.length
-  if (remaining === 0) {
-    onDone()
-    return
-  }
-
-  /** 全部落定（成功或失败）之后才 onDone —— 并发下必须自己计数。 */
-  const settle = (): void => {
-    remaining -= 1
-    if (remaining === 0) onDone()
-  }
-
-  slots.forEach((src, index) => {
-    const slot = index + 1
-    const image = new Image()
-    // 用 setAttribute 而不是 image.fetchPriority：后者在旧版 lib.dom 里没有类型定义
-    image.setAttribute('fetchpriority', priorityFor(slot))
-    image.onload = () => {
-      onHit(slot)
-      settle()
+function probeAvailable(slots: string[], onHit: (slot: number) => void, onDone: () => void, priorityFor: (slot: number) => 'high' | 'low' = () => 'low'): void {
+  let cursor = 0, active = 0, remaining = slots.length
+  if (!remaining) { onDone(); return }
+  const pump = () => {
+    if (imageLoadingStopped) return
+    while (active < 2 && cursor < slots.length) {
+      const index = cursor++, slot = index + 1, image = new Image()
+      active++
+      image.setAttribute('fetchpriority', priorityFor(slot))
+      const settle = (success: boolean) => {
+        image.onload = image.onerror = null
+        active--; remaining--
+        if (imageLoadingStopped) return
+        if (success) onHit(slot)
+        if (!remaining) onDone(); else pump()
+      }
+      image.onload = () => settle(true)
+      image.onerror = () => settle(false)
+      setImageRequest(image, slots[index]!, '(max-width: 900px) 100vw, 75vw')
     }
-    // 缺失就跳过这一张，其余照常 —— 不再中断整轮探测
-    image.onerror = settle
-    image.src = src
-  })
+  }
+  pump()
 }
 
 /**
@@ -586,18 +568,39 @@ function probeHeroSlides(group: Theme): void {
   )
 }
 
-/**
- * 探测画廊美照：5 个卡位各自独立探测，互不影响（不做「遇缺即停」，
- * 因为卡位数量固定，缺哪张只让那一张显示占位骨架）。
- */
-function probeGallerySlides(): void {
-  galleryPhotoSlots.forEach((src, index) => {
-    const slot = index + 1
-    const image = new Image()
-    image.onload = () => { galleryAvailable.value = { ...galleryAvailable.value, [slot]: true } }
-    image.src = src
-  })
+const galleryRequested = new Set<number>()
+const galleryPending: number[] = []
+let galleryActiveRequests = 0
+function pumpGallery(): void {
+  if (imageLoadingStopped) return
+  while (galleryActiveRequests < 2 && galleryPending.length) {
+    const slot = galleryPending.shift()!, image = new Image()
+    galleryActiveRequests++
+    image.setAttribute('fetchpriority', 'low')
+    const settle = (success: boolean) => {
+      image.onload = image.onerror = null
+      galleryActiveRequests--
+      if (imageLoadingStopped) return
+      if (success) galleryAvailable.value = { ...galleryAvailable.value, [slot]: true }
+      pumpGallery()
+    }
+    image.onload = () => settle(true)
+    image.onerror = () => settle(false)
+    setImageRequest(image, galleryPhotoSlots[slot - 1]!, '(max-width: 900px) 90vw, 50vw')
+  }
 }
+function probeGallerySlides(): void {
+  if (!galleryStarted.value) return
+  const wanted = Array.from({ length: Math.min(5, gallerySlideCount) }, (_, offset) => (activeGalleryIndex.value + offset) % gallerySlideCount + 1)
+  for (const slot of wanted) {
+    if (galleryRequested.has(slot)) continue
+    galleryRequested.add(slot); galleryPending.push(slot)
+  }
+  galleryPending.sort((a,b) => (a-1-activeGalleryIndex.value+gallerySlideCount)%gallerySlideCount - (b-1-activeGalleryIndex.value+gallerySlideCount)%gallerySlideCount)
+  pumpGallery()
+}
+watch(activeGalleryIndex, probeGallerySlides)
+function startGalleryLoading(): void { galleryStarted.value = true; probeGallerySlides() }
 
 /**
  * 首屏轮播的渲染列表：附上 state。
@@ -749,8 +752,15 @@ onMounted(async () => {
   window.addEventListener('hashchange', requestSectionUpdate)
   // 当前主题这一组先探测，另一组等切到该主题时再探测，避免无谓请求。
   probeHeroSlides(theme.value)
-  probeGallerySlides()
   await nextTick()
+  const galleryRegion = document.getElementById('gallery')
+  if (galleryRegion && 'IntersectionObserver' in window) {
+    galleryLoadObserver = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return
+      startGalleryLoading(); galleryLoadObserver?.disconnect()
+    }, { rootMargin: '600px 0px' })
+    galleryLoadObserver.observe(galleryRegion)
+  } else startGalleryLoading()
   if ('IntersectionObserver' in window) {
     if (heroRegion.value) {
       heroObserver = new IntersectionObserver(([entry]) => {
@@ -786,6 +796,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', requestSectionUpdate)
   window.removeEventListener('hashchange', requestSectionUpdate)
   if (sectionUpdateFrame !== undefined) window.cancelAnimationFrame(sectionUpdateFrame)
+  imageLoadingStopped = true
+  galleryPending.length = 0
+  galleryLoadObserver?.disconnect()
   heroObserver?.disconnect()
   artGalleryObserver?.disconnect()
 })
@@ -830,7 +843,7 @@ onBeforeUnmount(() => {
         <div :ref="setHeroRegion" class="hero-art" :aria-label="copy.artHero">
           <motion.div class="hero-art-frame" :style="heroArtMotionStyle">
             <template v-if="heroHasPhoto">
-              <img v-for="item in heroSlideItems" :key="item.src" class="hero-photo" :class="`hero-photo--${item.state}`" :src="item.src" :alt="item.state === 'current' ? `${copy.artHero} ${item.index + 1}` : ''" :aria-hidden="item.state === 'current' ? undefined : 'true'" />
+              <img v-for="item in heroSlideItems" :key="item.src" class="hero-photo" :class="`hero-photo--${item.state}`" :src="item.src" :srcset="imageSrcset(item.src)" sizes="(max-width: 900px) 100vw, 75vw" decoding="async" :alt="item.state === 'current' ? `${copy.artHero} ${item.index + 1}` : ''" :aria-hidden="item.state === 'current' ? undefined : 'true'" />
             </template>
             <div v-else class="art-placeholder hero-placeholder">
               <Sparkles :size="26" stroke-width="1.4" />
@@ -864,7 +877,7 @@ onBeforeUnmount(() => {
           <p>{{ copy.previewBody }}</p>
         </motion.div>
         <motion.div v-bind="sectionReveal">
-          <FeatureShowcase :language="language" :reduced-motion="prefersReducedMotion" :app-url="links.app" />
+          <FeatureShowcase :language="language" :reduced-motion="prefersReducedMotion" :app-url="links.app" :preload-ready="heroProbed[theme]" />
         </motion.div>
       </section>
 
@@ -892,8 +905,8 @@ onBeforeUnmount(() => {
             <a class="button-primary tutorial-cta" :href="links.app" target="_blank" rel="noreferrer"><ArrowUpRight :size="18" />{{ copy.tutorialAppLink }}</a>
           </motion.div>
           <motion.figure class="tutorial-figure" v-bind="sectionReveal">
-            <a class="tutorial-figure-link" href="/images/auto-update-outfit-code.webp" target="_blank" rel="noreferrer" :aria-label="copy.tutorialImageOpen">
-              <img class="tutorial-image" src="/images/auto-update-outfit-code.webp" :alt="copy.tutorialImageAlt" />
+            <a class="tutorial-figure-link" :href="imageSource('/images/auto-update-outfit-code.webp')" target="_blank" rel="noreferrer" :aria-label="copy.tutorialImageOpen">
+              <img class="tutorial-image" :src="imageSource('/images/auto-update-outfit-code.webp')" :srcset="imageSrcset('/images/auto-update-outfit-code.webp')" sizes="(max-width: 900px) 90vw, 440px" loading="lazy" decoding="async" :alt="copy.tutorialImageAlt" />
             </a>
             <figcaption>{{ copy.tutorialImageCaption }}</figcaption>
           </motion.figure>
@@ -908,7 +921,7 @@ onBeforeUnmount(() => {
           <motion.div class="gallery-carousel" role="region" tabindex="0" :aria-label="copy.galleryLabel" v-bind="sectionReveal" @keydown="handleGalleryKeydown">
             <div :ref="setArtGalleryEl" class="art-gallery" aria-live="off">
               <motion.div v-for="slot in gallerySlideCount" :key="slot" class="art-placeholder gallery-card" :class="{ 'has-photo': galleryAvailable[slot] }" :style="{ zIndex: galleryCardLayer(slot) }" :animate="galleryCardMotion(slot)" :transition="{ type: 'spring', stiffness: 140, damping: 24, mass: 0.8 }" role="group" aria-roledescription="slide" :aria-label="copy.gallerySlide(slot)" :aria-hidden="slot - 1 !== activeGalleryIndex ? 'true' : 'false'">
-                <img v-if="galleryAvailable[slot]" class="gallery-photo" :src="galleryPhotoSlots[slot - 1]" :alt="`${copy.artPortrait} ${slot}`" />
+                <img v-if="galleryAvailable[slot]" class="gallery-photo" :src="galleryPhotoSlots[slot - 1]" :srcset="imageSrcset(galleryPhotoSlots[slot - 1]!)" sizes="(max-width: 900px) 90vw, 50vw" decoding="async" :alt="`${copy.artPortrait} ${slot}`" />
                 <template v-else>
                   <Sparkles :size="22" />
                   <span class="art-placeholder-title">{{ copy.artPortrait }}</span>

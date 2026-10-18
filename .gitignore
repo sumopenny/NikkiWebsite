@@ -4,3 +4,6 @@ dist/
 .DS_Store
 Thumbs.db
 .verify
+
+public/images/optimized/
+src/data/imageManifest.json

@@ -22,3 +22,6 @@
 # 写出来是为了防止将来默认值变化时被静默改掉）。
 /index.html
   Cache-Control: public, max-age=0, must-revalidate
+
+/images/optimized/*
+  Cache-Control: public, max-age=31536000, immutable
