@@ -15,7 +15,11 @@ import {
   Moon,
   Pause,
   Play,
-  ScanSearch,
+  MonitorSmartphone,
+  Archive,
+  Heart,
+  Shirt,
+  Cloud,
   Sparkles,
   Sun,
   X
@@ -209,6 +213,8 @@ const featureCardVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.58, ease: [0.22, 1, 0.36, 1] } }
 }
 
+const trustIcons = [FileImage, MonitorSmartphone, Archive, Heart, Shirt, Cloud]
+
 const links = {
   app: 'https://infinity-nikki-album-manager.pages.dev/',
   fallback: 'https://infinity-nikki-album-manager.vercel.app/',
@@ -227,18 +233,16 @@ const copy = computed(() => language.value === 'zh'
       nav: ['首页', '功能预览', '使用指南', '常见问题'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: '把每一段心动，\n好好珍藏。',
-      heroBody: '暖立方（Nikki³）是为无限暖暖玩家打造的实用工具集。支持无限暖暖相册管理、搭配码解析、家园方案管理、相机参数收藏与共鸣记录统计，让珍贵瞬间留在自己的设备里。',
+      heroBody: "暖立方（Nikki³）是为无限暖暖玩家打造的实用工具集。整理游戏照片，珍藏搭配、家园灵感与相机参数，记录共鸣，查看个人衣橱收集进度，让珍贵瞬间留在自己的设备里。",
       useNow: '打开网站',
       viewFeatures: '看看它能做什么',
-      heroNote: '免费使用 · 无需注册 · 无需下载',
+      heroNote: "免费使用 · 本地功能无需注册 · 无需下载",
       artHero: '首屏暖暖氛围美照',
       artRatioWide: '轮播 · 浅色 1-10 / 深色 11-20 · 16:9 横向原图 · 宽度 2400px+',
-      local: '照片在本地读取', localBody: '浏览、解析与整理过程在你的设备中完成。',
-      privacy: '搭配码 / 图片解析 / 专项清理', privacyBody: '解析相机参数、管理搭配码，清理低质文件和游戏缓存。',
-      actions: '抽卡吉时参考', actionsBody: '查看娱乐向时刻表，实际出率仍以游戏概率为准。',
+      benefits: [{"title":"照片本地读取","body":"相册浏览与照片参数解析在本地完成，原图无需上传。"},{"title":"电脑手机都能用","body":"整理搭配、家园与拍摄灵感，查看共鸣记录和衣橱。"},{"title":"数据随时备份","body":"支持模块备份与全部数据导出，方便迁移到其他设备。"},{"title":"游戏灵感集中珍藏","body":"将搭配码、家园方案与相机参数分类保存，随时查找。"},{"title":"共鸣与衣橱一目了然","body":"查看共鸣抽数、部件获取记录和服装收集进度。"},{"title":"共鸣记录云同步","body":"登录后手动上传、下载共鸣记录，跨设备继续查看。"}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: '从相册时光，到趁手的小工具。',
-      previewBody: '整理照片、珍藏搭配与家园灵感，也把每一次共鸣好好记录。',
+      previewBody: "整理照片、珍藏搭配与家园灵感，记录每一次共鸣，也看看衣橱里的收集进度。",
       shotHint: '点击缩略图切换预览，点击大图放大查看',
       previewShotLabel: '真实应用界面', previewPlaceholderLabel: '截图素材位',
       previewAssetNote: '真实应用截图待提供', previewAssetRatio: '建议原图比例 16:10',
@@ -264,24 +268,56 @@ const copy = computed(() => language.value === 'zh'
       galleryPause: '暂停自动播放', galleryPlay: '继续自动播放', galleryMotionOff: '系统减少动态效果已关闭自动播放',
       startKicker: 'USAGE GUIDE',
       startTitle: '找到你的上手方式。',
-      startBody: '相册与方案管理需要电脑端目录授权；独立解析和共鸣记录可以直接从工具集进入。选择适合你的入口开始。',
+      startBody: "相册管理需要电脑端目录授权；搭配码、家园方案、相机参数收藏与暖暖档案可在电脑和手机直接使用。",
       startSteps: [
-        { no: '01', title: '整理相册、搭配与家园', body: '在支持目录授权的电脑浏览器中打开工具集，选择照片目录，再进入相册、搭配或家园方案。游戏搭配自动接收的设置见下方教程。' },
-        { no: '02', title: '解析原图或参数码', body: '在工具菜单打开解析入口，选择本地游戏原图，或输入相机参数、搭配码。无需先授权相册目录，电脑和手机都可使用独立解析。' },
-        { no: '03', title: '查看和备份共鸣记录', body: '进入共鸣记录，按应用内引导从美鸭梨奇想手账或 JSON 备份导入。记录保存在当前浏览器，定期导出 JSON 可便于迁移与备份。' }
-      ],
+  {
+    "no": "01",
+    "title": "整理电脑相册",
+    "body": "使用支持目录授权的电脑浏览器，选择照片目录，浏览、收藏与整理游戏照片；自动接收搭配码另行授权 X6Game，设置见下方教程。"
+  },
+  {
+    "no": "02",
+    "title": "珍藏搭配与拍摄灵感",
+    "body": "电脑和手机均可直接管理搭配码、家园方案与相机参数收藏，无需先授权相册目录；也可从工具菜单解析原图或参数码。"
+  },
+  {
+    "no": "03",
+    "title": "查看暖暖档案与迁移数据",
+    "body": "进入“暖暖档案”，按引导导入共鸣记录和衣橱数据；通过模块备份或“更多”中的全部数据备份迁移设备，共鸣记录还可手动云同步。"
+  }
+],
       questionsKicker: 'GOOD TO KNOW',
       questionsTitle: '开始前，几个常见问题。',
       questions: [
-        { q: '照片会上传到服务器吗？', a: '照片浏览与相机参数解析在本地浏览器中完成。临时选择的游戏原图只用于本次解析，不会上传，也不会自动加入相册。' },
-        { q: '哪些功能需要授权文件夹？', a: '相册整理、搭配与家园方案管理需要选择本地相册目录；游戏搭配自动接收与专项清理还需要相应的 X6Game 目录授权。独立照片与代码解析、共鸣记录无需先授权相册目录。' },
-        { q: '为什么无法授权文件夹，或相册没有显示？', a: '请使用支持目录授权的电脑端 Chromium 浏览器，选择实际存放照片的文件夹；授权失效时重新选择。若浏览器拒绝访问系统或受保护目录，可先将需要整理的照片复制到普通文件夹后授权。不要选择磁盘根目录。' },
-        { q: '手机上可以使用哪些功能？', a: '手机可使用独立照片参数与搭配码解析。相册、搭配和家园方案的目录管理，以及专项清理，需要支持目录授权的电脑浏览器。' },
-        { q: '无限暖暖共鸣记录保存在哪里，如何备份？', a: '记录保存在当前浏览器中。更换浏览器、设备或清除网站数据前，请先导出 JSON 备份，再通过导入恢复记录；请妥善保留备份文件。' },
-        { q: '清除网站数据会删除电脑里的照片吗？', a: '不会删除电脑里的照片，但会影响浏览器中保存的记录、缓存和授权。清除前请备份共鸣记录；之后可能需要重新授权相册目录。这与最近删除的永久删除、专项清理不同。' },
-        { q: '删除的照片能恢复吗？', a: '相册普通删除会移入最近删除，可从中恢复。最近删除中的永久删除、清空全部和专项清理会直接修改电脑文件，无法通过最近删除恢复。' },
-        { q: '项目是官方应用吗？', a: '不是。这是独立的开源社区工具，与《无限暖暖》官方及其发行方没有隶属、授权或背书关系。' }
-      ],
+  {
+    "q": "照片会上传到服务器吗？",
+    "a": "照片浏览与相机参数解析在本地浏览器中完成。临时选择的游戏原图不会上传，也不会自动加入相册；主动使用共鸣云同步时会上传对应的共鸣记录。"
+  },
+  {
+    "q": "为什么无法授权文件夹，或相册没有显示？",
+    "a": "请使用支持目录授权的电脑端 Chromium 浏览器，选择实际存放照片的文件夹；授权失效时重新选择。受保护目录无法访问时，可将照片复制到普通文件夹后授权，不要选择磁盘根目录。"
+  },
+  {
+    "q": "手机上可以使用哪些功能？",
+    "a": "手机可管理搭配码、家园方案和相机参数收藏，使用独立照片与代码解析，查看共鸣记录与个人衣橱。相册目录管理、游戏搭配自动接收和专项清理需要支持目录授权的电脑浏览器。"
+  },
+  {
+    "q": "如何把电脑数据迁移到手机？",
+    "a": "在电脑端“更多”中选择“导出全部数据”，将 ZIP 文件传到手机，再用手机浏览器打开网站，在“更多”中选择“导入全部数据”。导入会按各模块规则合并，请核对结果提示。"
+  },
+  {
+    "q": "云同步会自动同步所有数据吗？",
+    "a": "不会。目前仅支持共鸣记录，需注册并登录账号后手动上传或下载。上传覆盖云端存档，下载覆盖本地共鸣记录；登录和本地修改不会自动同步。"
+  },
+  {
+    "q": "为什么衣橱部件显示“未知”？",
+    "a": "星光小铺、服装商店、奇迹之冠、滚滚机与世界逸事等来源的拥有信息可能未包含在导入数据中，未识别到的部件显示为“未知”，不直接判定为未拥有。"
+  },
+  {
+    "q": "删除的照片能恢复吗？",
+    "a": "相册普通删除会移入最近删除，可从中恢复。最近删除中的永久删除、清空全部和专项清理会直接修改电脑文件，无法通过最近删除恢复。"
+  }
+],
       readme: '阅读完整 README', report: '反馈问题-小红书',
       footerLine: '为每一张心动留个位置。', disclaimer: '独立社区项目 · 与《无限暖暖》官方无隶属或背书关系',
       themeLight: '浅色主题', themeDark: '深色主题', languageLabel: '切换语言',
@@ -292,15 +328,13 @@ const copy = computed(() => language.value === 'zh'
       nav: ['Home', 'Features', 'Usage guide', 'FAQ'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: 'Keep every lovely\nmoment close.',
-      heroBody: 'NikkiCube (Nikki³) is a practical toolkit for Infinity Nikki players. Manage photo albums, parse outfit codes, save home plans and camera presets, and track resonance records, keeping precious moments on your own device.',
-      useNow: 'Open the app', viewFeatures: 'Explore the features', heroNote: 'Free to use · No sign-up · No download',
+      heroBody: "NikkiCube (Nikki³) is a practical toolkit for Infinity Nikki players. Organize game photos, save outfits, home ideas and camera presets, track resonance, and explore your wardrobe collection while keeping precious moments on your device.",
+      useNow: 'Open the app', viewFeatures: 'Explore the features', heroNote: "Free to use · Local features need no sign-up · No download",
       artHero: 'Infinity Nikki hero artwork', artRatioWide: 'Carousel · light 1-10 / dark 11-20 · 16:9 landscape · 2400px+ wide',
-      local: 'Photos stay on device', localBody: 'Browsing, parsing, and organizing happen in your browser.',
-      privacy: 'Outfit codes / image parsing / cleanup', privacyBody: 'Parse camera settings, manage outfit codes, and clear low-quality files and caches.',
-      actions: 'Lucky pull times', actionsBody: 'Check an entertainment-only timing table; actual odds follow the game.',
+      benefits: [{"title":"Photos stay local","body":"Album browsing and photo parameter parsing run locally. Original photos need no upload."},{"title":"Desktop and mobile","body":"Organize outfits, home ideas and camera presets, and explore resonance records and your wardrobe."},{"title":"Back up anytime","body":"Export individual modules or all data to move your collection to another device."},{"title":"Keep your inspiration","body":"Save outfit codes, home schemes and camera presets by category for easy access."},{"title":"Track your collection","body":"Review resonance pulls, piece acquisition records and clothing collection progress."},{"title":"Resonance cloud sync","body":"Sign in to manually upload or download resonance records and continue on another device."}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: 'From album memories to handy little tools.',
-      previewBody: 'Organize photos, save outfit and home ideas, and keep track of each resonance.',
+      previewBody: "Organize photos, save outfit and home ideas, track resonance, and explore your wardrobe collection.",
       shotHint: 'Choose a thumbnail to switch views, then open the preview',
       previewShotLabel: 'REAL APP INTERFACE', previewPlaceholderLabel: 'SCREENSHOT SLOT',
       previewAssetNote: 'Real app screenshot to come', previewAssetRatio: 'Suggested source ratio: 16:10',
@@ -324,23 +358,55 @@ const copy = computed(() => language.value === 'zh'
       galleryControlsLabel: 'Gallery controls', galleryPrevious: 'Previous photo', galleryNext: 'Next photo',
       galleryPause: 'Pause autoplay', galleryPlay: 'Resume autoplay', galleryMotionOff: 'Autoplay is off because reduced motion is enabled',
       startKicker: 'USAGE GUIDE', startTitle: 'Find the right way to get started.',
-      startBody: 'Album and scheme management need desktop folder access. Open the standalone parsers or resonance records directly in the toolkit. Choose the route that fits your task.',
+      startBody: "Album management requires desktop folder access; outfit codes, home schemes, camera favorites and Nikki Archive work directly on desktop and mobile.",
       startSteps: [
-        { no: '01', title: 'Organize albums, outfits and home schemes', body: 'Open the toolkit in a desktop browser with folder access, choose your photo folder, then enter the album or scheme views. Follow the tutorial below to set up automatic outfit imports.' },
-        { no: '02', title: 'Parse an original photo or a code', body: 'Open the parser from the tools menu. Select an original game photo, or enter camera parameters or an outfit code. Standalone parsing works on desktop and mobile without album access.' },
-        { no: '03', title: 'Review and back up resonance records', body: 'Open resonance records and follow the in-app instructions to import from Pear-Pal Whim-Log or a JSON backup. Records stay in the current browser. Export JSON regularly for backups and migration.' }
-      ],
+  {
+    "no": "01",
+    "title": "Organize desktop albums",
+    "body": "Use a desktop browser with folder access to select a photo folder, then browse, favorite and organize photos. Automatic outfit-code imports require separate X6Game access; see the tutorial below."
+  },
+  {
+    "no": "02",
+    "title": "Save outfits and camera inspiration",
+    "body": "Manage outfit codes, home schemes and camera favorites directly on desktop or mobile without album access, or use Tools to parse an original photo or code."
+  },
+  {
+    "no": "03",
+    "title": "Explore Nikki Archive and migrate data",
+    "body": "Import resonance and wardrobe data in Nikki Archive. Transfer data through module backups or all-data backups under More; resonance records also support manual cloud sync."
+  }
+],
       questionsKicker: 'GOOD TO KNOW', questionsTitle: 'A few things before you begin.',
       questions: [
-        { q: 'Are my photos uploaded?', a: 'Photo browsing and camera parameter parsing run in your local browser. An original selected for temporary parsing is not uploaded or automatically added to the album.' },
-        { q: 'Which features need folder access?', a: 'Album, outfit and home scheme management need a local album folder. Automatic game outfit imports and Special Cleanup also need the relevant X6Game access. Standalone photo and code parsing and resonance records do not need album access first.' },
-        { q: 'Why is folder access denied or my album missing?', a: 'Use a desktop Chromium browser with folder access and select the folder that contains your photos. Choose it again if access expires. If the browser blocks a system or protected folder, copy the photos you want to organize into an ordinary folder and authorize that folder. Do not select a drive root.' },
-        { q: 'Which features work on a phone?', a: 'Standalone photo parameter and outfit-code parsing work on mobile. Folder-based album, outfit and home scheme management and Special Cleanup require a desktop browser with folder access.' },
-        { q: 'Where are resonance records saved, and how do I back them up?', a: 'Records are saved in the current browser. Export a JSON backup before changing browsers or devices or clearing site data, then import it to restore your records. Keep your backup file safe.' },
-        { q: 'Does clearing site data delete photos on my computer?', a: 'It does not delete your computer photos, but it affects records, caches and permissions saved in the browser. Back up resonance records first and be ready to authorize your album again. Permanent deletion and Special Cleanup are separate file operations.' },
-        { q: 'Can I restore deleted photos?', a: 'Regular album deletion moves photos to Recently Deleted, where they can be restored. Permanent deletion, clearing Recently Deleted and Special Cleanup directly affect local files and cannot be restored from Recently Deleted.' },
-        { q: 'Is this an official app?', a: 'No. This is an independent open-source community tool. It is not affiliated with, authorized, or endorsed by the Infinity Nikki team or publisher.' }
-      ],
+  {
+    "q": "Are my photos uploaded?",
+    "a": "Photo browsing and camera parameter parsing run locally. Originals selected for temporary parsing are not uploaded or added to an album. Manually using resonance cloud sync uploads the corresponding resonance records."
+  },
+  {
+    "q": "Why is folder access denied or my album missing?",
+    "a": "Use a desktop Chromium browser supporting folder access and select the folder containing your photos. Reauthorize if access expires. If a protected folder is blocked, copy photos to an ordinary folder first. Do not select a drive root."
+  },
+  {
+    "q": "Which features work on a phone?",
+    "a": "Manage outfit codes, home schemes and camera favorites, parse photos or codes, and view resonance records and your wardrobe. Folder-based albums, automatic game outfit imports and targeted cleanup require a desktop browser with folder access."
+  },
+  {
+    "q": "How do I move desktop data to my phone?",
+    "a": "Choose Export all data under More on desktop, send the ZIP to your phone, open the site in its browser, and select Import all data under More. Data is merged according to module rules; review the result."
+  },
+  {
+    "q": "Does cloud sync automatically sync everything?",
+    "a": "No. It currently supports resonance records only and requires an account and manual upload or download. Upload overwrites the cloud save; download overwrites local resonance records. Signing in and local edits do not sync automatically."
+  },
+  {
+    "q": "Why do some wardrobe pieces show Unknown?",
+    "a": "Ownership data from sources such as Starlit Shop, clothing shops, Mira Crown, Surprise-O-Matic and world quests may be absent from the import. Unrecognized pieces show Unknown instead of being assumed unowned."
+  },
+  {
+    "q": "Can I restore deleted photos?",
+    "a": "Regular album deletion moves photos to Recently Deleted for restoration. Permanent deletion, clearing Recently Deleted and targeted cleanup modify local files and cannot be restored through Recently Deleted."
+  }
+],
       readme: 'Read the full README', report: 'Feedback on Xiaohongshu',
       footerLine: 'A little place for every lovely moment.', disclaimer: 'Independent community project · Not affiliated with or endorsed by Infinity Nikki',
       themeLight: 'Light theme', themeDark: 'Dark theme', languageLabel: 'Switch language',
@@ -788,10 +854,8 @@ onBeforeUnmount(() => {
         <div v-if="heroHasPhoto" class="hero-index" aria-hidden="true"><span>{{ heroIndexCurrent }}</span><i></i><span>{{ heroIndexTotal }}</span></div>
       </section>
 
-      <motion.section class="trust-strip" aria-label="Product principles" :initial="'hidden'" :while-in-view="'visible'" :variants="featureGridVariants" :in-view-options="{ once: true, amount: 0.4 }">
-        <motion.div class="trust-item" :variants="featureCardVariants"><span class="trust-icon"><FileImage :size="19" /></span><span><strong>{{ copy.local }}</strong><small>{{ copy.localBody }}</small></span></motion.div>
-        <motion.div class="trust-item" :variants="featureCardVariants"><span class="trust-icon"><ScanSearch :size="19" /></span><span><strong>{{ copy.privacy }}</strong><small>{{ copy.privacyBody }}</small></span></motion.div>
-        <motion.div class="trust-item" :variants="featureCardVariants"><span class="trust-icon"><Sparkles :size="19" /></span><span><strong>{{ copy.actions }}</strong><small>{{ copy.actionsBody }}</small></span></motion.div>
+      <motion.section class="trust-strip" :aria-label="language === 'zh' ? '使用特点' : 'Product benefits'" :initial="'hidden'" :while-in-view="'visible'" :variants="featureGridVariants" :in-view-options="{ once: true, amount: 0.4 }">
+        <motion.div v-for="(benefit, index) in copy.benefits" :key="index" class="trust-item" :variants="featureCardVariants"><span class="trust-icon"><component :is="trustIcons[index]" :size="19" aria-hidden="true" /></span><span><strong>{{ benefit.title }}</strong><small>{{ benefit.body }}</small></span></motion.div>
       </motion.section>
 
       <section id="screenshots" class="section showcase-section">

@@ -23,7 +23,7 @@ export interface ShowcaseCategory {
   defaultViewId: string
   views: ShowcaseView[]
 }
-// Add views here; the component derives the category totals and preview controls.
+
 export const showcaseCategories: ShowcaseCategory[] = [
   {
     "id": "album",
@@ -171,12 +171,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "拍摄时间、天气、焦距和光圈",
             "画面调节、动作、灯光与滤镜",
-            "读取可导入游戏的相机参数"
+            "读取可导入游戏的相机参数",
+            "点击“收藏参数”，保存至收藏夹的相机参数页"
           ],
           "en": [
             "Game time, weather, focal length and aperture",
             "Image adjustments, actions, lights and filters",
-            "Read camera parameters that can be imported into the game"
+            "Read camera parameters that can be imported into the game",
+            "Click Save parameters to add them to Camera Parameters in Favorites"
           ]
         },
         "note": {
@@ -197,12 +199,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "拍摄时间、天气、焦距和光圈",
             "画面调节、动作、灯光与滤镜",
-            "读取可导入游戏的相机参数"
+            "读取可导入游戏的相机参数",
+            "点击“收藏参数”，保存至收藏夹的相机参数页"
           ],
           "en": [
-            "Camera settings",
-            "Actions",
-            "Lights and filters"
+            "Game time, weather, focal length and aperture",
+            "Image adjustments, actions, lights and filters",
+            "Read camera parameters that can be imported into the game",
+            "Click Save parameters to add them to Camera Parameters in Favorites"
           ]
         }
       },
@@ -439,8 +443,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
   {
     "id": "outfit",
     "label": {
-      "zh": "搭配方案",
-      "en": "Outfits"
+      "zh": "搭配码",
+      "en": "Outfit codes"
     },
     "eyebrow": "OUTFIT",
     "icon": "shirt",
@@ -477,8 +481,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           ]
         },
         "note": {
-          "zh": "方案保存在当前相册文件夹中。",
-          "en": "Schemes are saved inside the current album folder."
+          "zh": "数据保存在当前浏览器，所有相册共用，无需先选择相册目录。",
+          "en": "Data is saved in the current browser and shared across albums. No album folder is required."
         },
         "image": "/images/screenshots/outfit-library.webp",
         "alt": {
@@ -561,63 +565,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
         }
       },
       {
-        "id": "outfit-auto-receive",
-        "label": {
-          "zh": "自动接收",
-          "en": "Auto receive"
-        },
-        "caption": {
-          "zh": "自动更新搭配码",
-          "en": "Automatically receive outfit codes"
-        },
-        "title": {
-          "zh": "游戏里生成，回来就能接收",
-          "en": "Create it in game and collect it here"
-        },
-        "body": {
-          "zh": "授权游戏目录后，在游戏中框选搭配截图、生成搭配码，再返回网页。",
-          "en": "Authorize the game folder, frame an outfit screenshot in game, generate its code and return to the website."
-        },
-        "points": {
-          "zh": [
-            "授权当前游戏的 X6Game 文件夹",
-            "游戏内框选搭配图片并生成搭配码",
-            "检测到新码与更新后的图片才会导入"
-          ],
-          "en": [
-            "Authorize the current game X6Game folder",
-            "Frame an outfit image and generate its code in game",
-            "Import only when both a new code and an updated outfit image are detected"
-          ]
-        },
-        "note": {
-          "zh": "相同搭配码、图片未更新或找不到图片时会跳过并提示。",
-          "en": "Duplicate codes, unchanged images and missing images are skipped with a notice."
-        },
-        "image": null,
-        "alt": {
-          "zh": "自动更新搭配码功能示意",
-          "en": "Automatically receive outfit codes feature illustration"
-        },
-        "icon": "refresh-cw",
-        "schematicTitle": {
-          "zh": "游戏里的搭配，收进方案库",
-          "en": "Create it in game and collect it here"
-        },
-        "schematicItems": {
-          "zh": [
-            "框选图片",
-            "生成搭配码",
-            "返回网页"
-          ],
-          "en": [
-            "Frame image",
-            "Generate code",
-            "Return to website"
-          ]
-        }
-      },
-      {
         "id": "outfit-code",
         "label": {
           "zh": "搭配码解析",
@@ -696,12 +643,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "所属套装与套装图片",
             "进化或焕新状态、可染条件",
-            "实际染色的区域、染色盘与色号"
+            "实际染色的区域、染色盘与色号",
+            "点击“所属套装”旁的跳转图标，打开套装详情"
           ],
           "en": [
             "Related outfit and outfit image",
             "Evolution or renewal state and dye requirements",
-            "Applied dye regions, palettes and color codes"
+            "Applied dye regions, palettes and color codes",
+            "Click the link icon beside the outfit name to open outfit details"
           ]
         },
         "note": {
@@ -722,12 +671,71 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "所属套装与套装图片",
             "进化或焕新状态、可染条件",
-            "实际染色的区域、染色盘与色号"
+            "实际染色的区域、染色盘与色号",
+            "点击“所属套装”旁的跳转图标，打开套装详情"
           ],
           "en": [
-            "Related outfit",
-            "Evolution",
-            "Dye details"
+            "Related outfit and outfit image",
+            "Evolution or renewal state and dye requirements",
+            "Applied dye regions, palettes and color codes",
+            "Click the link icon beside the outfit name to open outfit details"
+          ]
+        }
+      },
+      {
+        "id": "outfit-auto-receive",
+        "label": {
+          "zh": "自动接收",
+          "en": "Auto receive"
+        },
+        "caption": {
+          "zh": "自动更新搭配码",
+          "en": "Automatically receive outfit codes"
+        },
+        "title": {
+          "zh": "游戏里生成，回来就能接收",
+          "en": "Create it in game and collect it here"
+        },
+        "body": {
+          "zh": "授权游戏目录后，在游戏中框选搭配截图、生成搭配码，再返回网页。",
+          "en": "Authorize the game folder, frame an outfit screenshot in game, generate its code and return to the website."
+        },
+        "points": {
+          "zh": [
+            "授权当前游戏的 X6Game 文件夹",
+            "游戏内框选搭配图片并生成搭配码",
+            "检测到新码与更新后的图片才会导入"
+          ],
+          "en": [
+            "Authorize the current game X6Game folder",
+            "Frame an outfit image and generate its code in game",
+            "Import only when both a new code and an updated outfit image are detected"
+          ]
+        },
+        "note": {
+          "zh": "相同搭配码、图片未更新或找不到图片时会跳过并提示。",
+          "en": "Duplicate codes, unchanged images and missing images are skipped with a notice."
+        },
+        "image": null,
+        "alt": {
+          "zh": "自动更新搭配码功能示意",
+          "en": "Automatically receive outfit codes feature illustration"
+        },
+        "icon": "refresh-cw",
+        "schematicTitle": {
+          "zh": "游戏里的搭配，收进方案库",
+          "en": "Create it in game and collect it here"
+        },
+        "schematicItems": {
+          "zh": [
+            "框选图片",
+            "生成搭配码",
+            "返回网页"
+          ],
+          "en": [
+            "Frame image",
+            "Generate code",
+            "Return to website"
           ]
         }
       }
@@ -758,8 +766,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Keep ideas for your dream home"
         },
         "body": {
-          "zh": "集中管理家园码和组合码，为方案添加封面、标签和备注。",
-          "en": "Organize home codes and combination codes with optional covers, tags and notes."
+          "zh": "电脑和手机均可管理家园码与组合码，为方案添加封面、标签和备注，无需授权相册目录。",
+          "en": "Manage home and combination codes on desktop or mobile, with covers, tags and notes, without album folder access."
         },
         "points": {
           "zh": [
@@ -774,8 +782,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           ]
         },
         "note": {
-          "zh": "方案、标签及可选封面保存在当前相册文件夹中。",
-          "en": "Schemes, tags and optional covers are stored inside the current album folder."
+          "zh": "数据保存在当前浏览器，所有相册共用，无需先选择相册目录。",
+          "en": "Data is saved in the current browser and shared across albums. No album folder is required."
         },
         "image": "/images/screenshots/home-plan.webp",
         "alt": {
@@ -888,8 +896,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           ]
         },
         "note": {
-          "zh": "导出的 ZIP 保存在当前选择的相册文件夹中。",
-          "en": "Exported ZIP files are saved in the selected album folder."
+          "zh": "导出文件由浏览器下载设置决定保存位置。",
+          "en": "The browser download settings determine where exported files are saved."
         },
         "image": null,
         "alt": {
@@ -919,10 +927,10 @@ export const showcaseCategories: ShowcaseCategory[] = [
   {
     "id": "resonance",
     "label": {
-      "zh": "共鸣记录",
-      "en": "Resonance"
+      "zh": "暖暖档案",
+      "en": "Nikki Archive"
     },
-    "eyebrow": "RESONANCE",
+    "eyebrow": "NIKKI ARCHIVE",
     "icon": "sparkles",
     "defaultViewId": "resonance-records",
     "views": [
@@ -941,19 +949,19 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Keep track of every resonance"
         },
         "body": {
-          "zh": "查看各卡池套装的部件获取顺序、总抽数与平均抽数，并切换第一套和第二套。",
-          "en": "Review each banner outfit, part acquisition order, total and average pulls, and switch between the first and second sets."
+          "zh": "查看卡池套装的部件获取记录、总抽数与平均抽数；电脑同时展示两套部件，手机可在卡片右上角切换套数。",
+          "en": "Review piece acquisition records, total and average pulls. Desktop displays both sets together; mobile provides a set switch in the card’s top-right corner."
         },
         "points": {
           "zh": [
             "按卡池排序，按四星或五星筛选",
-            "查看部件获得顺序与对应抽数",
-            "第一套、第二套部件分别查看"
+            "电脑同时展示两套，手机切换第一套／第二套",
+            "点击套装图片或部件图片，打开对应详情"
           ],
           "en": [
             "Sort banners and filter four-star or five-star outfits",
-            "Review part acquisition order and pull counts",
-            "View the first and second outfit sets separately"
+            "View both sets on desktop; switch sets on mobile",
+            "Click outfit or piece images to open their details"
           ]
         },
         "note": {
@@ -972,45 +980,273 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "总抽数",
-            "平均抽数",
-            "第一套 / 第二套"
+            "按卡池排序，按四星或五星筛选",
+            "电脑同时展示两套，手机切换第一套／第二套",
+            "点击套装图片或部件图片，打开对应详情"
           ],
           "en": [
-            "Total pulls",
-            "Average pulls",
-            "First / second set"
+            "Sort banners and filter four-star or five-star outfits",
+            "View both sets on desktop; switch sets on mobile",
+            "Click outfit or piece images to open their details"
+          ]
+        }
+      },
+      {
+        "id": "wardrobe-outfits",
+        "label": {
+          "zh": "衣橱-套装",
+          "en": "Wardrobe - Outfits"
+        },
+        "caption": {
+          "zh": "衣橱-套装",
+          "en": "Wardrobe - Outfits"
+        },
+        "title": {
+          "zh": "按套装，查看衣橱收集进度",
+          "en": "Explore your collection by outfit"
+        },
+        "body": {
+          "zh": "浏览已集齐、收集中与未拥有的套装，查看每套的部件收集进度。点击套装卡片即可打开套装详情。",
+          "en": "Browse complete, partially collected and unowned outfits and review their piece collection progress. Click an outfit card to open its details."
+        },
+        "points": {
+          "zh": [
+            "按状态、星级、进化阶段、版本、风格、来源和标签筛选",
+            "搜索套装，查看已集齐数量与收集进度",
+            "点击套装卡片打开套装详情"
+          ],
+          "en": [
+            "Filter by ownership, rarity, evolution, version, style, source and tags",
+            "Search outfits and review completed counts and collection progress",
+            "Click an outfit card to open outfit details"
+          ]
+        },
+        "note": {
+          "zh": "部分来源的拥有信息可能未包含在导入数据中，未识别到的部件显示为“未知”。",
+          "en": "Some sources may lack ownership data in the import; unrecognized pieces are shown as Unknown."
+        },
+        "image": "/images/screenshots/wardrobe.webp",
+        "alt": {
+          "zh": "衣橱-套装界面截图",
+          "en": "Wardrobe - Outfits interface screenshot"
+        },
+        "icon": "sparkles",
+        "schematicTitle": {
+          "zh": "按套装，查看衣橱收集进度",
+          "en": "Explore your collection by outfit"
+        },
+        "schematicItems": {
+          "zh": [
+            "按状态、星级、进化阶段、版本、风格、来源和标签筛选",
+            "搜索套装，查看已集齐数量与收集进度",
+            "点击套装卡片打开套装详情"
+          ],
+          "en": [
+            "Filter by ownership, rarity, evolution, version, style, source and tags",
+            "Search outfits and review completed counts and collection progress",
+            "Click an outfit card to open outfit details"
+          ]
+        }
+      },
+      {
+        "id": "wardrobe-items",
+        "label": {
+          "zh": "衣橱-部件",
+          "en": "Wardrobe - Pieces"
+        },
+        "caption": {
+          "zh": "衣橱-部件",
+          "en": "Wardrobe - Pieces"
+        },
+        "title": {
+          "zh": "每个部件，都能单独查找",
+          "en": "Find each clothing piece"
+        },
+        "body": {
+          "zh": "切换到部件列表，按部位与其他条件查找服装，查看已拥有、未拥有和未知状态；点击部件卡片打开详情。",
+          "en": "Switch to pieces to find clothing by category and other filters, review Owned, Not owned and Unknown states, and click a card for details."
+        },
+        "points": {
+          "zh": [
+            "按部位、状态、星级、风格、来源等条件筛选",
+            "套装与部件分别保留筛选条件",
+            "点击部件卡片打开部件详情"
+          ],
+          "en": [
+            "Filter by category, ownership, rarity, style, source and more",
+            "Outfits and pieces retain separate filters",
+            "Click a piece card to open piece details"
+          ]
+        },
+        "note": {
+          "zh": "部分来源的拥有信息可能未包含在导入数据中，未识别到的部件显示为“未知”。",
+          "en": "Some sources may lack ownership data in the import; unrecognized pieces are shown as Unknown."
+        },
+        "image": "/images/screenshots/wardrobe-items.webp",
+        "alt": {
+          "zh": "衣橱-部件界面截图",
+          "en": "Wardrobe - Pieces interface screenshot"
+        },
+        "icon": "sparkles",
+        "schematicTitle": {
+          "zh": "每个部件，都能单独查找",
+          "en": "Find each clothing piece"
+        },
+        "schematicItems": {
+          "zh": [
+            "按部位、状态、星级、风格、来源等条件筛选",
+            "套装与部件分别保留筛选条件",
+            "点击部件卡片打开部件详情"
+          ],
+          "en": [
+            "Filter by category, ownership, rarity, style, source and more",
+            "Outfits and pieces retain separate filters",
+            "Click a piece card to open piece details"
+          ]
+        }
+      },
+      {
+        "id": "wardrobe-outfit-details",
+        "label": {
+          "zh": "套装详情",
+          "en": "Outfit details"
+        },
+        "caption": {
+          "zh": "套装详情",
+          "en": "Outfit details"
+        },
+        "title": {
+          "zh": "从一套搭配，看到每个部件",
+          "en": "Explore an outfit piece by piece"
+        },
+        "body": {
+          "zh": "点击衣橱套装卡片或共鸣记录中的套装图片，查看套装收集进度、星级、风格、来源版本、介绍及部件列表。",
+          "en": "Click an outfit card in the wardrobe or an outfit image in resonance records to view collection progress, rarity, style, release version, description and pieces."
+        },
+        "points": {
+          "zh": [
+            "查看套装信息与部件收集进度",
+            "点击部件图片，打开部件详情",
+            "通过关联入口查看进化形态"
+          ],
+          "en": [
+            "Review outfit information and piece collection progress",
+            "Click piece images to open piece details",
+            "Use related links to explore evolution variants"
+          ]
+        },
+        "note": {
+          "zh": "搭配码部件详情中，点击“所属套装”旁的跳转图标即可打开套装详情。",
+          "en": "In decoded piece details, click the link icon beside the outfit name to open outfit details."
+        },
+        "image": "/images/screenshots/wardrobe-outfit-details.webp",
+        "alt": {
+          "zh": "套装详情界面截图",
+          "en": "Outfit details interface screenshot"
+        },
+        "icon": "sparkles",
+        "schematicTitle": {
+          "zh": "从一套搭配，看到每个部件",
+          "en": "Explore an outfit piece by piece"
+        },
+        "schematicItems": {
+          "zh": [
+            "查看套装信息与部件收集进度",
+            "点击部件图片，打开部件详情",
+            "通过关联入口查看进化形态"
+          ],
+          "en": [
+            "Review outfit information and piece collection progress",
+            "Click piece images to open piece details",
+            "Use related links to explore evolution variants"
+          ]
+        }
+      },
+      {
+        "id": "wardrobe-item-details",
+        "label": {
+          "zh": "部件详情",
+          "en": "Piece details"
+        },
+        "caption": {
+          "zh": "部件详情",
+          "en": "Piece details"
+        },
+        "title": {
+          "zh": "点开部件，继续了解它",
+          "en": "Take a closer look at a piece"
+        },
+        "body": {
+          "zh": "点击衣橱部件卡片、套装详情中的部件图片或共鸣记录中的部件图片，打开对应部件详情。",
+          "en": "Click a wardrobe piece card, a piece image in outfit details, or a piece image in resonance records to open its details."
+        },
+        "points": {
+          "zh": [
+            "查看部件图片与相关信息",
+            "查看关联套装，并继续打开套装详情",
+            "搭配码解析的部件详情提供“所属套装”跳转入口"
+          ],
+          "en": [
+            "View the piece image and related information",
+            "Explore associated outfits and open outfit details",
+            "Decoded piece details include a link beside the outfit name"
+          ]
+        },
+        "note": {
+          "zh": "搭配码部件详情中，点击“所属套装”旁的跳转图标即可打开套装详情。",
+          "en": "In decoded piece details, click the link icon beside the outfit name to open outfit details."
+        },
+        "image": "/images/screenshots/wardrobe-item-details.webp",
+        "alt": {
+          "zh": "部件详情界面截图",
+          "en": "Piece details interface screenshot"
+        },
+        "icon": "sparkles",
+        "schematicTitle": {
+          "zh": "点开部件，继续了解它",
+          "en": "Take a closer look at a piece"
+        },
+        "schematicItems": {
+          "zh": [
+            "查看部件图片与相关信息",
+            "查看关联套装，并继续打开套装详情",
+            "搭配码解析的部件详情提供“所属套装”跳转入口"
+          ],
+          "en": [
+            "View the piece image and related information",
+            "Explore associated outfits and open outfit details",
+            "Decoded piece details include a link beside the outfit name"
           ]
         }
       },
       {
         "id": "resonance-pearpal",
         "label": {
-          "zh": "美鸭梨导入",
-          "en": "Pear-Pal import"
+          "zh": "手账导入",
+          "en": "Whim-Log import"
         },
         "caption": {
           "zh": "从美鸭梨奇想手账导入",
           "en": "Import from Pear-Pal Whim-Log"
         },
         "title": {
-          "zh": "从奇想手账，带回共鸣记录",
-          "en": "Bring your records back from Whim-Log"
+          "zh": "从奇想手账，带回你的暖暖档案",
+          "en": "Bring your Nikki Archive back from Whim-Log"
         },
         "body": {
-          "zh": "在国服美鸭梨登录并同步手账，按项目内的操作引导获取凭据，再预览导入。",
-          "en": "Sign in to the CN Pear-Pal website, sync your Whim-Log and follow the app instructions to preview an import."
+          "zh": "在国服美鸭梨登录并同步手账，按应用内引导获取凭据，预览后选择导入共鸣记录或衣橱数据。",
+          "en": "Sign in to CN Pear-Pal and sync Whim-Log, follow the in-app credential instructions, then preview and select resonance records or wardrobe data to import."
         },
         "points": {
           "zh": [
-            "书签或控制台方式获取凭据",
-            "核对游戏 UID，先预览再确认",
-            "来源缺失或解析失败的卡池保留原记录"
+            "建议使用电脑，通过书签或控制台获取凭据",
+            "核对游戏 UID，先预览再选择数据类型",
+            "确认导入共鸣记录后，以预览结果替换全部本地共鸣记录"
           ],
           "en": [
-            "Obtain credentials through the bookmark or console method",
-            "Check the game UID, preview and then confirm",
-            "Keep existing records for missing or unparsed source banners"
+            "Use a computer to obtain credentials through a bookmark or the console",
+            "Check the UID, preview, and choose the data types",
+            "Confirming resonance import replaces all local resonance records with the preview"
           ]
         },
         "note": {
@@ -1029,22 +1265,22 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "美鸭梨手账",
-            "导入预览",
-            "确认保存"
+            "建议使用电脑，通过书签或控制台获取凭据",
+            "核对游戏 UID，先预览再选择数据类型",
+            "确认导入共鸣记录后，以预览结果替换全部本地共鸣记录"
           ],
           "en": [
-            "Pear-Pal Whim-Log",
-            "Import preview",
-            "Confirm and save"
+            "Use a computer to obtain credentials through a bookmark or the console",
+            "Check the UID, preview, and choose the data types",
+            "Confirming resonance import replaces all local resonance records with the preview"
           ]
         }
       },
       {
         "id": "resonance-backup",
         "label": {
-          "zh": "JSON 备份",
-          "en": "JSON backups"
+          "zh": "本地备份",
+          "en": "Local backups"
         },
         "caption": {
           "zh": "共鸣记录 JSON 导入导出",
@@ -1055,24 +1291,24 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Continue organizing the records you already have"
         },
         "body": {
-          "zh": "导入本项目备份或暖暖共鸣录 JSON，也可以把当前记录导出为项目备份。",
-          "en": "Import this app backup or supported Resonance Recorder JSON files, and export a versioned project backup."
+          "zh": "共鸣记录可导入本工具或暖暖共鸣录 JSON，个人衣橱支持独立备份；也可通过“更多”中的全部数据备份迁移。",
+          "en": "Import this app’s or supported Resonance Recorder JSON for resonance records, back up the wardrobe separately, or migrate using all-data backups from More."
         },
         "points": {
           "zh": [
-            "兼容暖暖共鸣录新旧版 JSON",
-            "导入前预览，同套装以文件记录覆盖",
-            "项目备份保留手动补录标记"
+            "共鸣记录 JSON 与衣橱独立备份",
+            "共鸣导入先预览，确认后替换全部本地共鸣记录",
+            "全部数据备份包含衣橱，不包含相册原图与网站设置"
           ],
           "en": [
-            "Support old and new Resonance Recorder JSON formats",
-            "Preview before import; matching outfit records are replaced by the file",
-            "Preserve manual acquisition markers in project backups"
+            "Resonance JSON and separate wardrobe backups",
+            "Preview resonance imports; confirmation replaces all local resonance records",
+            "All-data backups include wardrobe data, but exclude original album photos and site settings"
           ]
         },
         "note": {
-          "zh": "文件只在浏览器中读取；云端同步目前待上线。",
-          "en": "Files are read only in the browser. Cloud sync is not yet available."
+          "zh": "本地文件在浏览器中读取；共鸣记录还支持手动云同步。",
+          "en": "Local files are read in the browser. Resonance records also support manual cloud sync."
         },
         "image": null,
         "alt": {
@@ -1086,14 +1322,71 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "JSON 文件",
-            "预览确认",
-            "导出备份"
+            "共鸣记录 JSON 与衣橱独立备份",
+            "共鸣导入先预览，确认后替换全部本地共鸣记录",
+            "全部数据备份包含衣橱，不包含相册原图与网站设置"
           ],
           "en": [
-            "JSON file",
-            "Preview and confirm",
-            "Export backup"
+            "Resonance JSON and separate wardrobe backups",
+            "Preview resonance imports; confirmation replaces all local resonance records",
+            "All-data backups include wardrobe data, but exclude original album photos and site settings"
+          ]
+        }
+      },
+      {
+        "id": "resonance-cloud",
+        "label": {
+          "zh": "共鸣云同步",
+          "en": "Resonance cloud sync"
+        },
+        "caption": {
+          "zh": "共鸣云同步",
+          "en": "Resonance cloud sync"
+        },
+        "title": {
+          "zh": "换一台设备，也能接着查看",
+          "en": "Continue on another device"
+        },
+        "body": {
+          "zh": "注册并登录同一账号，手动上传或下载共鸣记录，在电脑与手机之间迁移档案。",
+          "en": "Register and sign in to the same account, then manually upload or download resonance records between desktop and mobile."
+        },
+        "points": {
+          "zh": [
+            "每个账号保存一份共鸣记录云端存档",
+            "上传覆盖云端，下载覆盖本地，确认前核对记录",
+            "支持删除云端存档，保留本地记录"
+          ],
+          "en": [
+            "One resonance cloud save per account",
+            "Upload overwrites the cloud; download overwrites local records—review before confirming",
+            "Delete the cloud save while keeping local records"
+          ]
+        },
+        "note": {
+          "zh": "目前仅同步共鸣记录；登录及本地修改不会自动同步。",
+          "en": "Currently syncs resonance records only. Sign-in and local edits do not sync automatically."
+        },
+        "image": "/images/screenshots/resonance-cloud.webp",
+        "alt": {
+          "zh": "共鸣云同步界面截图",
+          "en": "Resonance cloud sync interface screenshot"
+        },
+        "icon": "sparkles",
+        "schematicTitle": {
+          "zh": "换一台设备，也能接着查看",
+          "en": "Continue on another device"
+        },
+        "schematicItems": {
+          "zh": [
+            "每个账号保存一份共鸣记录云端存档",
+            "上传覆盖云端，下载覆盖本地，确认前核对记录",
+            "支持删除云端存档，保留本地记录"
+          ],
+          "en": [
+            "One resonance cloud save per account",
+            "Upload overwrites the cloud; download overwrites local records—review before confirming",
+            "Delete the cloud save while keeping local records"
           ]
         }
       }
@@ -1143,7 +1436,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "不必先建立搭配方案；照片参数解析可手动补充 UID。",
           "en": "No outfit scheme is required. A UID can be supplied for photo parameter parsing."
         },
-        // 放入 public/images/screenshots/parse-tools.webp 后刷新页面即可显示。
         "image": "/images/screenshots/parse-tools.webp",
         "alt": {
           "zh": "相机参数与图片解析入口界面截图",
@@ -1164,6 +1456,63 @@ export const showcaseCategories: ShowcaseCategory[] = [
             "Upload original",
             "Camera parameters",
             "Outfit code"
+          ]
+        }
+      },
+      {
+        "id": "camera-favorites",
+        "label": {
+          "zh": "相机参数收藏",
+          "en": "Camera parameter favorites"
+        },
+        "caption": {
+          "zh": "相机参数收藏",
+          "en": "Camera parameter favorites"
+        },
+        "title": {
+          "zh": "把喜欢的拍摄参数，也珍藏",
+          "en": "Keep your favorite camera presets"
+        },
+        "body": {
+          "zh": "从照片参数解析窗口点击“收藏参数”，或在收藏夹的“相机参数”页手动添加。",
+          "en": "Click Save parameters in the photo parameter dialog, or add a preset manually under Camera Parameters in Favorites."
+        },
+        "points": {
+          "zh": [
+            "自定义名称、封面与单标签分类",
+            "复制参数、编辑收藏或打开详情",
+            "支持 ZIP 备份导入与导出"
+          ],
+          "en": [
+            "Custom names, covers and single-tag categories",
+            "Copy parameters, edit favorites, or open details",
+            "Import and export ZIP backups"
+          ]
+        },
+        "note": {
+          "zh": "数据保存在当前浏览器，所有相册共用，无需先选择相册目录。",
+          "en": "Data is saved in the current browser and shared across albums. No album folder is required."
+        },
+        "image": "/images/screenshots/camera-favorites.webp",
+        "alt": {
+          "zh": "相机参数收藏界面截图",
+          "en": "Camera parameter favorites interface screenshot"
+        },
+        "icon": "sparkles",
+        "schematicTitle": {
+          "zh": "把喜欢的拍摄参数，也珍藏",
+          "en": "Keep your favorite camera presets"
+        },
+        "schematicItems": {
+          "zh": [
+            "自定义名称、封面与单标签分类",
+            "复制参数、编辑收藏或打开详情",
+            "支持 ZIP 备份导入与导出"
+          ],
+          "en": [
+            "Custom names, covers and single-tag categories",
+            "Copy parameters, edit favorites, or open details",
+            "Import and export ZIP backups"
           ]
         }
       },
@@ -1290,8 +1639,8 @@ export const showcaseUi = {
     "en": "From album memories to handy tools."
   },
   "intro": {
-    "zh": "整理照片、珍藏搭配与家园灵感，也把每一次共鸣好好记录。",
-    "en": "Organize photos, save outfit and home ideas, and keep track of each resonance."
+    "zh": "整理照片、珍藏搭配与家园灵感，记录每一次共鸣，也看看衣橱里的收集进度。",
+    "en": "Organize photos, save outfit and home ideas, track resonance, and explore your wardrobe collection."
   },
   "categoriesLabel": {
     "zh": "功能分类",
@@ -1367,10 +1716,20 @@ export const showcaseSupport = {
         "zh": "问题反馈、作者社交平台与支持作者入口，集中放在工具集的“更多”菜单。",
         "en": "Find issue feedback, creator profiles and support links in the toolkit More menu."
       }
+    },
+    {
+      "title": {
+        "zh": "全部数据备份与迁移",
+        "en": "All-data backup and migration"
+      },
+      "body": {
+        "zh": "在“更多”中导出或导入搭配码、家园方案、相机参数收藏、共鸣记录与衣橱数据，不包含相册原图与网站设置。",
+        "en": "Use More to export or import outfit codes, home schemes, camera favorites, resonance records and wardrobe data; original album photos and site settings are excluded."
+      }
     }
   ],
   "cloudStatus": {
-    "zh": "共鸣记录云端同步 · 待上线",
-    "en": "Resonance cloud sync · Coming soon"
+    "zh": "共鸣记录云同步 · 已支持手动上传与下载",
+    "en": "Resonance cloud sync · Manual upload and download available"
   }
 }
