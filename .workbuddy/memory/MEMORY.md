@@ -1,6 +1,6 @@
 # NikkiWebsite — 项目长期备忘
 
-「暖立方 / NikkiCube」营销站（无限暖暖相册管理工具），Vue 3 + TS + Vite 单页。应用本体是开源仓库 sumopenny/Infinity-Nikki-Album-Manager，本站只负责介绍引流。
+「暖立方 / NikkiCube」营销站（无限暖暖相册管理工具），Vue 3 + TS + Vite 单页。应用本体是开源仓库 sumopenny/Infinity-Nikki-Toolkit，本站只负责介绍引流。
 
 ## 结构约定
 - 核心文件仅 5 个：`src/App.vue`（约 990 行，逻辑+全部文案）、`src/style.css`（全站样式+断点）、`src/main.ts`、`src/components/ScreenshotPreviewPlaceholder.vue`、`index.html`（head 内联脚本：提前设主题 + preload 首图）。改样式→style.css；改逻辑/文案→App.vue；`public/_headers` 管 Cloudflare 缓存头。

@@ -49,7 +49,7 @@ npm run preview
 
 ## 页面内容
 
-官网介绍相册管理、搭配码、家园方案、相机参数收藏、共鸣记录与个人衣橱，提供自动接收搭配码教程、备份迁移说明和常见问题。详细操作请阅读主项目的[中文 README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md)或[英文 README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README_EN.md)。
+官网介绍相册管理、搭配码、家园方案、相机参数收藏、共鸣记录与个人衣橱，提供自动接收搭配码教程、备份迁移说明和常见问题。详细操作请阅读主项目的[中文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md)或[英文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md)。
 
 ## 动效与无障碍
 
@@ -62,7 +62,7 @@ npm run preview
 ## 页面入口
 
 - 在线应用：[Cloudflare Pages](https://infinity-nikki-album-manager.pages.dev/)，[备用站点](https://infinity-nikki-album-manager.vercel.app/)
-- 源码与发布：[GitHub](https://github.com/sumopenny/Infinity-Nikki-Album-Manager)，[Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager)
+- 源码与发布：[GitHub](https://github.com/sumopenny/Infinity-Nikki-Toolkit)，[Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Toolkit)
 
 项目是独立社区工具，与《无限暖暖》官方及其发行方没有隶属、授权或背书关系。
 

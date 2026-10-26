@@ -49,7 +49,7 @@ The homepage has a self-referencing canonical; `public/robots.txt` references `p
 
 ## Page content
 
-The website covers album management, outfit codes, home schemes, camera favorites, resonance records and wardrobe collections, with an automatic outfit-code walkthrough, backup and migration guidance, and FAQ. For detailed instructions, read the toolkit [Chinese README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md) or [English README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README_EN.md).
+The website covers album management, outfit codes, home schemes, camera favorites, resonance records and wardrobe collections, with an automatic outfit-code walkthrough, backup and migration guidance, and FAQ. For detailed instructions, read the toolkit [Chinese README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md) or [English README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md).
 
 ## Motion and accessibility
 
@@ -62,7 +62,7 @@ The website covers album management, outfit codes, home schemes, camera favorite
 ## Links
 
 - App: [Cloudflare Pages](https://infinity-nikki-album-manager.pages.dev/), [alternate site](https://infinity-nikki-album-manager.vercel.app/)
-- Source and releases: [GitHub](https://github.com/sumopenny/Infinity-Nikki-Album-Manager), [Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager)
+- Source and releases: [GitHub](https://github.com/sumopenny/Infinity-Nikki-Toolkit), [Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Toolkit)
 
 This is an independent community tool. It is not affiliated with, authorized, or endorsed by the Infinity Nikki team or publisher.
 

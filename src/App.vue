@@ -220,12 +220,12 @@ const trustIcons = [FileImage, MonitorSmartphone, Archive, Heart, Shirt, Cloud]
 const links = {
   app: 'https://infinity-nikki-album-manager.pages.dev/',
   fallback: 'https://infinity-nikki-album-manager.vercel.app/',
-  github: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager',
+  github: 'https://github.com/sumopenny/Infinity-Nikki-Toolkit',
   // 反馈入口：小红书主页（原 GitHub Issues 已不再作为对外反馈渠道）
   feedback: 'https://xhslink.cn/o/57r27sFj6zH',
-  githubReadme: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md',
-  gitee: 'https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager',
-  giteeReadme: 'https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager/blob/master/README.md'
+  githubReadme: 'https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md',
+  gitee: 'https://gitee.com/sumopenny/Infinity-Nikki-Toolkit',
+  giteeReadme: 'https://gitee.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md'
 }
 
 const copy = computed(() => language.value === 'zh'
