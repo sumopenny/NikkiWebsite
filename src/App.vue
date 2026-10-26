@@ -30,13 +30,9 @@ import { imageSource, imageSrcset, setImageRequest } from './imageAssets'
 
 type Language = 'zh' | 'en'
 type Theme = 'light' | 'dark'
-/**
- * 素材统一扩展名 —— **换图片格式只改这一行**。
- * 首屏 / 画廊 / 截图在 public/images 下都是同名文件，只有后缀不同，
- * 所以全部走这里的常量拼路径，不再在下面各处写死后缀。
- */
+/** 首屏与画廊源图使用 WebP；构建时通过清单映射到内容哈希地址。 */
 const IMAGE_EXT = '.webp'
-// 真实素材路径：把同名图片放进 public/images/ 对应子目录即可自动启用。
+// 源素材位于 images/；生成清单沿用 /images/ 逻辑路径，公开文件位于 optimized/。
 const assetPath = (file: string): string => imageSource(`/images/${file}`)
 /**
  * 首屏暖暖氛围美照轮播（16:9 横向原图，建议宽度 2400px+）。
@@ -59,17 +55,17 @@ const galleryPhotoSlots: string[] = Array.from({ length: GALLERY_SLIDE_LIMIT }, 
 /** 画廊探测结果：第 N 个卡位是否有真实照片。 */
 const galleryAvailable = ref<Record<number, boolean>>({})
 /**
- * 画廊堆叠卡片数固定为 5 —— 与原始设计一致：始终渲染 5 张叠放的卡片，
+ * 画廊保留 10 个轮播卡位；图片按当前及后续四张的窗口按需加载，
  * 靠 activeGalleryIndex 做堆叠转场与循环。这里不要跟着实际照片数变化，
  * 否则照片少/没照片时堆叠动画就没了。
  */
 const gallerySlideCount = GALLERY_SLIDE_LIMIT
 /**
  * ★ 首屏轮播「每张停留多久」（毫秒）—— 想调快/调慢改这里即可。
- * 3000 = 每 3 秒切到下一张。改 2000 是 2 秒，改 4000 是 4 秒。
+ * 默认 2600，即每 2.6 秒切到下一张。
  * 注意：这个只管停留时长，**不管淡入淡出的快慢**。
  * 淡化速度在 src/style.css 的 :root 变量 --hero-fade / --hero-fade-scale 上
- * （值绑在 .hero-photo--current / --next 的 transition 里）。
+ * （值绑在 .hero-crossfade-* 的 transition 里）。
  * 间隔不要小于过渡时长，否则会看起来像一直在闪。
  */
 const HERO_SLIDE_INTERVAL = 2600
@@ -224,12 +220,10 @@ const links = {
   app: 'https://infinity-nikki-album-manager.pages.dev/',
   fallback: 'https://infinity-nikki-album-manager.vercel.app/',
   github: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager',
-  githubReleases: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager/releases',
   // 反馈入口：小红书主页（原 GitHub Issues 已不再作为对外反馈渠道）
   feedback: 'https://xhslink.cn/o/57r27sFj6zH',
   githubReadme: 'https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md',
   gitee: 'https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager',
-  giteeReleases: 'https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager/releases',
   giteeReadme: 'https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager/blob/master/README.md'
 }
 
@@ -248,9 +242,6 @@ const copy = computed(() => language.value === 'zh'
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: '从相册时光，到趁手的小工具。',
       previewBody: "整理照片、珍藏搭配与家园灵感，记录每一次共鸣，也看看衣橱里的收集进度。",
-      shotHint: '点击缩略图切换预览，点击大图放大查看',
-      previewShotLabel: '真实应用界面', previewPlaceholderLabel: '截图素材位',
-      previewAssetNote: '真实应用截图待提供', previewAssetRatio: '建议原图比例 16:10',
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER',
       galleryTitle: '留一块位置，给你镜头里的暖暖。',
       galleryBody: '尽情欣赏暖暖美照，让官网也像一本小小的旅途画册。',
@@ -323,11 +314,11 @@ const copy = computed(() => language.value === 'zh'
     "a": "相册普通删除会移入最近删除，可从中恢复。最近删除中的永久删除、清空全部和专项清理会直接修改电脑文件，无法通过最近删除恢复。"
   }
 ],
-      readme: '阅读完整 README', report: '反馈问题-小红书',
+      report: '反馈问题-小红书',
       footerLine: '为每一张心动留个位置。', disclaimer: '独立社区项目 · 与《无限暖暖》官方无隶属或背书关系',
       themeLight: '浅色主题', themeDark: '深色主题', languageLabel: '切换语言',
-      openImage: '放大查看界面预览', closeImage: '关闭图片预览', menuOpen: '打开导航菜单', menuClose: '关闭导航菜单',
-      imageModalLabel: '应用界面大图预览', appUnavailableNote: '若主站暂时无法访问，可试用备用站点。'
+      menuOpen: '打开导航菜单', menuClose: '关闭导航菜单',
+      appUnavailableNote: '若主站暂时无法访问，可试用备用站点。'
     }
   : {
       nav: ['Home', 'Features', 'Usage guide', 'FAQ'],
@@ -340,9 +331,6 @@ const copy = computed(() => language.value === 'zh'
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: 'From album memories to handy little tools.',
       previewBody: "Organize photos, save outfit and home ideas, track resonance, and explore your wardrobe collection.",
-      shotHint: 'Choose a thumbnail to switch views, then open the preview',
-      previewShotLabel: 'REAL APP INTERFACE', previewPlaceholderLabel: 'SCREENSHOT SLOT',
-      previewAssetNote: 'Real app screenshot to come', previewAssetRatio: 'Suggested source ratio: 16:10',
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER', galleryTitle: 'A little space for Nikki in your frame.',
       galleryBody: "Enjoy Nikki's beautiful photos, and let this site feel like a little travel album.",
       tutorialKicker: 'OUTFIT CODE · AUTO UPDATE',
@@ -412,11 +400,11 @@ const copy = computed(() => language.value === 'zh'
     "a": "Regular album deletion moves photos to Recently Deleted for restoration. Permanent deletion, clearing Recently Deleted and targeted cleanup modify local files and cannot be restored through Recently Deleted."
   }
 ],
-      readme: 'Read the full README', report: 'Feedback on Xiaohongshu',
+      report: 'Feedback on Xiaohongshu',
       footerLine: 'A little place for every lovely moment.', disclaimer: 'Independent community project · Not affiliated with or endorsed by Infinity Nikki',
       themeLight: 'Light theme', themeDark: 'Dark theme', languageLabel: 'Switch language',
-      openImage: 'Open interface preview', closeImage: 'Close image preview', menuOpen: 'Open navigation menu', menuClose: 'Close navigation menu',
-      imageModalLabel: 'Full-size app interface preview', appUnavailableNote: 'If the main site is temporarily unavailable, try the alternate site.'
+      menuOpen: 'Open navigation menu', menuClose: 'Close navigation menu',
+      appUnavailableNote: 'If the main site is temporarily unavailable, try the alternate site.'
     })
 
 
@@ -492,18 +480,6 @@ function galleryOffset(slot: number): number {
   return (slot - 1 - activeGalleryIndex.value + gallerySlideCount) % gallerySlideCount
 }
 
-/**
- * 首屏轮播：多张图不会同时参与合成 —— 只有「当前」与「下一张」两层参与过渡，
- * 其余隐藏。下一张从轻微放大状态淡入，当前图同时淡出，形成无缝交叉溶解。
- * 用「目标索引 - 当前索引」的环形差值判断相对关系，循环到头时同样成立。
- */
-function heroSlideState(index: number): 'current' | 'next' | 'hidden' {
-  const count = heroSlideCount.value
-  if (!count) return 'hidden'
-  const delta = ((index - activeHeroSlide.value) % count + count) % count
-  return delta === 0 ? 'current' : delta === 1 ? 'next' : 'hidden'
-}
-
 function setHeroSlide(index: number): void {
   const count = heroSlideCount.value
   if (!count) return
@@ -512,10 +488,6 @@ function setHeroSlide(index: number): void {
 
 function showNextHeroSlide(): void {
   setHeroSlide(activeHeroSlide.value + 1)
-}
-
-function showNextHeroSlideForTimer(): void {
-  showNextHeroSlide()
 }
 
 function probeAvailable(slots: string[], onHit: (slot: number) => void, onDone: () => void, priorityFor: (slot: number) => 'high' | 'low' = () => 'low'): void {
@@ -545,8 +517,8 @@ function probeAvailable(slots: string[], onHit: (slot: number) => void, onDone: 
 /**
  * 探测首屏某一主题组（浅色 1~10 / 深色 11~20）。
  *
- * 优先级策略：前 2 张给 high —— 第 1 张是首屏的 LCP，第 2 张 3 秒后就要用；
- * 其余 6 张给 low，只做预热，不去和 JS/CSS/字体抢带宽。
+ * 优先级策略：前 2 张给 high —— 第 1 张是首屏的 LCP，第 2 张会在下一轮使用；
+ * 其余图片给 low，只做预热，不去和 JS/CSS/字体抢带宽。
  */
 function probeHeroSlides(group: Theme): void {
   const slots = group === 'dark' ? heroSlidesDark : heroSlidesLight
@@ -602,13 +574,8 @@ function probeGallerySlides(): void {
 watch(activeGalleryIndex, probeGallerySlides)
 function startGalleryLoading(): void { galleryStarted.value = true; probeGallerySlides() }
 
-/**
- * 首屏轮播的渲染列表：附上 state。
- * 只让「当前」与「下一张」进入 DOM，其余直接跳过，避免多张大图同时占合成层。
- */
-const heroSlideItems = computed(() => heroVisibleSlides.value
-  .map((src, index) => ({ src, index, state: heroSlideState(index) }))
-  .filter(item => item.state !== 'hidden'))
+// Transition 保留离场图片，直到新图淡入完成；稳定时只保留当前一张。
+const heroCurrentSlide = computed(() => heroVisibleSlides.value[activeHeroSlide.value % heroSlideCount.value])
 
 // 主题切换时照片组整体变化：索引归零，并确保该主题那一组已完成探测。
 watch(theme, (next) => {
@@ -621,7 +588,7 @@ watch(heroCanAutoplay, (enabled) => {
     window.clearInterval(heroTimer)
     heroTimer = undefined
   }
-  if (enabled) heroTimer = window.setInterval(showNextHeroSlideForTimer, HERO_SLIDE_INTERVAL)
+  if (enabled) heroTimer = window.setInterval(showNextHeroSlide, HERO_SLIDE_INTERVAL)
 })
 
 /**
@@ -687,10 +654,6 @@ function handleVisibilityChange(): void {
   pageVisible.value = document.visibilityState === 'visible'
 }
 
-function showNextGallerySlideForTimer(): void {
-  showNextGallerySlide()
-}
-
 /**
  * 按当前播放条件重建定时器。手动切图后调它，
  * 让 2 秒的倒计时从用户操作那一刻重新开始，而不是接着上一次的残余时间。
@@ -701,7 +664,7 @@ function restartGalleryTimer(): void {
     galleryTimer = undefined
   }
   if (galleryCanAutoplay.value) {
-    galleryTimer = window.setInterval(showNextGallerySlideForTimer, GALLERY_SLIDE_INTERVAL)
+    galleryTimer = window.setInterval(showNextGallerySlide, GALLERY_SLIDE_INTERVAL)
   }
 }
 
@@ -811,7 +774,7 @@ onBeforeUnmount(() => {
     <motion.div class="reading-progress" aria-hidden="true" :style="{ scaleX: pageScrollProgress }" />
     <header class="site-header">
       <a class="brand" href="#top" :aria-label="language === 'zh' ? '暖立方首页' : 'NikkiCube home'" @click="closeMenu">
-        <span class="brand-mark"><img src="/favicon.ico" alt="" /></span>
+        <span class="brand-mark"><img src="/images/brand-mark.png" alt="" /></span>
         <span class="brand-name">{{ language === 'zh' ? '暖立方' : 'NikkiCube' }}<small>{{ language === 'zh' ? '无限暖暖工具集' : 'Infinity Nikki Toolkit' }}</small></span>
       </a>
       <nav class="desktop-nav" :aria-label="language === 'zh' ? '页面导航' : 'Page navigation'">
@@ -842,10 +805,10 @@ onBeforeUnmount(() => {
       <section id="top" ref="heroSection" class="hero-section">
         <div :ref="setHeroRegion" class="hero-art" :aria-label="copy.artHero">
           <motion.div class="hero-art-frame" :style="heroArtMotionStyle">
-            <template v-if="heroHasPhoto">
-              <img v-for="item in heroSlideItems" :key="item.src" class="hero-photo" :class="`hero-photo--${item.state}`" :src="item.src" :srcset="imageSrcset(item.src)" sizes="(max-width: 900px) 100vw, 75vw" decoding="async" :alt="item.state === 'current' ? `${copy.artHero} ${item.index + 1}` : ''" :aria-hidden="item.state === 'current' ? undefined : 'true'" />
-            </template>
-            <div v-else class="art-placeholder hero-placeholder">
+            <Transition name="hero-crossfade">
+              <img v-if="heroCurrentSlide" :key="heroCurrentSlide" class="hero-photo" :src="heroCurrentSlide" :srcset="imageSrcset(heroCurrentSlide)" sizes="(max-width: 900px) 100vw, 75vw" decoding="async" :alt="`${copy.artHero} ${heroIndexCurrent}`" />
+            </Transition>
+            <div v-if="!heroHasPhoto" class="art-placeholder hero-placeholder">
               <Sparkles :size="26" stroke-width="1.4" />
               <span class="art-placeholder-title">{{ copy.artHero }}</span>
               <span class="art-placeholder-ratio">{{ copy.artRatioWide }}</span>
@@ -959,7 +922,7 @@ onBeforeUnmount(() => {
 
     <footer class="site-footer">
       <div class="footer-main">
-        <a class="brand footer-brand" href="#top"><span class="brand-mark"><img src="/favicon.ico" alt="" /></span><span class="brand-name">{{ language === 'zh' ? '暖立方' : 'NikkiCube' }}<small>{{ language === 'zh' ? '无限暖暖工具集' : 'Infinity Nikki Toolkit' }}</small></span></a>
+        <a class="brand footer-brand" href="#top"><span class="brand-mark"><img src="/images/brand-mark.png" alt="" /></span><span class="brand-name">{{ language === 'zh' ? '暖立方' : 'NikkiCube' }}<small>{{ language === 'zh' ? '无限暖暖工具集' : 'Infinity Nikki Toolkit' }}</small></span></a>
         <p>{{ copy.footerLine }}</p>
         <a class="back-top" href="#top" :aria-label="language === 'zh' ? '返回顶部' : 'Back to top'"><ArrowDown :size="17" /></a>
       </div>

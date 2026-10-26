@@ -1,10 +1,10 @@
 # NikkiWebsite
 
-《无限暖暖相册管理》的独立项目官网。使用 Vue 3、TypeScript 和 Vite 构建，可单独开发、构建并部署到 Cloudflare Pages；不会连接相册应用的 API 或 D1 数据库。
+暖立方（Nikki³）无限暖暖工具集的独立项目官网。使用 Vue 3、TypeScript 和 Vite 构建，可单独开发、构建并部署到 Cloudflare Pages；不会连接相册应用的 API 或 D1 数据库。
 
 ## 本地预览
 
-要求 Windows 与 Node.js LTS。双击项目根目录的 `Start-Website.bat`，首次运行会安装依赖并打开本地网站；默认使用 `http://localhost:5180`，端口被占用时会自动选择 5181–5190 中的空闲端口。也可以在终端运行：
+要求 Windows 与 Node.js 20.9 或更新的 LTS 版本。双击项目根目录的 `Start-Website.bat`，首次运行会安装依赖并打开本地网站；默认使用 `http://localhost:5180`，端口被占用时会自动选择 5181–5190 中的空闲端口。也可以在终端运行：
 
 ```powershell
 npm install
@@ -26,7 +26,7 @@ npm run preview
 - Build command: `npm run build`
 - Build output directory: `dist`
 - Root directory: `/`
-- Environment: Node.js 20 或更新的 LTS 版本
+- Environment: Node.js 20.9 或更新的 LTS 版本
 
 本项目的 `wrangler.toml` 声明了 Pages 输出目录。官网为静态单页，不需要配置 D1、Secrets 或应用 API 代理。部署后可在 Cloudflare Pages 项目中绑定独立域名。
 
@@ -40,24 +40,24 @@ npm run preview
 
 ## 素材
 
-- `public/images/` 是首屏与画廊美照的投放目录，图片统一为 **`.webp`**，文件名规则在 `src/App.vue` 顶部（后缀由 `IMAGE_EXT` 常量统一控制）：首屏轮播浅色模式读 `1.webp` ~ `10.webp`、深色模式读 `11.webp` ~ `20.webp`（各最多 10 张，每 3 秒切换并循环），画廊为 `gallery-1.webp` ~ `gallery-10.webp`（16:10）。**张数由目录内容决定**——启动时逐个探测文件，缺号只跳过那一张、不中断整轮探测，所以有几张就播几张，不会去请求不存在的文件或凑满上限。画廊 10 个卡位各自独立探测，缺号会显示占位骨架。原始 jpeg/jpg 已归档到 `public/images/originals/`（不参与页面加载），需要重新生成 WebP 时跑 `scripts/convert_webp.py`。命名与规格详见 `public/images/README.md`。
-- `public/screenshots/` 内是从主项目复制的界面截图，用于展示真实应用。
-- 自动更新搭配码教程图为 `public/images/auto-update-outfit-code.webp`，从界面预览区后展示，图片保持原始纵向比例。
-- 预览区按“相册时间轴 → 相册动作轴 → 其他工具”展示界面截图；把截图按 `public/images/screenshots/` 下不带数字前缀的约定文件名放入即可自动替换，建议原图比例 16:10。
-- 页面中标有 `ASSET SLOT` 的区域是待替换素材位，当前没有放入游戏美术。替换前请确认素材有权用于公开展示。
-- 替换时保留对应容器比例，并为图片提供描述性替代文本。
+- 源图片统一放在项目根目录的 `images/`，不会复制进部署目录。首屏浅色使用 `1.webp`～`10.webp`，深色使用 `11.webp`～`20.webp`；画廊使用 `gallery-1.webp`～`gallery-10.webp`。
+- 功能预览包含相册、搭配码、家园方案、暖暖档案和解析工具五类，数据与截图路径在 `src/data/showcase.ts`；真实截图放在 `images/screenshots/`。未提供或加载失败的截图显示功能示意图。
+- 教程图为 `images/auto-update-outfit-code.webp`，保留原始纵向比例，支持打开完整图片。
+- 品牌图标位于 `public/images/brand-mark.png`，浏览器图标位于 `public/favicon.ico` 与 `public/favicon.svg`。
+- 原始 JPEG/JPG 可选归档在 `images/originals/`。安装 Python 与 Pillow 后，可使用 `python scripts/convert_webp.py` 转成源 WebP；归档文件不发布。
+- 命名与替换步骤详见 [图片素材说明](images/README.md)。更换图片格式需要同时调整路径、构建脚本和预加载配置，不能只修改 `IMAGE_EXT`。
 
 ## 页面内容
 
-官网介绍相册时间轴、搜索与收藏、批量导入导出、最近删除与恢复、搭配方案和搭配码、照片参数解析、专项清理、抽卡吉时、帮助与反馈；新增自动更新搭配码的授权与游戏内操作教程，并说明文件夹授权、本地处理及永久删除等边界。详细教程请阅读主项目的[中文 README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md)或[英文 README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README_EN.md)。
+官网介绍相册管理、搭配码、家园方案、相机参数收藏、共鸣记录与个人衣橱，提供自动接收搭配码教程、备份迁移说明和常见问题。详细操作请阅读主项目的[中文 README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md)或[英文 README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README_EN.md)。
 
 ## 动效与无障碍
 
-- 滚动显现、首屏分段进入、截图视差与轻倾斜、画廊堆叠转场由 motion-v 驱动；导航、按钮和截图淡入淡出使用 CSS。首屏美照轮播使用纯 CSS 交叉溶解（同一时刻只有当前图与下一张参与合成），不依赖 JS 逐帧动画。
-- 画廊与首屏轮播的暂停条件：切到别的标签页、系统启用“减少动态效果”时暂停；启用减少动态效果时也会关闭视差与指针倾斜。首屏轮播不受悬停或聚焦影响，会持续播放。
-- 首屏轮播间隔由 `src/App.vue` 的 `HERO_SLIDE_INTERVAL`（毫秒）控制，默认 2000。
-- 动效设计参考 [Motion for Vue](https://motion.dev/docs/vue)、[Vue Bits](https://vue-bits.dev/) 和 [AutoAnimate 的 Vue 用法](https://auto-animate.formkit.com/)。页面只依赖 motion-v，没有复制 Vue Bits 源码或引入第二套动画库。
-- 页面提供跳过导航链接、可见键盘焦点、截图预览关闭与焦点返回，并响应 prefers-reduced-motion。
+- 滚动显现、首屏文字进入、截图倾斜和画廊堆叠转场由 motion-v 驱动。首屏照片使用 Vue Transition 与 CSS：旧图保留在下层，直到新图淡入完成，稳定时仅保留当前图片。
+- 首屏每 2.6 秒切换（`HERO_SLIDE_INTERVAL = 2600`），画廊每 2 秒切换（`GALLERY_SLIDE_INTERVAL = 2000`）；只有一张首屏图时静态显示。
+- 首屏在移出视口、页面隐藏或系统减少动态效果时暂停；画廊在页面隐藏、系统减少动态效果或点击暂停按钮时暂停。悬停、键盘聚焦与手动切图不暂停自动播放。
+- 页面提供跳过导航、可见键盘焦点和截图弹窗关闭后的焦点返回；减少动态效果时关闭视差与指针倾斜。
+- 动效参考 [Motion for Vue](https://motion.dev/docs/vue)、[Vue Bits](https://vue-bits.dev/) 和 [AutoAnimate](https://auto-animate.formkit.com/)，运行时只使用 motion-v。
 
 ## 页面入口
 
@@ -69,9 +69,9 @@ npm run preview
 
 ## 图片加载与更新
 
-- 继续替换 `public/images/` 下原有名称的 WebP 图片；不要手动修改 `optimized/`。
-- `npm run dev` 与 `npm run build` 会先运行 `scripts/prepare-images.mjs`，生成内容哈希地址、960px 图片及清单。替换原图后重新运行启动或构建命令，新地址可避免旧缓存。
-- 首屏前两张优先加载，同主题最多两张并发；功能预览首屏就绪后最多五张后台并发。
-- 美照区域距离视口 600px 时开始加载当前及后续四张，随后随轮播补充；教程图使用懒加载。
-- 响应式图片由浏览器结合显示宽度与像素密度选择；放大功能截图时使用原尺寸图片。
-- `node scripts/verify-image-loading.mjs` 验证加载队列与生成图片（先运行构建）。
+1. 替换 `images/` 中的源 WebP，运行 `npm run dev` 或 `npm run build`。开发服务器运行期间替换图片后，也需要重新启动以生成清单。
+2. `scripts/prepare-images.mjs` 生成原尺寸及最多 960px 宽的图片，输出到 `public/images/optimized/`；地址取最终文件内容的哈希。源图、压缩参数或编码结果变化时，对应地址随之更新。宽度不超过 960px 的图片直接复用原尺寸文件。
+3. `src/data/imageManifest.json` 是自动生成的路径清单。不要手工修改它或 `optimized/`；它们不提交到 Git。
+4. 首屏探测最多两个并发，前两张优先加载；功能截图在首屏可展示后最多五个后台并发。画廊接近视口 600px 时加载当前及后续四张，教程图使用懒加载。浏览器按宽度和像素密度选择尺寸，放大截图使用原尺寸。
+5. `dist` 只包含公开资源和生成图片，不包含 `images/` 源图。`/images/*`（含 optimized）统一缓存 7 天；JS/CSS 构建产物按内容哈希长期缓存。
+6. 构建后运行 `node scripts/verify-image-loading.mjs`，验证加载队列、输出内容哈希、尺寸、部署引用、源图排除和图片缓存配置。

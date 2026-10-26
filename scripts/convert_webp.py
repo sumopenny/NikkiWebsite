@@ -1,13 +1,13 @@
-"""把 public/images/originals/ 下的原始 jpeg/jpg 批量转成 WebP。
+"""把 images/originals/ 下的原始 jpeg/jpg 批量转成 WebP。
 
-用法（Windows / 本机 Python）：
-    D:\\py\\python.exe scripts\\convert_webp.py
+用法（已安装 Python 与 Pillow）：
+    python scripts/convert_webp.py
 
-输出：public/images/ 下与原名同路径、同主文件名的 .webp（分辨率保持不变）。
+输出：images/ 下与原名同路径、同主文件名的 .webp（分辨率保持不变）。
 - 首屏 / 画廊照片：quality 88
 - screenshots/ 下的界面截图：quality 88（UI 含文字，保真度给高一点）
 
-依赖：Pillow（本机 D:\\py\\python.exe 已自带，含 WebP 编码支持）。
+依赖：Pillow，需包含 WebP 编码支持。
 """
 import argparse
 import os
@@ -16,8 +16,8 @@ import sys
 from PIL import Image, ImageOps
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DEFAULT_SRC = os.path.join(ROOT, 'public', 'images', 'originals')
-DEFAULT_DST = os.path.join(ROOT, 'public', 'images')
+DEFAULT_SRC = os.path.join(ROOT, 'images', 'originals')
+DEFAULT_DST = os.path.join(ROOT, 'images')
 
 QUALITY_PHOTO = 88
 QUALITY_SHOT = 88
@@ -54,7 +54,7 @@ def main() -> int:
         rel = os.path.relpath(src, args.src)
         dst = os.path.join(args.dst, os.path.splitext(rel)[0] + '.webp')
         os.makedirs(os.path.dirname(dst), exist_ok=True)
-        # 子目录（screenshots/）里的当作界面截图，质量给高一点
+        # 子目录（screenshots/）使用独立的截图质量参数
         q = args.shot_quality if os.path.dirname(rel) else args.quality
         try:
             with Image.open(src) as raw:

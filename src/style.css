@@ -27,10 +27,9 @@
   --header-height: 72px;
   --content-width: 1200px;
   /*
-   * 首屏图片交叉溶解的时长。--hero-fade 管淡出+淡入（两侧必须一致），
-   * --hero-fade-scale 管叠加的缩放位移，故意比溶解略长，收尾更从容。
-   * 两者绑在同一条 transition 上，调整时请一起动 —— 只压 --hero-fade 会让缩放留下「尾巴」。
-   * 别和 App.vue 的 HERO_SLIDE_INTERVAL（每张停留 3 秒）混淆：那个管停留，不管淡化速度。
+   * --hero-fade 控制新图淡入，--hero-fade-scale 控制缩放并决定旧图保留时长。
+   * 保留时长应不短于淡入时长，避免新图尚未显示完整时旧图已移除。
+   * App.vue 的 HERO_SLIDE_INTERVAL（2600ms）控制切图间隔。
    */
   --hero-fade: 0.45s;
   --hero-fade-scale: 0.6s;
@@ -100,8 +99,8 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 
 .site-header { position: sticky; z-index: 20; top: 0; display: flex; align-items: center; justify-content: space-between; height: var(--header-height); padding-inline: max(32px, calc((100vw - 1320px) / 2)); border-bottom: 1px solid color-mix(in srgb, var(--line) 78%, transparent); background: color-mix(in srgb, var(--page) 88%, transparent); backdrop-filter: blur(18px); }
 .brand { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 11px; min-width: 210px; }
-.brand-mark { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
-.brand-mark img { width: 27px; height: 27px; object-fit: contain; }
+.brand-mark { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: 0 2px 4px rgba(161, 71, 101, 0.113) }
+.brand-mark img { width: 100%; height: 100%; object-fit: contain; }
 .brand-name { display: flex; flex-direction: column; gap: 3px; font-size: 14px; font-weight: 700; line-height: 1.15; }
 .brand-name small { color: var(--muted); font-size: 10px; font-weight: 600; }
 .desktop-nav { display: flex; align-items: center; justify-content: center; gap: 28px; }
@@ -192,7 +191,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .hero-note svg { color: var(--rose); }
 /*
  * z-index: 3 —— 它锚在 .hero-section 底部，而 .hero-section 的高度由 .hero-art 撑开，
- * 所以这行小字会正好落在照片下缘上。照片本体的 .hero-photo--current 是 z-index: 2，
+ * 所以这行小字会正好落在照片下缘上。照片本体的 .hero-photo 是 z-index: 2，
  * 不给更高的层级就会被照片压住、对比度极低（看起来像"滚一下才浮出来"）。
  */
 .hero-index { position: absolute; z-index: 3; right: max(48px, calc((100vw - 1200px) / 2)); bottom: 22px; display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 11px; font-weight: 650; }
@@ -227,19 +226,11 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .showcase-side { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; padding: 12px 0; }
 .showcase-side h3 { margin: 13px 0 5px; font-size: 24px; font-weight: 650; line-height: 1.35; }
 .showcase-side > p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
-.shot-list { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin: 20px 0 18px; }
-.shot-list button { display: grid; min-width: 0; min-height: 56px; grid-template-columns: 56px minmax(0, 1fr) 14px; align-items: center; gap: 7px; padding: 6px; border: 1px solid transparent; border-radius: 11px; background: transparent; color: var(--ink-soft); text-align: left; cursor: pointer; transition: border-color .2s ease, background .2s ease, color .2s ease; }
-.shot-list button:hover, .shot-list button.active { border-color: var(--line); background: var(--surface); }
-.shot-list button.active { color: var(--accent-deep); }
-/* 缩略图统一 16:10 显示（width 定尺寸，height 由 aspect-ratio 推导） */
-.shot-list img, .shot-list .shot-art-thumb { width: 56px; height: auto; aspect-ratio: 16 / 10; border-radius: 4px; object-fit: cover; object-position: top left; }
-.shot-list .shot-art-thumb { display: grid; place-items: center; border: 1px solid var(--line); background: var(--surface-soft); color: var(--accent-deep); }
-.shot-list .shot-label { min-width: 0; overflow-wrap: anywhere; font-size: 12px; font-weight: 600; line-height: 1.4; }
 .text-link { display: inline-flex; align-items: center; gap: 7px; color: var(--accent-deep); font-size: 14px; font-weight: 650; transition: gap .2s ease; }
 .text-link:hover { gap: 11px; }
-.screenshot-switch-enter-active, .screenshot-switch-leave-active, .screenshot-caption-enter-active, .screenshot-caption-leave-active { transition: opacity .2s ease, transform .2s ease; }
-.screenshot-switch-enter-from, .screenshot-caption-enter-from { transform: translateY(5px) scale(.99); opacity: 0; }
-.screenshot-switch-leave-to, .screenshot-caption-leave-to { transform: translateY(-4px); opacity: 0; }
+.screenshot-switch-enter-active, .screenshot-switch-leave-active { transition: opacity .2s ease, transform .2s ease; }
+.screenshot-switch-enter-from { transform: translateY(5px) scale(.99); opacity: 0; }
+.screenshot-switch-leave-to { transform: translateY(-4px); opacity: 0; }
 
 .tutorial-band { padding: 86px 0 92px; border-block: 1px solid var(--line); background: var(--page); }
 .tutorial-inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(270px, 360px); align-items: center; gap: clamp(34px, 6vw, 78px); }
@@ -290,20 +281,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .gallery-dot.active { width: 23px; background: var(--accent-deep); }
 .gallery-autoplay:disabled { opacity: .55; cursor: not-allowed; }
 
-.feature-section { padding-top: 118px; padding-bottom: 120px; }
-.feature-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1px; overflow: hidden; border: 1px solid var(--line); background: var(--line); }
-.feature-item { display: flex; min-width: 0; min-height: 326px; flex-direction: column; padding: 26px 27px; background: var(--page); transition: background-color .25s ease; }
-.feature-item:hover { background: color-mix(in srgb, var(--surface-soft) 60%, var(--page)); }
-.feature-item-lead, .feature-item-wide { grid-column: span 6; min-height: 290px; }
-.feature-item:not(.feature-item-lead):not(.feature-item-wide) { grid-column: span 4; }
-.feature-top { display: flex; align-items: center; justify-content: space-between; color: var(--accent); }
-.feature-number { color: var(--muted); font-size: 11px; font-weight: 700; }
-.feature-item h3 { margin: 22px 0 10px; font-size: 20px; font-weight: 650; line-height: 1.4; }
-.feature-item > p { flex: 1; margin: 0; color: var(--ink-soft); font-size: 14px; line-height: 1.85; }
-.feature-item ul { display: grid; gap: 8px 14px; margin: 18px 0 0; padding: 0; list-style: none; }
-.feature-item li { display: flex; align-items: flex-start; gap: 8px; color: var(--muted); font-size: 12px; line-height: 1.55; }
-.feature-item li svg { flex: 0 0 auto; margin-top: 1px; color: var(--mint); }
-
 .start-section { display: grid; grid-template-columns: .95fr 1.05fr; align-items: center; gap: 72px; padding-top: 112px; padding-bottom: 116px; }
 .start-header h2 { max-width: 550px; }
 .start-header > p { max-width: 510px; margin: 16px 0 23px; color: var(--ink-soft); font-size: 15px; line-height: 1.85; }
@@ -344,28 +321,17 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 
 .lightbox { position: fixed; z-index: 50; inset: 0; display: grid; place-items: center; padding: 52px; background: rgba(13, 10, 20, .9); backdrop-filter: blur(10px); }
 .lightbox > img { display: block; width: auto; height: auto; max-width: min(1200px, calc(100vw - 104px)); max-height: calc(100vh - 104px); border: 1px solid rgba(255,255,255,.18); border-radius: 4px; object-fit: contain; box-shadow: 0 20px 90px rgba(0,0,0,.5); }
-.lightbox > .preview-placeholder { width: min(1120px, 100%); max-height: 100%; aspect-ratio: 16 / 10; }
 .lightbox-close { position: absolute; top: 20px; right: 20px; width: 44px; height: 44px; border-color: rgba(255,255,255,.25); background: rgba(255,255,255,.1); color: #fff; }
-.lightbox-enter-active, .lightbox-leave-active { transition: opacity .22s ease; }
-.lightbox-enter-from, .lightbox-leave-to { opacity: 0; }
 .mobile-nav-enter-active, .mobile-nav-leave-active { transition: opacity .2s ease, transform .2s ease; }
 .mobile-nav-enter-from, .mobile-nav-leave-to { transform: translateY(-8px); opacity: 0; }
 
-/* 真实图片素材：把 jpeg 放进 public/images/ 对应文件名即可自动显示 */
-.hero-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
-/*
- * 首屏轮播：只挂载当前图与下一张，其余 v-show 隐藏。
- * 切换时下一张从 scale(1.045) 淡入到 scale(1)，当前图同时淡出，
- * 靠 z-index 分层保证新图始终盖在上层，形成无缝交叉溶解。
- */
-.hero-photo--current { z-index: 2; opacity: 1; transform: scale(1); transition: opacity var(--hero-fade) cubic-bezier(.4, 0, .2, 1), transform var(--hero-fade) cubic-bezier(.4, 0, .2, 1); }
-.hero-photo--next { z-index: 1; opacity: 0; transform: scale(1.045); transition: opacity var(--hero-fade) cubic-bezier(.4, 0, .2, 1), transform var(--hero-fade-scale) cubic-bezier(.22, 1, .36, 1); }
-.hero-photo--hidden { z-index: 0; opacity: 0; transform: scale(1.045); }
-.hero-photo--current,
-.hero-photo--next { will-change: opacity, transform; backface-visibility: hidden; }
+/* 新图在旧图上淡入；离场层始终不透明，避免两层半透明时透出背景。 */
+.hero-photo { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; opacity: 1; transform: scale(1); object-fit: cover; object-position: center; backface-visibility: hidden; }
+.hero-crossfade-enter-active { transition: opacity var(--hero-fade) cubic-bezier(.4, 0, .2, 1), transform var(--hero-fade-scale) cubic-bezier(.22, 1, .36, 1); will-change: opacity, transform; }
+.hero-crossfade-enter-from { opacity: 0; transform: scale(1.045); }
+.hero-crossfade-leave-active { z-index: 1; transition: opacity var(--hero-fade-scale) linear; }
 .gallery-card.has-photo { border-style: solid; background-color: var(--surface); }
 .gallery-photo { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 18px; object-fit: cover; object-position: center; }
-.lightbox > .preview-photo { width: auto; height: auto; max-width: min(1200px, calc(100vw - 104px)); max-height: calc(100vh - 104px); aspect-ratio: auto; border: 1px solid rgba(255,255,255,.18); border-radius: 4px; object-fit: contain; box-shadow: 0 20px 90px rgba(0,0,0,.5); }
 
 @media (max-width: 1100px) {
   .site-header { padding-inline: 28px; }
@@ -378,10 +344,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .hero-index { right: 40px; }
   .gallery-inner { gap: 38px; }
   .faq-inner { gap: 44px; }
-  .feature-item { padding: 24px; }
-  .shot-list { grid-template-columns: 1fr; gap: 6px; }
-  .shot-list button { min-height: 52px; grid-template-columns: 60px minmax(0, 1fr) 16px; gap: 8px; padding: 5px; }
-  .shot-list img, .shot-list .shot-art-thumb { width: 60px; height: auto; border-radius: 4px; }
   .site-footer { padding-inline: 32px; }
 }
 
@@ -420,15 +382,11 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 
   .trust-item { min-height: 82px; padding: 14px 18px; }
 
-  .showcase-section, .feature-section { padding-block: 84px; }
+  .showcase-section { padding-block: 84px; }
   .section-heading { align-items: flex-start; gap: 24px; }
   .section-heading h2, .gallery-copy h2, .tutorial-copy h2, .start-header h2, .faq-heading h2 { font-size: 36px; }
   .showcase-layout { grid-template-columns: 1fr; gap: 20px; }
   .showcase-side { padding: 0; }
-  .shot-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
-  .shot-list button { min-height: 84px; grid-template-columns: minmax(0, 1fr) 18px; gap: 6px; padding: 7px; }
-  .shot-list img, .shot-list .shot-art-thumb { width: 100%; height: auto; grid-column: 1 / -1; border-radius: 4px; }
-  .shot-list .shot-label { font-size: 12px; }
   .gallery-band { padding-block: 68px; }
   .gallery-inner { grid-template-columns: 1fr; gap: 30px; }
   .gallery-copy p { max-width: 560px; }
@@ -437,8 +395,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .tutorial-figure { width: min(100%, 440px); }
   .art-gallery { width: min(100%, 680px); margin-inline: auto; }
   .gallery-controls { width: min(100%, 680px); margin-inline: auto; padding-right: 0; }
-  .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .feature-item-lead, .feature-item-wide, .feature-item:not(.feature-item-lead):not(.feature-item-wide) { grid-column: span 1; min-height: 300px; }
   .start-section { grid-template-columns: 1fr; gap: 34px; padding-block: 84px; }
   .start-header > p { max-width: 650px; }
   .faq-section { padding-block: 76px; }
@@ -481,7 +437,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .trust-icon { width: 38px; height: 38px; }
   .trust-item strong { font-size: 13px; }
   .trust-item small { font-size: 12px; }
-  .showcase-section, .feature-section { padding-block: 70px; }
+  .showcase-section { padding-block: 70px; }
   .section-heading { display: block; margin-bottom: 24px; }
   .section-heading h2, .gallery-copy h2, .tutorial-copy h2, .start-header h2, .faq-heading h2 { margin-top: 10px; font-size: 31px; }
   .section-heading > p { margin-top: 12px; font-size: 14px; }
@@ -489,11 +445,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .image-open-hint { right: 9px; bottom: 9px; padding: 7px 8px; font-size: 11px; opacity: 1; }
   .showcase-side h3 { font-size: 21px; }
   .showcase-side > p { font-size: 12px; }
-  .shot-list { gap: 5px; margin: 13px 0; }
-  .shot-list button { min-height: 78px; grid-template-columns: minmax(0, 1fr) 14px; gap: 4px; padding: 5px; }
-  .shot-list img, .shot-list .shot-art-thumb { height: auto; border-radius: 4px; }
-  .shot-list .shot-label { font-size: 11px; }
-  .shot-list button > svg { width: 14px; }
   .text-link { font-size: 13px; }
   .gallery-band { padding-block: 56px; }
   .gallery-inner { gap: 25px; }
@@ -514,12 +465,6 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .gallery-step-controls { gap: 9px; }
   .gallery-arrow, .gallery-autoplay { width: 38px; height: 38px; }
   .gallery-dots { gap: 6px; }
-  .feature-grid { grid-template-columns: 1fr; }
-  .feature-item-lead, .feature-item-wide, .feature-item:not(.feature-item-lead):not(.feature-item-wide) { min-height: 0; padding: 21px 19px; }
-  .feature-item h3 { margin: 15px 0 8px; font-size: 18px; }
-  .feature-item > p { flex: initial; font-size: 14px; }
-  .feature-item ul { grid-template-columns: 1fr; gap: 7px; margin-top: 14px; }
-  .feature-item li { font-size: 12px; }
   .start-section { gap: 27px; padding-block: 70px; }
   .start-header > p { font-size: 14px; }
   .start-header small { font-size: 11px; }
@@ -541,7 +486,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
   .footer-bottom > span:nth-child(2) { flex-basis: 100%; order: 2; }
   .footer-links { flex: 1; justify-content: flex-end; gap: 10px; }
   .lightbox { padding: 14px; }
-  .lightbox > img, .lightbox > .preview-photo { max-width: calc(100vw - 28px); max-height: calc(100vh - 28px); }
+  .lightbox > img { max-width: calc(100vw - 28px); max-height: calc(100vh - 28px); }
   .lightbox-close { top: 10px; right: 10px; }
 }
 

@@ -1,10 +1,10 @@
 # NikkiWebsite
 
-The independent website for Infinity Nikki Album Manager. It is built with Vue 3, TypeScript, and Vite and can be developed, built, and deployed to Cloudflare Pages separately. It does not connect to the album app API or its D1 database.
+The independent website for the NikkiCube (Nikki³) Infinity Nikki toolkit. It is built with Vue 3, TypeScript, and Vite and can be developed, built, and deployed to Cloudflare Pages separately. It does not connect to the album app API or its D1 database.
 
 ## Local preview
 
-Requirements: Windows and Node.js LTS. Double-click `Start-Website.bat` in the project root. On first run it installs dependencies and opens the local site, using `http://localhost:5180` by default or an available port from 5181 to 5190 when needed. You can also run:
+Requirements: Windows and Node.js 20.9 or a newer LTS release. Double-click `Start-Website.bat` in the project root. On first run it installs dependencies and opens the local site, using `http://localhost:5180` by default or an available port from 5181 to 5190 when needed. You can also run:
 
 ```powershell
 npm install
@@ -26,7 +26,7 @@ Create a separate Cloudflare Pages project connected to this website repository 
 - Build command: `npm run build`
 - Build output directory: `dist`
 - Root directory: `/`
-- Environment: Node.js 20 or newer LTS
+- Environment: Node.js 20.9 or newer LTS
 
 The included `wrangler.toml` declares the Pages output directory. This is a static single-page site and does not need D1, secrets, or an API proxy. Bind a domain in the Cloudflare Pages project after deployment.
 
@@ -40,23 +40,24 @@ The homepage has a self-referencing canonical; `public/robots.txt` references `p
 
 ## Assets
 
-- All site imagery is served as `.webp` from `public/images/` — hero and gallery photos at the root, app screenshots under `screenshots/`. To retarget the format, change the single `IMAGE_EXT` constant at the top of `src/App.vue`.
-- The auto-update outfit-code tutorial uses `public/images/auto-update-outfit-code.webp` after the app preview section; keep its original portrait ratio.
-- The original JPEG/JPEG files are archived in `public/images/originals/` (same subfolder layout). They ship inside `dist/` but are never requested by the page, so they do not affect runtime performance. Regenerate the WebP set with `scripts/convert_webp.py`.
-- The outfit code parser, photo parameter parser, and lucky pull times previews are screenshot slots; replace them with real app screenshots when available. A 16:10 source ratio is recommended.
-- Areas labeled `ASSET SLOT` are placeholders. No game artwork is included. Confirm that supplied artwork can be displayed publicly before adding it.
-- Suggested original image ratios: hero artwork 16:9 and five gallery images 16:10. Keep the matching container ratio and add descriptive alternative text when replacing a placeholder.
+- Keep source WebP files in the project-root `images/` directory, outside the public deployment tree. Light hero photos use `1.webp`–`10.webp`, dark photos use `11.webp`–`20.webp`, and gallery photos use `gallery-1.webp`–`gallery-10.webp`.
+- Feature previews cover Album, Outfit codes, Home schemes, Nikki Archive, and Parsers and tools. Their content and image paths are in `src/data/showcase.ts`; screenshots belong in `images/screenshots/`. Missing or failed screenshots fall back to feature illustrations.
+- The tutorial source is `images/auto-update-outfit-code.webp`, displayed at its original portrait ratio with a link to the complete image.
+- The brand image is `public/images/brand-mark.png`; browser icons are `public/favicon.ico` and `public/favicon.svg`.
+- Optionally archive JPEG/JPG originals under `images/originals/`. With Python and Pillow installed, run `python scripts/convert_webp.py` to regenerate source WebP files. Archives are not published.
+- See [image asset instructions](images/README.md) for filenames and replacement steps. Changing formats requires coordinated updates to paths, generation and preloading; changing `IMAGE_EXT` alone is insufficient.
 
 ## Page content
 
-The site covers the photo timeline, search and favorites, batch import and export, Recently Deleted and restore, outfit plans and codes, camera parameter parsing, Special Cleanup, lucky pull times, help, and issue feedback. It now includes an authorization and in-game walkthrough for automatic outfit-code updates, along with notes on folder access, local processing, and permanent deletion boundaries. Read the full [Chinese README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md) or [English README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README_EN.md) for detailed instructions.
+The website covers album management, outfit codes, home schemes, camera favorites, resonance records and wardrobe collections, with an automatic outfit-code walkthrough, backup and migration guidance, and FAQ. For detailed instructions, read the toolkit [Chinese README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README.md) or [English README](https://github.com/sumopenny/Infinity-Nikki-Album-Manager/blob/main/README_EN.md).
 
 ## Motion and accessibility
 
-- motion-v drives scroll reveals, the staggered hero, screenshot parallax and subtle tilt, and the gallery stack. Navigation, buttons, and screenshot crossfades use CSS.
-- The gallery can be controlled manually or paused. Autoplay pauses on pointer hover, keyboard focus, hidden pages, and the system reduced-motion preference. Reduced motion also disables parallax and pointer tilt.
-- Motion references include [Motion for Vue](https://motion.dev/docs/vue), [Vue Bits](https://vue-bits.dev/), and [AutoAnimate's Vue usage](https://auto-animate.formkit.com/). The site depends only on motion-v; it does not copy Vue Bits source or add a second animation library.
-- The page includes a skip link, visible keyboard focus, screenshot-preview focus return, and support for prefers-reduced-motion.
+- motion-v drives text entrances, scroll reveals, screenshot tilt and gallery stacking. Hero photos use Vue Transition and CSS: the outgoing photo remains opaque underneath until the incoming photo finishes fading in. Only the current photo remains afterward.
+- The hero interval is 2.6 seconds (`HERO_SLIDE_INTERVAL = 2600`); the gallery interval is 2 seconds (`GALLERY_SLIDE_INTERVAL = 2000`). A single hero photo remains static.
+- Hero autoplay pauses outside the viewport, on hidden pages, or with reduced motion. Gallery autoplay pauses on hidden pages, with reduced motion, or through its pause button. Hover, keyboard focus and manual navigation do not pause autoplay.
+- The page provides a skip link, visible focus and focus return after closing screenshot previews. Reduced motion disables parallax and pointer tilt.
+- Motion references include [Motion for Vue](https://motion.dev/docs/vue), [Vue Bits](https://vue-bits.dev/) and [AutoAnimate](https://auto-animate.formkit.com/). The runtime uses motion-v only.
 
 ## Links
 
@@ -64,3 +65,12 @@ The site covers the photo timeline, search and favorites, batch import and expor
 - Source and releases: [GitHub](https://github.com/sumopenny/Infinity-Nikki-Album-Manager), [Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Album-Manager)
 
 This is an independent community tool. It is not affiliated with, authorized, or endorsed by the Infinity Nikki team or publisher.
+
+## Image loading and updates
+
+1. Replace source WebP files under `images/`, then run `npm run dev` or `npm run build`. Restart the dev server after replacing files to regenerate its manifest.
+2. `scripts/prepare-images.mjs` writes full-size and up-to-960px variants to `public/images/optimized/`. Filenames hash the actual output bytes, so changes to images, compression or encoding produce new URLs. Images no wider than 960px reuse the full-size file.
+3. Do not edit the generated `src/data/imageManifest.json` or `optimized/` directory manually; both are ignored by Git.
+4. Hero probing uses two concurrent requests, prioritizing the first two photos. Screenshots preload with up to five concurrent requests after the hero is ready to display. Gallery loading starts within 600px of the viewport for the current and following four slots. The tutorial is lazy-loaded. Responsive images account for display width and pixel density; enlarged screenshots use the full-size variant.
+5. `dist` contains generated images and public assets, excluding the `images/` source tree. All `/images/*` responses, including optimized variants, use a seven-day cache; hashed JS/CSS bundles retain long-term caching.
+6. After building, run `node scripts/verify-image-loading.mjs` to check loading queues, output hashes, dimensions, deployment references, source exclusion and image cache rules.

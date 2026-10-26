@@ -11,7 +11,6 @@ export interface ShowcaseView {
   note: LocalizedText
   image: string | null
   alt: LocalizedText
-  icon: string
   schematicTitle: LocalizedText
   schematicItems: Record<Language, string[]>
 }
@@ -19,7 +18,6 @@ export interface ShowcaseCategory {
   id: CategoryId
   label: LocalizedText
   eyebrow: string
-  icon: string
   defaultViewId: string
   views: ShowcaseView[]
 }
@@ -32,7 +30,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
       "en": "Album"
     },
     "eyebrow": "ALBUM",
-    "icon": "images",
     "defaultViewId": "album-timeline",
     "views": [
       {
@@ -74,7 +71,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "相册时间轴界面截图",
           "en": "Album timeline interface screenshot"
         },
-        "icon": "calendar-days",
         "schematicTitle": {
           "zh": "按时间，找回那一刻",
           "en": "Find that moment by date"
@@ -131,7 +127,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "相册动作轴界面截图",
           "en": "Album action groups interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "按动作，发现相册里的灵感",
           "en": "Find inspiration by photo pose"
@@ -190,7 +185,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "照片参数解析界面截图",
           "en": "Photo parameter parser interface screenshot"
         },
-        "icon": "camera",
         "schematicTitle": {
           "zh": "把拍摄参数，也看明白",
           "en": "Understand the settings behind a photo"
@@ -249,7 +243,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "照片大图预览界面截图",
           "en": "Full-size photo preview interface screenshot"
         },
-        "icon": "maximize-2",
         "schematicTitle": {
           "zh": "放大看看，每一处细节",
           "en": "Take a closer look at every detail"
@@ -306,7 +299,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "照片收藏与备注功能示意",
           "en": "Photo favorites and notes feature illustration"
         },
-        "icon": "heart",
         "schematicTitle": {
           "zh": "把心动瞬间放进收藏夹",
           "en": "Keep favorite moments within reach"
@@ -363,7 +355,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "相册图片导入与导出功能示意",
           "en": "Photo import and export feature illustration"
         },
-        "icon": "files",
         "schematicTitle": {
           "zh": "导入、整理、导出",
           "en": "Take your photos where you need them"
@@ -420,7 +411,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "最近删除与照片恢复功能示意",
           "en": "Recently Deleted and photo recovery feature illustration"
         },
-        "icon": "archive-restore",
         "schematicTitle": {
           "zh": "误删后，可以恢复",
           "en": "Give deleted photos a chance to return"
@@ -447,7 +437,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
       "en": "Outfit codes"
     },
     "eyebrow": "OUTFIT",
-    "icon": "shirt",
     "defaultViewId": "outfit-library",
     "views": [
       {
@@ -489,7 +478,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "搭配方案管理界面截图",
           "en": "Outfit scheme library interface screenshot"
         },
-        "icon": "shirt",
         "schematicTitle": {
           "zh": "把喜欢的搭配，也收好",
           "en": "Keep your favorite outfits together"
@@ -546,7 +534,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "搭配方案编辑界面截图",
           "en": "Outfit scheme editor interface screenshot"
         },
-        "icon": "file-image",
         "schematicTitle": {
           "zh": "图片、搭配码和标签，一起整理",
           "en": "Organize images, codes and tags together"
@@ -603,7 +590,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "搭配码解析界面界面截图",
           "en": "Outfit code parser interface screenshot"
         },
-        "icon": "scan-search",
         "schematicTitle": {
           "zh": "从搭配码，找到每个部件",
           "en": "Identify every part from an outfit code"
@@ -662,7 +648,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "搭配码部件与染色详情界面截图",
           "en": "Outfit part and dye details interface screenshot"
         },
-        "icon": "palette",
         "schematicTitle": {
           "zh": "套装、进化与染色，继续看清楚",
           "en": "Look closer at outfits, evolution and dyes"
@@ -721,7 +706,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "自动更新搭配码功能示意",
           "en": "Automatically receive outfit codes feature illustration"
         },
-        "icon": "refresh-cw",
         "schematicTitle": {
           "zh": "游戏里的搭配，收进方案库",
           "en": "Create it in game and collect it here"
@@ -748,7 +732,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
       "en": "Home schemes"
     },
     "eyebrow": "HOME SCHEMES",
-    "icon": "house",
     "defaultViewId": "home-plan",
     "views": [
       {
@@ -790,7 +773,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "家园码与组合码方案界面截图",
           "en": "Home and combination schemes interface screenshot"
         },
-        "icon": "house",
         "schematicTitle": {
           "zh": "把心仪的家园灵感，也留下",
           "en": "Keep ideas for your dream home"
@@ -847,7 +829,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "家园方案编辑与解析界面截图",
           "en": "Home scheme editor and parser interface screenshot"
         },
-        "icon": "house",
         "schematicTitle": {
           "zh": "输入方案码，信息自动整理",
           "en": "Enter a code and organize its details"
@@ -904,7 +885,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "家园方案 ZIP 备份功能示意",
           "en": "Home scheme ZIP backup feature illustration"
         },
-        "icon": "package",
         "schematicTitle": {
           "zh": "方案与封面，一起备份",
           "en": "Keep a backup of your saved schemes"
@@ -931,7 +911,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
       "en": "Nikki Archive"
     },
     "eyebrow": "NIKKI ARCHIVE",
-    "icon": "sparkles",
     "defaultViewId": "resonance-records",
     "views": [
       {
@@ -973,7 +952,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "共鸣记录套装列表界面截图",
           "en": "Resonance records outfit list interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "记录每个部件的获得过程",
           "en": "Keep track of every resonance"
@@ -1030,7 +1008,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "衣橱-套装界面截图",
           "en": "Wardrobe - Outfits interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "按套装，查看衣橱收集进度",
           "en": "Explore your collection by outfit"
@@ -1087,7 +1064,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "衣橱-部件界面截图",
           "en": "Wardrobe - Pieces interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "每个部件，都能单独查找",
           "en": "Find each clothing piece"
@@ -1144,7 +1120,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "套装详情界面截图",
           "en": "Outfit details interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "从一套搭配，看到每个部件",
           "en": "Explore an outfit piece by piece"
@@ -1201,7 +1176,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "部件详情界面截图",
           "en": "Piece details interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "点开部件，继续了解它",
           "en": "Take a closer look at a piece"
@@ -1258,7 +1232,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "从美鸭梨奇想手账导入功能示意",
           "en": "Import from Pear-Pal Whim-Log feature illustration"
         },
-        "icon": "download",
         "schematicTitle": {
           "zh": "先预览，再写入本地记录",
           "en": "Bring your records back from Whim-Log"
@@ -1315,7 +1288,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "共鸣记录 JSON 导入导出功能示意",
           "en": "Resonance JSON import and export feature illustration"
         },
-        "icon": "file-json",
         "schematicTitle": {
           "zh": "共鸣记录，本地导入与备份",
           "en": "Continue organizing the records you already have"
@@ -1372,7 +1344,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "共鸣云同步界面截图",
           "en": "Resonance cloud sync interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "换一台设备，也能接着查看",
           "en": "Continue on another device"
@@ -1399,7 +1370,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
       "en": "Parsers and tools"
     },
     "eyebrow": "PARSERS & TOOLS",
-    "icon": "scan-search",
     "defaultViewId": "parse-tools",
     "views": [
       {
@@ -1441,7 +1411,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "相机参数与图片解析入口界面截图",
           "en": "Photo and camera parameter input interface screenshot"
         },
-        "icon": "scan-search",
         "schematicTitle": {
           "zh": "一个窗口，集中完成解析",
           "en": "Parse a photo or a parameter code"
@@ -1498,7 +1467,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "相机参数收藏界面截图",
           "en": "Camera parameter favorites interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "把喜欢的拍摄参数，也珍藏",
           "en": "Keep your favorite camera presets"
@@ -1555,7 +1523,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "游戏文件专项清理界面截图",
           "en": "Targeted game file cleanup interface screenshot"
         },
-        "icon": "eraser",
         "schematicTitle": {
           "zh": "清理不需要的游戏文件",
           "en": "Clear game files you no longer need"
@@ -1612,7 +1579,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "抽卡吉时参考界面截图",
           "en": "Lucky pull time reference interface screenshot"
         },
-        "icon": "sparkles",
         "schematicTitle": {
           "zh": "一点旅途中的娱乐参考",
           "en": "A little ritual for your journey"
@@ -1634,14 +1600,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
   }
 ]
 export const showcaseUi = {
-  "title": {
-    "zh": "从相册时光，到趁手的小工具。",
-    "en": "From album memories to handy tools."
-  },
-  "intro": {
-    "zh": "整理照片、珍藏搭配与家园灵感，记录每一次共鸣，也看看衣橱里的收集进度。",
-    "en": "Organize photos, save outfit and home ideas, track resonance, and explore your wardrobe collection."
-  },
   "categoriesLabel": {
     "zh": "功能分类",
     "en": "Feature categories"
@@ -1665,10 +1623,6 @@ export const showcaseUi = {
   "openApp": {
     "zh": "打开暖立方工具集",
     "en": "Open NikkiCube toolkit"
-  },
-  "localReading": {
-    "zh": "照片在本地读取",
-    "en": "Photos are read locally"
   }
 }
 export const showcaseSupport = {
