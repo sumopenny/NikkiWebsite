@@ -90,6 +90,7 @@ const prefersReducedMotion = ref(false)
 const navigationSections = ['top', 'screenshots', 'start', 'faq'] as const
 const activeSection = ref<string>('top')
 const activeHeroSlide = ref(0)
+const heroDisplayedSrc = ref<string | null>(null)
 const heroInView = ref(true)
 const heroSection = ref<HTMLElement | null>(null)
 const heroRegion = ref<HTMLElement | null>(null)
@@ -164,12 +165,12 @@ const heroIndexCurrent = computed(() => {
 })
 const heroIndexTotal = computed(() => String(heroSlideCount.value).padStart(2, '0'))
 /**
- * 自动播放条件：有多张、且没有暂停理由。
- * 暂停只保留：切到别的标签页、系统启用「减少动态效果」。
+ * 首图可展示后即可计时，不等待第二张加载；切图时再检查是否有后续图片。
+ * 离开首屏、切到别的标签页或系统启用「减少动态效果」时暂停。
  * 悬停与聚焦都不再暂停。
  */
 const heroCanAutoplay = computed(() => pageReady.value
-  && heroSlideCount.value > 1
+  && heroHasPhoto.value
   && !prefersReducedMotion.value
   && heroInView.value
   && pageVisible.value)
@@ -583,13 +584,37 @@ watch(theme, (next) => {
   if (!heroProbed.value[next]) probeHeroSlides(next)
 })
 
-watch(heroCanAutoplay, (enabled) => {
+let heroAdvanceDue = false
+
+function advanceHeroIfReady(): void {
+  if (!heroAdvanceDue || !heroCanAutoplay.value || heroSlideCount.value < 2
+    || heroDisplayedSrc.value !== heroCurrentSlide.value) return
+  heroAdvanceDue = false
+  showNextHeroSlide()
+}
+
+/** 从当前图实际显示时计时；到期后缺少下一张时，保留到期状态等待加载通知。 */
+function restartHeroTimer(): void {
   if (heroTimer !== undefined) {
-    window.clearInterval(heroTimer)
+    window.clearTimeout(heroTimer)
     heroTimer = undefined
   }
-  if (enabled) heroTimer = window.setInterval(showNextHeroSlide, HERO_SLIDE_INTERVAL)
-})
+  heroAdvanceDue = false
+  if (!heroCanAutoplay.value || heroDisplayedSrc.value !== heroCurrentSlide.value) return
+  heroTimer = window.setTimeout(() => {
+    heroTimer = undefined
+    heroAdvanceDue = true
+    advanceHeroIfReady()
+  }, HERO_SLIDE_INTERVAL)
+}
+
+function handleHeroImageLoaded(event: Event): void {
+  const src = (event.target as HTMLImageElement).getAttribute('src')
+  if (src === heroCurrentSlide.value) heroDisplayedSrc.value = src
+}
+
+watch([heroCanAutoplay, heroCurrentSlide, heroDisplayedSrc], restartHeroTimer)
+watch(heroSlideCount, advanceHeroIfReady)
 
 /**
  * 堆叠卡片的位移与缩放。x / y 基于容器宽度的百分比步长（见 galleryStackStep），
@@ -752,7 +777,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', handleKeydown)
   if (galleryTimer !== undefined) window.clearInterval(galleryTimer)
-  if (heroTimer !== undefined) window.clearInterval(heroTimer)
+  if (heroTimer !== undefined) window.clearTimeout(heroTimer)
   motionPreferenceQuery?.removeEventListener('change', handleMotionPreferenceChange)
   document.removeEventListener('visibilitychange', handleVisibilityChange)
   window.removeEventListener('scroll', requestSectionUpdate)
@@ -806,7 +831,7 @@ onBeforeUnmount(() => {
         <div :ref="setHeroRegion" class="hero-art" :aria-label="copy.artHero">
           <motion.div class="hero-art-frame" :style="heroArtMotionStyle">
             <Transition name="hero-crossfade">
-              <img v-if="heroCurrentSlide" :key="heroCurrentSlide" class="hero-photo" :src="heroCurrentSlide" :srcset="imageSrcset(heroCurrentSlide)" sizes="(max-width: 900px) 100vw, 75vw" decoding="async" :alt="`${copy.artHero} ${heroIndexCurrent}`" />
+              <img v-if="heroCurrentSlide" :key="heroCurrentSlide" class="hero-photo" :src="heroCurrentSlide" :srcset="imageSrcset(heroCurrentSlide)" sizes="(max-width: 900px) 100vw, 75vw" decoding="async" :alt="`${copy.artHero} ${heroIndexCurrent}`" @load="handleHeroImageLoaded" />
             </Transition>
             <div v-if="!heroHasPhoto" class="art-placeholder hero-placeholder">
               <Sparkles :size="26" stroke-width="1.4" />

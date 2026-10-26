@@ -54,7 +54,7 @@ The website covers album management, outfit codes, home schemes, camera favorite
 ## Motion and accessibility
 
 - motion-v drives text entrances, scroll reveals, screenshot tilt and gallery stacking. Hero photos use Vue Transition and CSS: the outgoing photo remains opaque underneath until the incoming photo finishes fading in. Only the current photo remains afterward.
-- The hero interval is 2.6 seconds (`HERO_SLIDE_INTERVAL = 2600`); the gallery interval is 2 seconds (`GALLERY_SLIDE_INTERVAL = 2000`). A single hero photo remains static.
+- The hero starts its 2.6-second timer (`HERO_SLIDE_INTERVAL = 2600`) when the current photo has loaded for display. If the next photo is not ready at the deadline, the current photo remains until another is ready, then switches immediately without an additional interval. A single hero photo remains static. The gallery interval is 2 seconds (`GALLERY_SLIDE_INTERVAL = 2000`).
 - Hero autoplay pauses outside the viewport, on hidden pages, or with reduced motion. Gallery autoplay pauses on hidden pages, with reduced motion, or through its pause button. Hover, keyboard focus and manual navigation do not pause autoplay.
 - The page provides a skip link, visible focus and focus return after closing screenshot previews. Reduced motion disables parallax and pointer tilt.
 - Motion references include [Motion for Vue](https://motion.dev/docs/vue), [Vue Bits](https://vue-bits.dev/) and [AutoAnimate](https://auto-animate.formkit.com/). The runtime uses motion-v only.
@@ -74,3 +74,5 @@ This is an independent community tool. It is not affiliated with, authorized, or
 4. Hero probing uses two concurrent requests, prioritizing the first two photos. Screenshots preload with up to five concurrent requests after the hero is ready to display. Gallery loading starts within 600px of the viewport for the current and following four slots. The tutorial is lazy-loaded. Responsive images account for display width and pixel density; enlarged screenshots use the full-size variant.
 5. `dist` contains generated images and public assets, excluding the `images/` source tree. All `/images/*` responses, including optimized variants, use a seven-day cache; hashed JS/CSS bundles retain long-term caching.
 6. After building, run `node scripts/verify-image-loading.mjs` to check loading queues, output hashes, dimensions, deployment references, source exclusion and image cache rules.
+
+Run `node scripts/verify-hero-timing.mjs` to check hero deadlines, early or late image readiness, single-photo waiting, pause/resume and stale image load events.

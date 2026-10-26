@@ -54,7 +54,7 @@ npm run preview
 ## 动效与无障碍
 
 - 滚动显现、首屏文字进入、截图倾斜和画廊堆叠转场由 motion-v 驱动。首屏照片使用 Vue Transition 与 CSS：旧图保留在下层，直到新图淡入完成，稳定时仅保留当前图片。
-- 首屏每 2.6 秒切换（`HERO_SLIDE_INTERVAL = 2600`），画廊每 2 秒切换（`GALLERY_SLIDE_INTERVAL = 2000`）；只有一张首屏图时静态显示。
+- 首屏从当前图片加载显示起计时 2.6 秒（`HERO_SLIDE_INTERVAL = 2600`）；到期时后续图片未就绪则继续显示当前图，后续图片就绪后立即切换，不额外等待一轮。只有一张首屏图时静态显示。画廊每 2 秒切换（`GALLERY_SLIDE_INTERVAL = 2000`）。
 - 首屏在移出视口、页面隐藏或系统减少动态效果时暂停；画廊在页面隐藏、系统减少动态效果或点击暂停按钮时暂停。悬停、键盘聚焦与手动切图不暂停自动播放。
 - 页面提供跳过导航、可见键盘焦点和截图弹窗关闭后的焦点返回；减少动态效果时关闭视差与指针倾斜。
 - 动效参考 [Motion for Vue](https://motion.dev/docs/vue)、[Vue Bits](https://vue-bits.dev/) 和 [AutoAnimate](https://auto-animate.formkit.com/)，运行时只使用 motion-v。
@@ -75,3 +75,5 @@ npm run preview
 4. 首屏探测最多两个并发，前两张优先加载；功能截图在首屏可展示后最多五个后台并发。画廊接近视口 600px 时加载当前及后续四张，教程图使用懒加载。浏览器按宽度和像素密度选择尺寸，放大截图使用原尺寸。
 5. `dist` 只包含公开资源和生成图片，不包含 `images/` 源图。`/images/*`（含 optimized）统一缓存 7 天；JS/CSS 构建产物按内容哈希长期缓存。
 6. 构建后运行 `node scripts/verify-image-loading.mjs`，验证加载队列、输出内容哈希、尺寸、部署引用、源图排除和图片缓存配置。
+
+`node scripts/verify-hero-timing.mjs` 验证首屏切换时序，包括图片提前或延迟就绪、仅有一张、暂停恢复及旧图片加载事件。
