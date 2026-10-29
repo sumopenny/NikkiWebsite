@@ -168,7 +168,7 @@ onBeforeUnmount(() => {
         <!-- Keep the original image shell, 16:10 crop, hover tilt and screenshot transition. -->
         <motion.button v-if="view.image && imageState !== 'failed'" type="button" class="showcase-image-button" :aria-label="`${showcaseUi.openImage[language]}: ${view.caption[language]}`" :aria-disabled="!imageReady" :style="{ rotateX, rotateY, transformPerspective: 1200 }" :while-hover="reducedMotion ? undefined : { scale: 1.008 }" @pointermove="movePointer" @pointerleave="resetTilt" @click="openImage">
           <Transition name="screenshot-switch" mode="out-in">
-            <img ref="previewImage" :key="view.id" :data-view-id="view.id" :src="imageSource(view.image)" :srcset="imageSrcset(view.image)" sizes="(max-width: 900px) 100vw, 65vw" :alt="view.alt[language]" decoding="async" fetchpriority="high" @load="imageLoaded" @error="failImage" />
+            <img ref="previewImage" :key="view.id" :data-view-id="view.id" :class="{ 'is-parameter-scrolling': view.id === 'image-parameters' && imageReady && !reducedMotion }" :src="imageSource(view.image)" :srcset="imageSrcset(view.image)" sizes="(max-width: 900px) 100vw, 65vw" :alt="view.alt[language]" decoding="async" fetchpriority="high" @load="imageLoaded" @error="failImage" />
           </Transition>
           <span v-if="imageReady" class="image-open-hint"><ArrowUpRight :size="17" /> {{ showcaseUi.openImage[language] }}</span>
         </motion.button>
@@ -221,6 +221,22 @@ onBeforeUnmount(() => {
 .showcase-preview-column { min-width: 0; }
 .showcase-image-button { width: 100%; }
 .showcase-image-button img { object-position: center; }
+/* Only the photo-parameters preview pans through its tall screenshot. */
+.showcase-image-button img.is-parameter-scrolling {
+  object-position: center top;
+  animation: parameter-preview-pan 6s linear infinite;
+}
+.showcase-image-button:hover img.is-parameter-scrolling,
+.showcase-image-button:focus-visible img.is-parameter-scrolling {
+  animation-play-state: paused;
+}
+@keyframes parameter-preview-pan {
+  0% { object-position: center top; }
+  80%, 100% { object-position: center bottom; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .showcase-image-button img.is-parameter-scrolling { animation: none; }
+}
 .showcase-caption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; margin: 14px 2px 12px; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .showcase-caption > span:first-child { color: var(--ink-soft); font-weight: 650; }
 .showcase-views { display: flex; flex-wrap: wrap; gap: 7px; }

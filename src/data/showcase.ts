@@ -1252,112 +1252,112 @@ export const showcaseCategories: ShowcaseCategory[] = [
       {
         "id": "resonance-backup",
         "label": {
-          "zh": "本地备份",
-          "en": "Local backups"
+          "zh": "数据备份",
+          "en": "Data backup"
         },
         "caption": {
-          "zh": "共鸣记录 JSON 导入导出",
-          "en": "Resonance JSON import and export"
+          "zh": "暖暖档案数据备份",
+          "en": "Archive data backup"
         },
         "title": {
-          "zh": "已有记录，继续接着整理",
-          "en": "Continue organizing the records you already have"
+          "zh": "把共鸣与衣橱记录，安心保存",
+          "en": "Keep your resonance and wardrobe records safe"
         },
         "body": {
-          "zh": "共鸣记录可导入本工具或暖暖共鸣录 JSON，个人衣橱支持独立备份；也可通过“更多”中的全部数据备份迁移。",
-          "en": "Import this app’s or supported Resonance Recorder JSON for resonance records, back up the wardrobe separately, or migrate using all-data backups from More."
+          "zh": "共鸣记录与个人衣橱均支持本地导入导出，也可通过“更多”中的全部数据备份一并迁移。",
+          "en": "Import or export resonance records and wardrobe data locally, or migrate both with the all-data backup in More."
         },
         "points": {
           "zh": [
-            "共鸣记录 JSON 与衣橱独立备份",
-            "共鸣导入先预览，确认后替换全部本地共鸣记录",
+            "共鸣记录与个人衣橱支持分别备份",
+            "共鸣记录支持导入本工具及兼容的暖暖共鸣录 JSON",
             "全部数据备份包含衣橱，不包含相册原图与网站设置"
           ],
           "en": [
-            "Resonance JSON and separate wardrobe backups",
-            "Preview resonance imports; confirmation replaces all local resonance records",
-            "All-data backups include wardrobe data, but exclude original album photos and site settings"
+            "Back up resonance records and wardrobe separately",
+            "Import resonance JSON from this app or supported Resonance Recorder exports",
+            "All-data backups include wardrobe, but exclude original photos and site settings"
           ]
         },
         "note": {
-          "zh": "本地文件在浏览器中读取；共鸣记录还支持手动云同步。",
-          "en": "Local files are read in the browser. Resonance records also support manual cloud sync."
+          "zh": "本地文件在浏览器中读取；云端同步可另行手动操作。",
+          "en": "Local files are read in the browser; cloud sync is available separately."
         },
-        "image": null,
+        "image": "/images/screenshots/data-backup.webp",
         "alt": {
-          "zh": "共鸣记录 JSON 导入导出功能示意",
-          "en": "Resonance JSON import and export feature illustration"
+          "zh": "暖暖档案数据备份界面截图",
+          "en": "Archive data backup interface screenshot"
         },
         "schematicTitle": {
-          "zh": "共鸣记录，本地导入与备份",
-          "en": "Continue organizing the records you already have"
+          "zh": "共鸣与衣橱，本地导入和备份",
+          "en": "Local imports and backups for your archive"
         },
         "schematicItems": {
           "zh": [
-            "共鸣记录 JSON 与衣橱独立备份",
-            "共鸣导入先预览，确认后替换全部本地共鸣记录",
-            "全部数据备份包含衣橱，不包含相册原图与网站设置"
+            "共鸣记录与个人衣橱支持分别备份",
+            "共鸣记录支持导入兼容的 JSON",
+            "全部数据备份可一并迁移档案"
           ],
           "en": [
-            "Resonance JSON and separate wardrobe backups",
-            "Preview resonance imports; confirmation replaces all local resonance records",
-            "All-data backups include wardrobe data, but exclude original album photos and site settings"
+            "Separate resonance and wardrobe backups",
+            "Import compatible resonance JSON",
+            "Migrate archive data with an all-data backup"
           ]
         }
       },
       {
         "id": "resonance-cloud",
         "label": {
-          "zh": "共鸣云同步",
-          "en": "Resonance cloud sync"
+          "zh": "数据同步",
+          "en": "Data sync"
         },
         "caption": {
-          "zh": "共鸣云同步",
-          "en": "Resonance cloud sync"
+          "zh": "暖暖档案数据同步",
+          "en": "Archive data sync"
         },
         "title": {
-          "zh": "换一台设备，也能接着查看",
-          "en": "Continue on another device"
+          "zh": "换一台设备，档案也能接着用",
+          "en": "Keep your archive across devices"
         },
         "body": {
-          "zh": "注册并登录同一账号，手动上传或下载共鸣记录，在电脑与手机之间迁移档案。",
-          "en": "Register and sign in to the same account, then manually upload or download resonance records between desktop and mobile."
+          "zh": "登录同一账号，可分别上传或下载共鸣记录与个人衣橱，在电脑和手机之间手动同步档案数据。",
+          "en": "Sign in with the same account to manually upload or download resonance records and wardrobe data across desktop and mobile."
         },
         "points": {
           "zh": [
-            "每个账号保存一份共鸣记录云端存档",
-            "上传覆盖云端，下载覆盖本地，确认前核对记录",
-            "支持删除云端存档，保留本地记录"
+            "共鸣记录与个人衣橱均支持云端存档",
+            "按模块选择上传或下载，确认前核对数据",
+            "支持删除云端存档，本地数据不受影响"
           ],
           "en": [
-            "One resonance cloud save per account",
-            "Upload overwrites the cloud; download overwrites local records—review before confirming",
-            "Delete the cloud save while keeping local records"
+            "Cloud saves for both resonance records and wardrobe",
+            "Choose modules to upload or download and review before confirming",
+            "Delete cloud saves without affecting local data"
           ]
         },
         "note": {
-          "zh": "目前仅同步共鸣记录；登录及本地修改不会自动同步。",
-          "en": "Currently syncs resonance records only. Sign-in and local edits do not sync automatically."
+          "zh": "同步需手动触发，登录及本地修改不会自动上传。",
+          "en": "Sync is manual; signing in and local edits do not automatically upload data."
         },
-        "image": "/images/screenshots/resonance-cloud.webp",
+        "image": "/images/screenshots/data-sync.webp",
         "alt": {
-          "zh": "共鸣云同步界面截图",
-          "en": "Resonance cloud sync interface screenshot"
+          "zh": "暖暖档案数据同步界面截图",
+          "en": "Archive data sync interface screenshot"
         },
         "schematicTitle": {
-          "zh": "换一台设备，也能接着查看",
-          "en": "Continue on another device"
+          "zh": "换一台设备，档案也能接着用",
+          "en": "Keep your archive across devices"
         },
         "schematicItems": {
           "zh": [
-            "每个账号保存一份共鸣记录云端存档",
-            "上传覆盖云端，下载覆盖本地，确认前核对记录",
-            "支持删除云端存档，保留本地记录"
+            "共鸣记录与个人衣橱均支持云端存档",
+            "按模块选择上传或下载，确认前核对数据",
+            "支持删除云端存档，本地数据不受影响"
           ],
           "en": [
-            "One resonance cloud save per account",
-            "Upload overwrites the cloud; download overwrites local records—review before confirming",
-            "Delete the cloud save while keeping local records"
+            "Cloud saves for resonance and wardrobe",
+            "Select modules to sync manually",
+            "Delete cloud saves without affecting local data"
           ]
         }
       }
@@ -1683,7 +1683,7 @@ export const showcaseSupport = {
     }
   ],
   "cloudStatus": {
-    "zh": "共鸣记录云同步 · 已支持手动上传与下载",
-    "en": "Resonance cloud sync · Manual upload and download available"
+    "zh": "暖暖档案数据同步 · 共鸣记录与个人衣橱支持手动上传和下载",
+    "en": "Archive data sync · Manual upload and download for resonance and wardrobe"
   }
 }
