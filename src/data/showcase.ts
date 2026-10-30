@@ -63,8 +63,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           ]
         },
         "note": {
-          "zh": "选择本地相册目录后即可使用。",
-          "en": "Choose a local album folder to begin."
+          "zh": "选择本地相册目录后即可使用。普通授权失败时可尝试“兼容打开（只读）”；支持浏览、解析、收藏和 ZIP 导出，刷新后需重选文件夹，无法修改原文件。",
+          "en": "Choose a local album folder to begin. If authorization fails, try Compatibility open (read-only) to browse, decode, favorite and export ZIPs. Reselect after reloading; original files cannot be changed."
         },
         "image": "/images/screenshots/album-timeline.webp",
         "alt": {
@@ -159,8 +159,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Understand the settings behind a photo"
         },
         "body": {
-          "zh": "从游戏原图里读取相机设置、环境和动作信息，找回照片里的拍摄灵感。",
-          "en": "Read camera settings, environment and action information from an original game photo."
+          "zh": "从游戏原图读取相机设置、环境、动作和穿搭，点击部件查看染色详情；电脑端可切换上下或左右布局并记住选择。",
+          "en": "Read camera settings, environment, actions and outfits from original game photos. Select pieces for dye details; desktop supports stacked or side-by-side layouts and remembers your choice."
         },
         "points": {
           "zh": [
@@ -989,12 +989,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "按状态、星级、进化阶段、版本、风格、来源和标签筛选",
+            "按状态、星级、进化阶段、版本、风格、来源和标签筛选；可合并展示同系列形态",
             "搜索套装，查看已集齐数量与收集进度",
             "点击套装卡片打开套装详情"
           ],
           "en": [
-            "Filter by ownership, rarity, evolution, version, style, source and tags",
+            "Filter by ownership, rarity, evolution, version, style, source and tags; group forms from the same family",
             "Search outfits and review completed counts and collection progress",
             "Click an outfit card to open outfit details"
           ]
@@ -1014,12 +1014,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "按状态、星级、进化阶段、版本、风格、来源和标签筛选",
+            "按状态、星级、进化阶段、版本、风格、来源和标签筛选；可合并展示同系列形态",
             "搜索套装，查看已集齐数量与收集进度",
             "点击套装卡片打开套装详情"
           ],
           "en": [
-            "Filter by ownership, rarity, evolution, version, style, source and tags",
+            "Filter by ownership, rarity, evolution, version, style, source and tags; group forms from the same family",
             "Search outfits and review completed counts and collection progress",
             "Click an outfit card to open outfit details"
           ]
@@ -1208,8 +1208,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Bring your Nikki Archive back from Whim-Log"
         },
         "body": {
-          "zh": "在国服美鸭梨登录并同步手账，按应用内引导获取凭据，预览后选择导入共鸣记录或衣橱数据。",
-          "en": "Sign in to CN Pear-Pal and sync Whim-Log, follow the in-app credential instructions, then preview and select resonance records or wardrobe data to import."
+          "zh": "选择国服或国际服对应区服，按应用内引导登录并获取手账凭据，预览后选择导入共鸣记录或衣橱数据。",
+          "en": "Choose your China or global server and follow the in-app sign-in and credential instructions, then preview and select resonance records or wardrobe data to import."
         },
         "points": {
           "zh": [
@@ -1227,7 +1227,7 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": "凭据仅用于当前验证和获取记录，不保存到本地。",
           "en": "Credentials are used only for the current verification and retrieval and are not saved locally."
         },
-        "image": null,
+        "image": "/images/screenshots/archive-pearpal.webp",
         "alt": {
           "zh": "从美鸭梨奇想手账导入功能示意",
           "en": "Import from Pear-Pal Whim-Log feature illustration"
@@ -1320,8 +1320,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Keep your archive across devices"
         },
         "body": {
-          "zh": "登录同一账号，可分别上传或下载共鸣记录与个人衣橱，在电脑和手机之间手动同步档案数据。",
-          "en": "Sign in with the same account to manually upload or download resonance records and wardrobe data across desktop and mobile."
+          "zh": "登录同一账号，可单独或一起上传、下载共鸣记录与个人衣橱，在电脑和手机之间手动同步档案数据。",
+          "en": "Sign in with the same account to upload or download resonance and wardrobe separately or together across desktop and mobile."
         },
         "points": {
           "zh": [
@@ -1560,12 +1560,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "日期、时段与面朝方位参考",
+            "日期、时段、面朝方位与需避开生肖参考",
             "通过工具菜单直接打开",
             "适合与共鸣记录分开查看"
           ],
           "en": [
-            "Reference dates, times and facing directions",
+            "Reference dates, times, facing directions and zodiac signs to avoid",
             "Open directly from the tools menu",
             "Keep this separate from actual resonance records"
           ]
@@ -1585,7 +1585,7 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "日期、时段与面朝方位参考",
+            "日期、时段、面朝方位与需避开生肖参考",
             "通过工具菜单直接打开",
             "适合与共鸣记录分开查看"
           ],

@@ -239,7 +239,7 @@ const copy = computed(() => language.value === 'zh'
       heroNote: "免费使用 · 本地功能无需注册 · 无需下载",
       artHero: '首屏暖暖氛围美照',
       artRatioWide: '轮播 · 浅色 1-10 / 深色 11-20 · 16:9 横向原图 · 宽度 2400px+',
-      benefits: [{"title":"照片本地读取","body":"相册浏览与照片参数解析在本地完成，原图无需上传。"},{"title":"电脑手机都能用","body":"整理搭配、家园与拍摄灵感，查看共鸣记录和衣橱。"},{"title":"数据随时备份","body":"支持模块备份与全部数据导出，方便迁移到其他设备。"},{"title":"游戏灵感集中珍藏","body":"将搭配码、家园方案与相机参数分类保存，随时查找。"},{"title":"共鸣与衣橱一目了然","body":"查看共鸣抽数、部件获取记录和服装收集进度。"},{"title":"共鸣记录云同步","body":"登录后手动上传、下载共鸣记录，跨设备继续查看。"}],
+      benefits: [{"title":"照片本地读取","body":"相册浏览与照片参数解析在本地完成，原图无需上传。"},{"title":"电脑手机都能用","body":"整理搭配、家园与拍摄灵感，查看共鸣记录和衣橱。"},{"title":"数据随时备份","body":"支持模块备份与全部数据导出，方便迁移到其他设备。"},{"title":"游戏灵感集中珍藏","body":"将搭配码、家园方案与相机参数分类保存，随时查找。"},{"title":"共鸣与衣橱一目了然","body":"查看共鸣抽数、部件获取记录和服装收集进度。"},{"title":"共鸣与衣橱云同步","body":"登录后可单独或一起同步共鸣记录与衣橱，跨设备继续查看。"}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: '从相册时光，到趁手的小工具。',
       previewBody: "整理照片、珍藏搭配与家园灵感，记录每一次共鸣，也看看衣橱里的收集进度。",
@@ -280,7 +280,7 @@ const copy = computed(() => language.value === 'zh'
   {
     "no": "03",
     "title": "查看暖暖档案与迁移数据",
-    "body": "进入“暖暖档案”，按引导导入共鸣记录和衣橱数据；通过模块备份或“更多”中的全部数据备份迁移设备，共鸣记录还可手动云同步。"
+    "body": "进入“暖暖档案”，按引导导入共鸣记录和衣橱数据；通过模块备份或“更多”中的全部数据备份迁移设备，共鸣记录与衣橱还可在同一窗口手动云同步。"
   }
 ],
       questionsKicker: 'GOOD TO KNOW',
@@ -288,11 +288,11 @@ const copy = computed(() => language.value === 'zh'
       questions: [
   {
     "q": "照片会上传到服务器吗？",
-    "a": "照片浏览与相机参数解析在本地浏览器中完成。临时选择的游戏原图不会上传，也不会自动加入相册；主动使用共鸣云同步时会上传对应的共鸣记录。"
+    "a": "照片浏览与相机参数解析在本地浏览器中完成。临时选择的游戏原图不会上传，也不会自动加入相册；主动使用云同步时，仅上传所选的共鸣或衣橱存档。"
   },
   {
     "q": "为什么无法授权文件夹，或相册没有显示？",
-    "a": "请使用支持目录授权的电脑端 Chromium 浏览器，选择实际存放照片的文件夹；授权失效时重新选择。受保护目录无法访问时，可将照片复制到普通文件夹后授权，不要选择磁盘根目录。"
+    "a": "请使用支持目录授权的电脑端 Chromium 浏览器，选择实际存放照片的文件夹；授权失效时重新选择。普通授权失败时，可尝试“兼容打开（只读）”浏览、解析、收藏与导出照片；刷新或查看新照片时需重新选择文件夹。不要选择磁盘根目录。"
   },
   {
     "q": "手机上可以使用哪些功能？",
@@ -304,7 +304,7 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "云同步会自动同步所有数据吗？",
-    "a": "不会。目前仅支持共鸣记录，需注册并登录账号后手动上传或下载。上传覆盖云端存档，下载覆盖本地共鸣记录；登录和本地修改不会自动同步。"
+    "a": "不会。共鸣记录与个人衣橱共用账号和同步窗口，可单独或一起上传、下载，也可删除所选云端存档。上传覆盖对应云端存档，下载替换对应本机存档，不合并记录；操作前请核对预览。登录和本地修改不会自动同步。"
   },
   {
     "q": "为什么衣橱部件显示“未知”？",
@@ -328,7 +328,7 @@ const copy = computed(() => language.value === 'zh'
       heroBody: "NikkiCube (Nikki³) is a practical toolkit for Infinity Nikki players. Organize game photos, save outfits, home ideas and camera presets, track resonance, and explore your wardrobe collection while keeping precious moments on your device.",
       useNow: 'Open the app', viewFeatures: 'Explore the features', heroNote: "Free to use · Local features need no sign-up · No download",
       artHero: 'Infinity Nikki hero artwork', artRatioWide: 'Carousel · light 1-10 / dark 11-20 · 16:9 landscape · 2400px+ wide',
-      benefits: [{"title":"Photos stay local","body":"Album browsing and photo parameter parsing run locally. Original photos need no upload."},{"title":"Desktop and mobile","body":"Organize outfits, home ideas and camera presets, and explore resonance records and your wardrobe."},{"title":"Back up anytime","body":"Export individual modules or all data to move your collection to another device."},{"title":"Keep your inspiration","body":"Save outfit codes, home schemes and camera presets by category for easy access."},{"title":"Track your collection","body":"Review resonance pulls, piece acquisition records and clothing collection progress."},{"title":"Resonance cloud sync","body":"Sign in to manually upload or download resonance records and continue on another device."}],
+      benefits: [{"title":"Photos stay local","body":"Album browsing and photo parameter parsing run locally. Original photos need no upload."},{"title":"Desktop and mobile","body":"Organize outfits, home ideas and camera presets, and explore resonance records and your wardrobe."},{"title":"Back up anytime","body":"Export individual modules or all data to move your collection to another device."},{"title":"Keep your inspiration","body":"Save outfit codes, home schemes and camera presets by category for easy access."},{"title":"Track your collection","body":"Review resonance pulls, piece acquisition records and clothing collection progress."},{"title":"Resonance and wardrobe cloud sync","body":"Sign in to sync resonance and wardrobe separately or together across devices."}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: 'From album memories to handy little tools.',
       previewBody: "Organize photos, save outfit and home ideas, track resonance, and explore your wardrobe collection.",
@@ -367,18 +367,18 @@ const copy = computed(() => language.value === 'zh'
   {
     "no": "03",
     "title": "Explore Nikki Archive and migrate data",
-    "body": "Import resonance and wardrobe data in Nikki Archive. Transfer data through module backups or all-data backups under More; resonance records also support manual cloud sync."
+    "body": "Import resonance and wardrobe data in Nikki Archive. Transfer data through module backups or all-data backups under More; resonance and wardrobe also share one manual cloud-sync window."
   }
 ],
       questionsKicker: 'GOOD TO KNOW', questionsTitle: 'A few things before you begin.',
       questions: [
   {
     "q": "Are my photos uploaded?",
-    "a": "Photo browsing and camera parameter parsing run locally. Originals selected for temporary parsing are not uploaded or added to an album. Manually using resonance cloud sync uploads the corresponding resonance records."
+    "a": "Photo browsing and camera parameter parsing run locally. Originals selected for temporary parsing are not uploaded or added to an album. Manual cloud sync uploads only the selected resonance or wardrobe saves."
   },
   {
     "q": "Why is folder access denied or my album missing?",
-    "a": "Use a desktop Chromium browser supporting folder access and select the folder containing your photos. Reauthorize if access expires. If a protected folder is blocked, copy photos to an ordinary folder first. Do not select a drive root."
+    "a": "Use a desktop Chromium browser supporting folder access and select the folder containing your photos. Reauthorize if access expires. If normal authorization fails, try Compatibility open (read-only) to browse, decode, favorite and export photos. Select the folder again after reloading or to see new photos. Do not select a drive root."
   },
   {
     "q": "Which features work on a phone?",
@@ -390,7 +390,7 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "Does cloud sync automatically sync everything?",
-    "a": "No. It currently supports resonance records only and requires an account and manual upload or download. Upload overwrites the cloud save; download overwrites local resonance records. Signing in and local edits do not sync automatically."
+    "a": "No. Resonance and wardrobe share an account and sync window. Upload, download or delete selected cloud saves separately or together. Upload replaces the corresponding cloud saves; download replaces local saves without merging. Review the preview before confirming. Signing in and local edits do not sync automatically."
   },
   {
     "q": "Why do some wardrobe pieces show Unknown?",
