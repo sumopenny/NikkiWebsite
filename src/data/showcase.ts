@@ -205,6 +205,102 @@ export const showcaseCategories: ShowcaseCategory[] = [
         }
       },
       {
+        "id": "photo-share-portrait",
+        "label": {
+          "zh": "竖版照片分享图",
+          "en": "Portrait share card"
+        },
+        "caption": {
+          "zh": "竖版照片分享图",
+          "en": "Portrait share card"
+        },
+        "title": {
+          "zh": "竖版照片分享图",
+          "en": "Portrait share card"
+        },
+        "body": {
+          "zh": "竖幅人像旁展示穿搭部件，底部附相机参数码。",
+          "en": "Outfit parts appear beside the portrait, with the camera code below."
+        },
+        "points": {
+          "zh": [
+            "可选图片参数、穿搭部件和相机参数码"
+          ],
+          "en": [
+            "Choose photo settings, outfit parts and camera code"
+          ]
+        },
+        "note": {
+          "zh": "从照片卡片或照片参数窗口进入分享。",
+          "en": "Open Share from the card or the details window."
+        },
+        "image": "/images/screenshots/photo-share-portrait.webp",
+        "alt": {
+          "zh": "竖幅人像旁展示穿搭部件，底部附相机参数码。",
+          "en": "Outfit parts appear beside the portrait, with the camera code below."
+        },
+        "schematicTitle": {
+          "zh": "竖版照片分享图",
+          "en": "Portrait share card"
+        },
+        "schematicItems": {
+          "zh": [
+            "可选图片参数、穿搭部件和相机参数码"
+          ],
+          "en": [
+            "Choose photo settings, outfit parts and camera code"
+          ]
+        }
+      },
+      {
+        "id": "photo-share-landscape",
+        "label": {
+          "zh": "横版照片分享图",
+          "en": "Landscape share card"
+        },
+        "caption": {
+          "zh": "横版照片分享图",
+          "en": "Landscape share card"
+        },
+        "title": {
+          "zh": "横版照片分享图",
+          "en": "Landscape share card"
+        },
+        "body": {
+          "zh": "横幅照片下方展示拍摄参数，右侧列出穿搭部件。",
+          "en": "Shooting settings sit below the landscape photo, with outfit parts alongside."
+        },
+        "points": {
+          "zh": [
+            "可选图片参数、穿搭部件和相机参数码"
+          ],
+          "en": [
+            "Choose photo settings, outfit parts and camera code"
+          ]
+        },
+        "note": {
+          "zh": "从照片卡片或照片参数窗口进入分享。",
+          "en": "Open Share from the card or the details window."
+        },
+        "image": "/images/screenshots/photo-share-landscape.webp",
+        "alt": {
+          "zh": "横幅照片下方展示拍摄参数，右侧列出穿搭部件。",
+          "en": "Shooting settings sit below the landscape photo, with outfit parts alongside."
+        },
+        "schematicTitle": {
+          "zh": "横版照片分享图",
+          "en": "Landscape share card"
+        },
+        "schematicItems": {
+          "zh": [
+            "可选图片参数、穿搭部件和相机参数码"
+          ],
+          "en": [
+            "Choose photo settings, outfit parts and camera code"
+          ]
+        }
+      },
+      {
         "id": "photo-lightbox",
         "label": {
           "zh": "大图预览",
@@ -369,62 +465,6 @@ export const showcaseCategories: ShowcaseCategory[] = [
             "Import images",
             "Export all",
             "Export selected"
-          ]
-        }
-      },
-      {
-        "id": "album-trash",
-        "label": {
-          "zh": "最近删除",
-          "en": "Recently Deleted"
-        },
-        "caption": {
-          "zh": "最近删除与照片恢复",
-          "en": "Recently Deleted and photo recovery"
-        },
-        "title": {
-          "zh": "给误删的照片，留一次找回机会",
-          "en": "Give deleted photos a chance to return"
-        },
-        "body": {
-          "zh": "普通相册删除会把照片移入最近删除，可单张或批量恢复。",
-          "en": "Regular album deletion moves photos to Recently Deleted, where they can be restored individually or in batches."
-        },
-        "points": {
-          "zh": [
-            "按删除时间查看照片与占用大小",
-            "单张或批量恢复，恢复时避免同名覆盖",
-            "支持永久删除和清空全部"
-          ],
-          "en": [
-            "Browse by deletion time and view total size",
-            "Restore photos without overwriting same-name files",
-            "Permanently delete selected photos or clear the collection"
-          ]
-        },
-        "note": {
-          "zh": "最近删除不会自动过期；永久删除与清空全部不可恢复。",
-          "en": "Recently Deleted does not expire automatically. Permanent deletion and clearing cannot be undone."
-        },
-        "image": null,
-        "alt": {
-          "zh": "最近删除与照片恢复功能示意",
-          "en": "Recently Deleted and photo recovery feature illustration"
-        },
-        "schematicTitle": {
-          "zh": "误删后，可以恢复",
-          "en": "Give deleted photos a chance to return"
-        },
-        "schematicItems": {
-          "zh": [
-            "最近删除",
-            "恢复照片",
-            "永久删除"
-          ],
-          "en": [
-            "Recently Deleted",
-            "Restore photos",
-            "Permanently delete"
           ]
         }
       }
@@ -604,6 +644,54 @@ export const showcaseCategories: ShowcaseCategory[] = [
             "Clothing parts",
             "Makeup",
             "Local cache"
+          ]
+        }
+      },
+      {
+        "id": "outfit-code-share",
+        "label": {
+          "zh": "搭配码分享图",
+          "en": "Outfit share card"
+        },
+        "caption": {
+          "zh": "搭配码分享图",
+          "en": "Outfit share card"
+        },
+        "title": {
+          "zh": "搭配码分享图",
+          "en": "Outfit share card"
+        },
+        "body": {
+          "zh": "将搭配库中的配图与对应搭配码生成一张 9:16 竖版分享卡。",
+          "en": "Export a 9:16 card with the saved outfit image and its code."
+        },
+        "points": {
+          "zh": [
+            "搭配库中需有对应图片"
+          ],
+          "en": [
+            "Requires a saved outfit image"
+          ]
+        },
+        "note": {
+          "zh": "从搭配码卡片或解析窗口进入分享。",
+          "en": "Open Share from the card or the details window."
+        },
+        "image": "/images/screenshots/outfit-code-share.webp",
+        "alt": {
+          "zh": "将搭配库中的配图与对应搭配码生成一张 9:16 竖版分享卡。",
+          "en": "Export a 9:16 card with the saved outfit image and its code."
+        },
+        "schematicTitle": {
+          "zh": "搭配码分享图",
+          "en": "Outfit share card"
+        },
+        "schematicItems": {
+          "zh": [
+            "搭配库中需有对应图片"
+          ],
+          "en": [
+            "Requires a saved outfit image"
           ]
         }
       },
