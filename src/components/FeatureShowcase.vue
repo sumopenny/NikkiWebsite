@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { ArrowUpRight, Check, ChevronDown, House, Images, ScanSearch, Shirt, Sparkles, X } from 'lucide-vue-next'
+import { ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, Minus, Plus, House, Images, ScanSearch, Shirt, Sparkles, X } from 'lucide-vue-next'
+import { useImageZoom, MIN_ZOOM, ZOOM_STEP } from '../composables/useImageZoom'
 import { imageSource, imageSrcset, setImageRequest } from '../imageAssets'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion-v'
 import { showcaseCategories, showcaseSupport, showcaseUi, type CategoryId, type Language } from '../data/showcase'
@@ -111,17 +112,61 @@ function moveSelection(event: KeyboardEvent, kind: 'category' | 'view'): void {
   else chooseView(button.dataset.view!)
   button.focus()
 }
+const slides = computed(() => category.value.views.filter(item => item.image && !failedScreenshots.has(item.image)))
+const displayed = ref(view.value)
+const requested = ref(view.value.id)
+const slideIndex = computed(() => slides.value.findIndex(item => item.id === requested.value))
+let requestVersion = 0
+const { zoom, imageTransform, resetTransform, setZoom, handleWheel, startDrag, moveDrag, endDrag } =
+  useImageZoom(() => Boolean(dialog.value?.open), direction => navigate(direction === 'next' ? 1 : -1), 400)
+
+async function navigate(step: number) {
+  const target = slides.value[slideIndex.value + step]
+  if (!target?.image) return
+  const version = ++requestVersion
+  requested.value = target.id
+  const image = new Image()
+  image.src = imageSource(target.image)
+  try {
+    await image.decode()
+  } catch {
+    if (version === requestVersion) {
+      failedScreenshots.add(target.image)
+      requested.value = displayed.value.id
+    }
+    return
+  }
+  if (version !== requestVersion || !dialog.value?.open) return
+  displayed.value = target
+  resetTransform()
+}
+const chromeActive = ref(false)
+let chromeTimer: ReturnType<typeof setTimeout> | undefined
+function wakeToolbar() {
+  clearTimeout(chromeTimer)
+  chromeActive.value = true
+  chromeTimer = setTimeout(() => { chromeActive.value = false }, 1000)
+}
+
 async function openImage(event: MouseEvent): Promise<void> {
   if (!imageReady.value || !dialog.value) return
   trigger = event.currentTarget as HTMLButtonElement
   previousOverflow = document.body.style.overflow
   document.body.style.overflow = 'hidden'
+  displayed.value = view.value
+  requested.value = view.value.id
+  resetTransform()
+  wakeToolbar()
   dialog.value.showModal()
   await nextTick()
   closeButton.value?.focus()
 }
 function restoreDialog(): void {
-  if (previousOverflow !== null) document.body.style.overflow = previousOverflow
+  ++requestVersion
+  clearTimeout(chromeTimer)
+  if (previousOverflow === null) return
+  chooseView(displayed.value.id)
+  document.body.style.overflow = previousOverflow
   previousOverflow = null
   trigger?.focus({ preventScroll: true })
   trigger = null
@@ -202,9 +247,19 @@ onBeforeUnmount(() => {
       <p class="showcase-cloud-status">{{ showcaseSupport.cloudStatus[language] }}</p>
     </details>
     <Teleport v-if="mounted" to="body">
-      <dialog ref="dialog" class="lightbox showcase-dialog" :aria-label="showcaseUi.dialogLabel[language]" @click.self="closeImage" @close="restoreDialog" @keydown.tab.prevent="closeButton?.focus()">
-        <button ref="closeButton" type="button" class="icon-button lightbox-close" :aria-label="showcaseUi.closeImage[language]" @click="closeImage"><X :size="21" /></button>
-        <img v-if="view.image" :data-view-id="view.id" :src="imageSource(view.image)" :alt="view.alt[language]" @error="failImage" />
+      <dialog ref="dialog" class="showcase-dialog" :aria-label="showcaseUi.dialogLabel[language]" @click.self="closeImage" @close="restoreDialog" @keydown.left.prevent="navigate(-1)" @keydown.right.prevent="navigate(1)">
+        <figure class="preview-stage" @wheel="handleWheel" @pointerdown="startDrag" @pointermove="moveDrag" @pointerup="endDrag" @pointercancel="endDrag">
+          <img v-if="displayed.image" :src="imageSource(displayed.image)" :alt="displayed.alt[language]" :style="imageTransform" draggable="false" />
+        </figure>
+        <button ref="closeButton" class="preview-close" :aria-label="showcaseUi.closeImage[language]" @click="closeImage"><X /></button>
+        <button class="preview-prev" :disabled="slideIndex <= 0" :aria-label="language === 'zh' ? '上一张' : 'Previous image'" @click="navigate(-1)"><ChevronLeft /></button>
+        <button class="preview-next" :disabled="slideIndex >= slides.length - 1" :aria-label="language === 'zh' ? '下一张' : 'Next image'" @click="navigate(1)"><ChevronRight /></button>
+        <div class="preview-toolbar" :class="{ awake: chromeActive }" @pointerleave="wakeToolbar" @focusout="wakeToolbar">
+          <span aria-live="polite">{{ displayed.caption[language] }}</span>
+          <button :disabled="zoom <= MIN_ZOOM" :aria-label="language === 'zh' ? '缩小' : 'Zoom out'" @click="setZoom(zoom - ZOOM_STEP)"><Minus /></button>
+          <button :aria-label="language === 'zh' ? '重置缩放' : 'Reset zoom'" @click="resetTransform">{{ zoom }}%</button>
+          <button :disabled="zoom >= 400" :aria-label="language === 'zh' ? '放大' : 'Zoom in'" @click="setZoom(zoom + ZOOM_STEP)"><Plus /></button>
+        </div>
       </dialog>
     </Teleport>
   </div>
@@ -264,9 +319,24 @@ onBeforeUnmount(() => {
 .schematic-items { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .schematic-items span { padding: 6px 10px; border-radius: 6px; background: var(--surface-soft); color: var(--ink-soft); font-size: 12px; line-height: 1.5; }
 /* Native dialog focus handling; retain the original full-size image presentation. */
-.showcase-dialog { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; border: 0; }
-.showcase-dialog:not([open]) { display: none; }
-.showcase-dialog::backdrop { background: transparent; }
+.showcase-dialog { position: fixed; inset: 0; width: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 8px; box-sizing: border-box; border: 0; background: rgba(12,10,16,.88); color: white; overflow: hidden; }
+.showcase-dialog[open] { display: grid; place-items: center; }
+.preview-stage { margin: 0; overflow: visible; touch-action: none; user-select: none; }
+.preview-stage img { display: block; max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); width: auto; height: auto; }
+.showcase-dialog button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border: 0; border-radius: 50%; background: #28252de8; color: white; cursor: pointer; }
+.showcase-dialog button:disabled { opacity: .4; cursor: default; }
+.preview-close,.preview-prev,.preview-next,.preview-toolbar { position: absolute; }
+.preview-close { right: 12px; top: max(12px,env(safe-area-inset-top)); }
+.preview-prev,.preview-next { top: 50%; transform: translateY(-50%); }
+.preview-prev { left: 12px; }
+.preview-next { right: 12px; }
+.preview-toolbar { bottom: max(8px,env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; border-radius: 24px; padding: 2px 6px 2px 14px; background: #28252de8; max-width: 96%; }
+.preview-toolbar span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.preview-toolbar button { background: transparent; }
+@media (hover:hover) and (pointer:fine) {
+  .preview-toolbar:not(.awake):not(:hover):not(:focus-within) { opacity: .55; transform: translate(-50%,45%); }
+}
+
 @media (max-width: 900px) { .showcase-support-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) {
   .showcase-categories { gap: 7px; margin-bottom: 20px; }
