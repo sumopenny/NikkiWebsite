@@ -79,3 +79,9 @@ npm run preview
 `node scripts/verify-hero-timing.mjs` 验证首屏切换时序，包括图片提前或延迟就绪、仅有一张、暂停恢复及旧图片加载事件。
 
 构建校验：npm run build 会自动执行图片部署与轮播时序校验，失败即终止。图片增量缓存位于 .verify/image-cache.json；首次构建、源图或编码器变化、缓存缺失或损坏时重新生成，重复构建复用未变化的缩略图。云端未保留缓存时仍可完整构建。Cloudflare 构建环境请保持 Node 22.14.0；后台显式设置的 NODE_VERSION 也需一致。
+
+## GitHub Pages 自动部署
+
+在 Settings → Pages 将 Source 设为 GitHub Actions。推送 main 或手动运行 Deploy GitHub Pages，将安装锁定依赖、构建校验并仅发布 dist。无需配置部署密钥。工作流通过 configure-pages 的 base_path 设置 SITE_BASE_PATH，支持仓库子路径与自定义域名。Cloudflare 不设置此变量，仍使用根路径。
+
+本地验证子路径：PowerShell 中设置 $env:SITE_BASE_PATH="/NikkiWebsite/" 后运行 npm run build；完成后 Remove-Item Env:SITE_BASE_PATH。

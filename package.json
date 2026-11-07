@@ -9,7 +9,7 @@
     "preview": "vite preview --host 127.0.0.1 --port 4180",
     "predev": "node scripts/prepare-images.mjs",
     "prebuild": "node scripts/prepare-images.mjs",
-    "verify": "node scripts/verify-image-loading.mjs && node scripts/verify-hero-timing.mjs"
+    "verify": "node scripts/verify-image-loading.mjs && node scripts/verify-hero-timing.mjs && node scripts/verify-base-paths.mjs"
   },
   "dependencies": {
     "lucide-vue-next": "^0.577.0",

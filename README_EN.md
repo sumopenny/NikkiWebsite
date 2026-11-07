@@ -78,3 +78,7 @@ This is an independent community tool. It is not affiliated with, authorized, or
 Run `node scripts/verify-hero-timing.mjs` to check hero deadlines, early or late image readiness, single-photo waiting, pause/resume and stale image load events.
 
 Build validation: npm run build automatically checks deployed images and hero timing and stops on failure. Incremental image metadata lives in .verify/image-cache.json. Missing or damaged outputs and source or encoder changes trigger regeneration; unchanged thumbnails are reused. Clean cloud builds work without the cache. Use Node 22.14.0 for Cloudflare builds, including any explicit NODE_VERSION override.
+
+## GitHub Pages deployment
+
+Set Settings → Pages → Source to GitHub Actions. A push to main or manual Deploy GitHub Pages run installs locked dependencies, builds and validates, and publishes only dist. No deployment secret is needed. configure-pages supplies base_path through SITE_BASE_PATH for project paths or custom domains. Cloudflare leaves this variable unset and keeps root paths.
