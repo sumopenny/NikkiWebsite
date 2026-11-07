@@ -7,6 +7,10 @@ export default defineConfig({
     transformIndexHtml(html) {
       const assets = JSON.parse(readFileSync('src/data/imageManifest.json', 'utf8'))
       const first = { light: assets['/images/1.webp'], dark: assets['/images/11.webp'] }
+      const marker = "link.href = '/images/' + (theme === 'dark' ? '11' : '1') + '.webp'"
+      if (html.split(marker).length !== 2) {
+        throw new Error('首屏预加载模板不匹配：请同步更新 index.html 和 vite.config.ts。')
+      }
       return html.replace("link.href = '/images/' + (theme === 'dark' ? '11' : '1') + '.webp'", [
         'var asset = ' + JSON.stringify(first) + '[theme]',
         "if (!asset) { link.href = '/images/' + (theme === 'dark' ? '11' : '1') + '.webp' }",

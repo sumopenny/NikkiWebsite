@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5180",
-    "build": "vue-tsc --noEmit && vite build && node scripts/prerender.mjs",
+    "build": "vue-tsc --noEmit && vite build && node scripts/prerender.mjs && npm run verify",
     "preview": "vite preview --host 127.0.0.1 --port 4180",
     "predev": "node scripts/prepare-images.mjs",
-    "prebuild": "node scripts/prepare-images.mjs"
+    "prebuild": "node scripts/prepare-images.mjs",
+    "verify": "node scripts/verify-image-loading.mjs && node scripts/verify-hero-timing.mjs"
   },
   "dependencies": {
     "lucide-vue-next": "^0.577.0",
@@ -21,5 +22,8 @@
     "typescript": "~5.6.3",
     "vite": "^5.4.11",
     "vue-tsc": "^2.1.10"
+  },
+  "engines": {
+    "node": "22.14.x"
   }
 }

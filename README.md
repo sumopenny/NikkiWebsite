@@ -4,7 +4,7 @@
 
 ## 本地预览
 
-要求 Windows 与 Node.js 20.9 或更新的 LTS 版本。双击项目根目录的 `Start-Website.bat`，首次运行会安装依赖并打开本地网站；默认使用 `http://localhost:5180`，端口被占用时会自动选择 5181–5190 中的空闲端口。也可以在终端运行：
+要求 Windows 与 Node.js 22.14.0（与 .node-version 一致）。双击项目根目录的 `Start-Website.bat`，首次运行会安装依赖并打开本地网站；默认使用 `http://localhost:5180`，端口被占用时会自动选择 5181–5190 中的空闲端口。也可以在终端运行：
 
 ```powershell
 npm install
@@ -26,7 +26,7 @@ npm run preview
 - Build command: `npm run build`
 - Build output directory: `dist`
 - Root directory: `/`
-- Environment: Node.js 20.9 或更新的 LTS 版本
+- Environment: Node.js 22.14.0（与 .node-version 一致）
 
 本项目的 `wrangler.toml` 声明了 Pages 输出目录。官网为静态单页，不需要配置 D1、Secrets 或应用 API 代理。部署后可在 Cloudflare Pages 项目中绑定独立域名。
 
@@ -77,3 +77,5 @@ npm run preview
 6. 构建后运行 `node scripts/verify-image-loading.mjs`，验证加载队列、输出内容哈希、尺寸、部署引用、源图排除和图片缓存配置。
 
 `node scripts/verify-hero-timing.mjs` 验证首屏切换时序，包括图片提前或延迟就绪、仅有一张、暂停恢复及旧图片加载事件。
+
+构建校验：npm run build 会自动执行图片部署与轮播时序校验，失败即终止。图片增量缓存位于 .verify/image-cache.json；首次构建、源图或编码器变化、缓存缺失或损坏时重新生成，重复构建复用未变化的缩略图。云端未保留缓存时仍可完整构建。Cloudflare 构建环境请保持 Node 22.14.0；后台显式设置的 NODE_VERSION 也需一致。

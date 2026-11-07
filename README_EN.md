@@ -4,7 +4,7 @@ The independent website for the NikkiCube (Nikki³) Infinity Nikki toolkit. It i
 
 ## Local preview
 
-Requirements: Windows and Node.js 20.9 or a newer LTS release. Double-click `Start-Website.bat` in the project root. On first run it installs dependencies and opens the local site, using `http://localhost:5180` by default or an available port from 5181 to 5190 when needed. You can also run:
+Requirements: Windows and Node.js 22.14.0 (matching .node-version). Double-click `Start-Website.bat` in the project root. On first run it installs dependencies and opens the local site, using `http://localhost:5180` by default or an available port from 5181 to 5190 when needed. You can also run:
 
 ```powershell
 npm install
@@ -26,7 +26,7 @@ Create a separate Cloudflare Pages project connected to this website repository 
 - Build command: `npm run build`
 - Build output directory: `dist`
 - Root directory: `/`
-- Environment: Node.js 20.9 or newer LTS
+- Environment: Node.js 22.14.0 (matching .node-version)
 
 The included `wrangler.toml` declares the Pages output directory. This is a static single-page site and does not need D1, secrets, or an API proxy. Bind a domain in the Cloudflare Pages project after deployment.
 
@@ -76,3 +76,5 @@ This is an independent community tool. It is not affiliated with, authorized, or
 6. After building, run `node scripts/verify-image-loading.mjs` to check loading queues, output hashes, dimensions, deployment references, source exclusion and image cache rules.
 
 Run `node scripts/verify-hero-timing.mjs` to check hero deadlines, early or late image readiness, single-photo waiting, pause/resume and stale image load events.
+
+Build validation: npm run build automatically checks deployed images and hero timing and stops on failure. Incremental image metadata lives in .verify/image-cache.json. Missing or damaged outputs and source or encoder changes trigger regeneration; unchanged thumbnails are reused. Clean cloud builds work without the cache. Use Node 22.14.0 for Cloudflare builds, including any explicit NODE_VERSION override.
