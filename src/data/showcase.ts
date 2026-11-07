@@ -164,21 +164,21 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "拍摄时间、天气、焦距和光圈",
-            "画面调节、动作、灯光与滤镜",
+            "拍摄时间、天气、风力、风向、焦距、缩放和光圈",
+            "画面调节、动作播放进度、灯光与滤镜",
             "读取可导入游戏的相机参数",
-            "点击“收藏参数”，保存至收藏夹的相机参数页"
+            "收藏喜欢的相机参数"
           ],
           "en": [
-            "Game time, weather, focal length and aperture",
-            "Image adjustments, actions, lights and filters",
-            "Read camera parameters that can be imported into the game",
-            "Click Save parameters to add them to Camera Parameters in Favorites"
+            "Capture time, weather, wind strength and direction, focal length, zoom and aperture",
+            "Image adjustments, pose playback progress, lighting and filters",
+            "Read camera codes that can be imported into the game",
+            "Save favorite camera parameters"
           ]
         },
         "note": {
-          "zh": "选择单张原图即可解析；文件不上传，也不会加入相册。",
-          "en": "Choose a single original photo. It is not uploaded or added to the album."
+          "zh": "选择单张游戏原图即可解析；动态动作播放进度仅适用于支持的较新版本照片。文件不上传，也不会加入相册。",
+          "en": "Parse a single original game photo locally. Pose playback progress requires a supported newer photo version. The file is not uploaded or added to an album."
         },
         "image": "/images/screenshots/image-parameters.webp",
         "alt": {
@@ -191,16 +191,16 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "拍摄时间、天气、焦距和光圈",
-            "画面调节、动作、灯光与滤镜",
+            "拍摄时间、天气、风力、风向、焦距、缩放和光圈",
+            "画面调节、动作播放进度、灯光与滤镜",
             "读取可导入游戏的相机参数",
-            "点击“收藏参数”，保存至收藏夹的相机参数页"
+            "收藏喜欢的相机参数"
           ],
           "en": [
-            "Game time, weather, focal length and aperture",
-            "Image adjustments, actions, lights and filters",
-            "Read camera parameters that can be imported into the game",
-            "Click Save parameters to add them to Camera Parameters in Favorites"
+            "Capture time, weather, wind strength and direction, focal length, zoom and aperture",
+            "Image adjustments, pose playback progress, lighting and filters",
+            "Read camera codes that can be imported into the game",
+            "Save favorite camera parameters"
           ]
         }
       },
@@ -224,10 +224,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "可选图片参数、穿搭部件和相机参数码"
+            "可选图片参数、穿搭部件和相机参数码",
+            "分享预览支持缩放至 400% 与拖动查看"
           ],
           "en": [
-            "Choose photo settings, outfit parts and camera code"
+            "Choose photo settings, outfit parts and camera code",
+            "Zoom the share preview up to 400% and drag to inspect it"
           ]
         },
         "note": {
@@ -245,10 +247,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "可选图片参数、穿搭部件和相机参数码"
+            "可选图片参数、穿搭部件和相机参数码",
+            "分享预览支持缩放至 400% 与拖动查看"
           ],
           "en": [
-            "Choose photo settings, outfit parts and camera code"
+            "Choose photo settings, outfit parts and camera code",
+            "Zoom the share preview up to 400% and drag to inspect it"
           ]
         }
       },
@@ -272,10 +276,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "可选图片参数、穿搭部件和相机参数码"
+            "可选图片参数、穿搭部件和相机参数码",
+            "分享预览支持缩放至 400% 与拖动查看"
           ],
           "en": [
-            "Choose photo settings, outfit parts and camera code"
+            "Choose photo settings, outfit parts and camera code",
+            "Zoom the share preview up to 400% and drag to inspect it"
           ]
         },
         "note": {
@@ -293,10 +299,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "可选图片参数、穿搭部件和相机参数码"
+            "可选图片参数、穿搭部件和相机参数码",
+            "分享预览支持缩放至 400% 与拖动查看"
           ],
           "en": [
-            "Choose photo settings, outfit parts and camera code"
+            "Choose photo settings, outfit parts and camera code",
+            "Zoom the share preview up to 400% and drag to inspect it"
           ]
         }
       },
@@ -320,14 +328,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "支持 50%–300% 缩放与滚轮缩放",
+            "支持 50%–400% 缩放与滚轮缩放",
             "放大后拖动，左右方向键翻页",
             "预览中可解析照片参数或删除照片"
           ],
           "en": [
-            "Zoom from 50% to 300%, including mouse-wheel control",
-            "Drag a zoomed photo and browse with the arrow keys",
-            "Parse parameters or delete a photo from its preview"
+            "Zoom from 50% to 400%, including mouse-wheel zoom",
+            "Drag when enlarged and browse with arrow keys",
+            "Parse photo parameters or delete photos from the preview"
           ]
         },
         "note": {
@@ -345,14 +353,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "支持 50%–300% 缩放与滚轮缩放",
+            "支持 50%–400% 缩放与滚轮缩放",
             "放大后拖动，左右方向键翻页",
             "预览中可解析照片参数或删除照片"
           ],
           "en": [
-            "Zoom",
-            "Drag",
-            "Keyboard browsing"
+            "Zoom from 50% to 400%, including mouse-wheel zoom",
+            "Drag when enlarged and browse with arrow keys",
+            "Parse photo parameters or delete photos from the preview"
           ]
         }
       },
@@ -550,8 +558,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Organize images, codes and tags together"
         },
         "body": {
-          "zh": "添加或编辑搭配方案，搭配码可以暂时留空，之后再补充完整。",
-          "en": "Add or edit an outfit scheme. Leave its code blank and complete it later if needed."
+          "zh": "添加或编辑搭配方案，图片或搭配码任选其一即可保存。",
+          "en": "Add or edit an outfit scheme. An image or an outfit code is enough to save it."
         },
         "points": {
           "zh": [
@@ -667,10 +675,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "搭配库中需有对应图片"
+            "搭配库中需有对应图片",
+            "分享预览支持缩放至 400% 与拖动查看"
           ],
           "en": [
-            "Requires a saved outfit image"
+            "Requires a saved outfit image",
+            "Zoom the share preview up to 400% and drag to inspect it"
           ]
         },
         "note": {
@@ -688,10 +698,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "搭配库中需有对应图片"
+            "搭配库中需有对应图片",
+            "分享预览支持缩放至 400% 与拖动查看"
           ],
           "en": [
-            "Requires a saved outfit image"
+            "Requires a saved outfit image",
+            "Zoom the share preview up to 400% and drag to inspect it"
           ]
         }
       },
@@ -718,13 +730,15 @@ export const showcaseCategories: ShowcaseCategory[] = [
             "所属套装与套装图片",
             "进化或焕新状态、可染条件",
             "实际染色的区域、染色盘与色号",
-            "点击“所属套装”旁的跳转图标，打开套装详情"
+            "点击“所属套装”旁的跳转图标，打开套装详情",
+            "妆容部件显示对应全妆名称，并可跳转查看"
           ],
           "en": [
             "Related outfit and outfit image",
             "Evolution or renewal state and dye requirements",
             "Applied dye regions, palettes and color codes",
-            "Click the link icon beside the outfit name to open outfit details"
+            "Click the link icon beside the outfit name to open outfit details",
+            "View the related full makeup name and open its details"
           ]
         },
         "note": {
@@ -745,13 +759,71 @@ export const showcaseCategories: ShowcaseCategory[] = [
             "所属套装与套装图片",
             "进化或焕新状态、可染条件",
             "实际染色的区域、染色盘与色号",
-            "点击“所属套装”旁的跳转图标，打开套装详情"
+            "点击“所属套装”旁的跳转图标，打开套装详情",
+            "妆容部件显示对应全妆名称，并可跳转查看"
           ],
           "en": [
             "Related outfit and outfit image",
             "Evolution or renewal state and dye requirements",
             "Applied dye regions, palettes and color codes",
-            "Click the link icon beside the outfit name to open outfit details"
+            "Click the link icon beside the outfit name to open outfit details",
+            "View the related full makeup name and open its details"
+          ]
+        }
+      },
+      {
+        "id": "outfit-summary",
+        "label": {
+          "zh": "搭配总结",
+          "en": "Outfit summary"
+        },
+        "caption": {
+          "zh": "搭配总结",
+          "en": "Outfit summary"
+        },
+        "title": {
+          "zh": "看看你的搭配偏好",
+          "en": "Discover your outfit favorites"
+        },
+        "body": {
+          "zh": "查看常用标签、常穿部件和常用妆容排行，回顾自己的搭配习惯。",
+          "en": "Review your most-used tags, clothing and makeup to discover your styling habits."
+        },
+        "points": {
+          "zh": [
+            "按部位筛选服装与妆容排行",
+            "点击标签查看对应搭配，点击部件查看详情",
+            "优先读取本地解析记录，剩余搭配码可批量解析"
+          ],
+          "en": [
+            "Filter clothing and makeup rankings by type",
+            "Open matching outfits from tags or inspect ranked parts",
+            "Reuse local results and batch-parse remaining codes"
+          ]
+        },
+        "note": {
+          "zh": "排名根据已保存搭配及其解析结果统计。",
+          "en": "Rankings use saved outfits and their parsed results."
+        },
+        "image": "/images/screenshots/outfit-summary.webp",
+        "alt": {
+          "zh": "搭配总结",
+          "en": "Outfit summary"
+        },
+        "schematicTitle": {
+          "zh": "看看你的搭配偏好",
+          "en": "Discover your outfit favorites"
+        },
+        "schematicItems": {
+          "zh": [
+            "按部位筛选服装与妆容排行",
+            "点击标签查看对应搭配，点击部件查看详情",
+            "优先读取本地解析记录，剩余搭配码可批量解析"
+          ],
+          "en": [
+            "Filter clothing and makeup rankings by type",
+            "Open matching outfits from tags or inspect ranked parts",
+            "Reuse local results and batch-parse remaining codes"
           ]
         }
       },
@@ -1023,12 +1095,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "按卡池排序，按四星或五星筛选",
             "电脑同时展示两套，手机切换第一套／第二套",
-            "点击套装图片或部件图片，打开对应详情"
+            "点击套装图片或部件图片，打开对应详情",
+            "有对应妆容的套装可通过“查看妆容”打开详情"
           ],
           "en": [
             "Sort banners and filter four-star or five-star outfits",
             "View both sets on desktop; switch sets on mobile",
-            "Click outfit or piece images to open their details"
+            "Click outfit or piece images to open their details",
+            "Open related makeup details from outfits that have matching makeup"
           ]
         },
         "note": {
@@ -1041,19 +1115,21 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Resonance records outfit list interface screenshot"
         },
         "schematicTitle": {
-          "zh": "记录每个部件的获得过程",
+          "zh": "每一次共鸣，都有迹可循",
           "en": "Keep track of every resonance"
         },
         "schematicItems": {
           "zh": [
             "按卡池排序，按四星或五星筛选",
             "电脑同时展示两套，手机切换第一套／第二套",
-            "点击套装图片或部件图片，打开对应详情"
+            "点击套装图片或部件图片，打开对应详情",
+            "有对应妆容的套装可通过“查看妆容”打开详情"
           ],
           "en": [
             "Sort banners and filter four-star or five-star outfits",
             "View both sets on desktop; switch sets on mobile",
-            "Click outfit or piece images to open their details"
+            "Click outfit or piece images to open their details",
+            "Open related makeup details from outfits that have matching makeup"
           ]
         }
       },
@@ -1191,12 +1267,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "查看套装信息与部件收集进度",
             "点击部件图片，打开部件详情",
-            "通过关联入口查看进化形态"
+            "通过关联入口查看进化形态",
+            "有对应妆容的套装可通过“查看妆容”打开详情"
           ],
           "en": [
             "Review outfit information and piece collection progress",
             "Click piece images to open piece details",
-            "Use related links to explore evolution variants"
+            "Use related links to explore evolution variants",
+            "Open related makeup details from outfits that have matching makeup"
           ]
         },
         "note": {
@@ -1216,12 +1294,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "查看套装信息与部件收集进度",
             "点击部件图片，打开部件详情",
-            "通过关联入口查看进化形态"
+            "通过关联入口查看进化形态",
+            "有对应妆容的套装可通过“查看妆容”打开详情"
           ],
           "en": [
             "Review outfit information and piece collection progress",
             "Click piece images to open piece details",
-            "Use related links to explore evolution variants"
+            "Use related links to explore evolution variants",
+            "Open related makeup details from outfits that have matching makeup"
           ]
         }
       },
@@ -1282,6 +1362,174 @@ export const showcaseCategories: ShowcaseCategory[] = [
         }
       },
       {
+        "id": "makeup-catalog",
+        "label": {
+          "zh": "妆容图鉴",
+          "en": "Makeup catalog"
+        },
+        "caption": {
+          "zh": "妆容图鉴",
+          "en": "Makeup catalog"
+        },
+        "title": {
+          "zh": "喜欢的妆容，分类慢慢找",
+          "en": "Explore makeup by category"
+        },
+        "body": {
+          "zh": "浏览全妆、底妆、眉妆、睫毛、美瞳和唇妆，查找喜欢的妆容与组成部件。",
+          "en": "Browse full makeup, foundation, brows, lashes, contacts and lips to find your favorites."
+        },
+        "points": {
+          "zh": [
+            "按游戏版本、获取来源和星级筛选",
+            "通过名称或 ID 搜索",
+            "电脑和手机均可浏览，无需先导入个人档案"
+          ],
+          "en": [
+            "Filter by game version, source and rarity",
+            "Search by name or ID",
+            "Browse on desktop and mobile without importing personal records"
+          ]
+        },
+        "note": {
+          "zh": "从“暖暖档案 → 妆容图鉴”进入。",
+          "en": "Open Nikki Archive → Makeup catalog."
+        },
+        "image": "/images/screenshots/makeup-catalog.webp",
+        "alt": {
+          "zh": "妆容图鉴",
+          "en": "Makeup catalog"
+        },
+        "schematicTitle": {
+          "zh": "喜欢的妆容，分类慢慢找",
+          "en": "Explore makeup by category"
+        },
+        "schematicItems": {
+          "zh": [
+            "按游戏版本、获取来源和星级筛选",
+            "通过名称或 ID 搜索",
+            "电脑和手机均可浏览，无需先导入个人档案"
+          ],
+          "en": [
+            "Filter by game version, source and rarity",
+            "Search by name or ID",
+            "Browse on desktop and mobile without importing personal records"
+          ]
+        }
+      },
+      {
+        "id": "makeup-details",
+        "label": {
+          "zh": "妆容详情",
+          "en": "Makeup details"
+        },
+        "caption": {
+          "zh": "妆容详情",
+          "en": "Makeup details"
+        },
+        "title": {
+          "zh": "从全妆，看到每个部件",
+          "en": "Explore every part of a makeup look"
+        },
+        "body": {
+          "zh": "查看妆容大图、星级、版本、来源及组成部件，并继续浏览关联全妆与套装。",
+          "en": "Inspect makeup images, rarity, version, source and parts, then explore related full makeup and outfits."
+        },
+        "points": {
+          "zh": [
+            "切换不同进化形态",
+            "点击组成部件查看详情",
+            "在关联妆容与套装之间继续跳转"
+          ],
+          "en": [
+            "Switch evolution forms",
+            "Open details for individual parts",
+            "Navigate between related makeup and outfits"
+          ]
+        },
+        "note": {
+          "zh": "共鸣记录、衣橱套装详情及搭配解析也提供关联妆容入口。",
+          "en": "Related makeup is also accessible from resonance, wardrobe outfit details and parsed outfit parts."
+        },
+        "image": "/images/screenshots/makeup-details.webp",
+        "alt": {
+          "zh": "妆容详情",
+          "en": "Makeup details"
+        },
+        "schematicTitle": {
+          "zh": "从全妆，看到每个部件",
+          "en": "Explore every part of a makeup look"
+        },
+        "schematicItems": {
+          "zh": [
+            "切换不同进化形态",
+            "点击组成部件查看详情",
+            "在关联妆容与套装之间继续跳转"
+          ],
+          "en": [
+            "Switch evolution forms",
+            "Open details for individual parts",
+            "Navigate between related makeup and outfits"
+          ]
+        }
+      },
+      {
+        "id": "archive-background",
+        "label": {
+          "zh": "背景切换",
+          "en": "Backgrounds"
+        },
+        "caption": {
+          "zh": "背景切换",
+          "en": "Backgrounds"
+        },
+        "title": {
+          "zh": "给暖暖档案，换一种心情",
+          "en": "Give your archive a fresh look"
+        },
+        "body": {
+          "zh": "在“视图”菜单中选择不同风格的背景，让档案展示更合心意。",
+          "en": "Choose a background from View to personalize your archive."
+        },
+        "points": {
+          "zh": [
+            "多款背景自由切换",
+            "选择后立即生效",
+            "自动记住背景偏好"
+          ],
+          "en": [
+            "Choose from multiple backgrounds",
+            "Apply your choice immediately",
+            "Remember your background preference"
+          ]
+        },
+        "note": {
+          "zh": "浅色与深色主题均可使用。",
+          "en": "Available with light and dark themes."
+        },
+        "image": "/images/screenshots/archive-background.webp",
+        "alt": {
+          "zh": "背景切换",
+          "en": "Backgrounds"
+        },
+        "schematicTitle": {
+          "zh": "给暖暖档案，换一种心情",
+          "en": "Give your archive a fresh look"
+        },
+        "schematicItems": {
+          "zh": [
+            "多款背景自由切换",
+            "选择后立即生效",
+            "自动记住背景偏好"
+          ],
+          "en": [
+            "Choose from multiple backgrounds",
+            "Apply your choice immediately",
+            "Remember your background preference"
+          ]
+        }
+      },
+      {
         "id": "resonance-pearpal",
         "label": {
           "zh": "手账导入",
@@ -1301,19 +1549,19 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "建议使用电脑，通过书签或控制台获取凭据",
-            "核对游戏 UID，先预览再选择数据类型",
-            "确认导入共鸣记录后，以预览结果替换全部本地共鸣记录"
+            "支持电脑端、安卓端和苹果端获取凭据，建议优先使用电脑",
+            "导入窗口提供电脑端、安卓端、苹果端视频教程入口",
+            "核对 UID、预览内容后，再选择导入共鸣记录或衣橱数据"
           ],
           "en": [
-            "Use a computer to obtain credentials through a bookmark or the console",
-            "Check the UID, preview, and choose the data types",
-            "Confirming resonance import replaces all local resonance records with the preview"
+            "Get credentials on desktop, Android or iOS; desktop is recommended",
+            "Find desktop, Android and iOS video tutorials in the import dialog",
+            "Check the UID and preview before importing resonance or wardrobe data"
           ]
         },
         "note": {
-          "zh": "凭据仅用于当前验证和获取记录，不保存到本地。",
-          "en": "Credentials are used only for the current verification and retrieval and are not saved locally."
+          "zh": "导入窗口按设备提供操作指引；确认导入共鸣记录会替换本地共鸣记录。凭据不保存到本地。",
+          "en": "Follow the device-specific guide in the import dialog. Confirming a resonance import replaces local resonance records. Credentials are not saved locally."
         },
         "image": "/images/screenshots/archive-pearpal.webp",
         "alt": {
@@ -1321,19 +1569,19 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Import from Pear-Pal Whim-Log feature illustration"
         },
         "schematicTitle": {
-          "zh": "先预览，再写入本地记录",
-          "en": "Bring your records back from Whim-Log"
+          "zh": "从奇想手账，带回你的暖暖档案",
+          "en": "Bring your Nikki Archive back from Whim-Log"
         },
         "schematicItems": {
           "zh": [
-            "建议使用电脑，通过书签或控制台获取凭据",
-            "核对游戏 UID，先预览再选择数据类型",
-            "确认导入共鸣记录后，以预览结果替换全部本地共鸣记录"
+            "支持电脑端、安卓端和苹果端获取凭据，建议优先使用电脑",
+            "导入窗口提供电脑端、安卓端、苹果端视频教程入口",
+            "核对 UID、预览内容后，再选择导入共鸣记录或衣橱数据"
           ],
           "en": [
-            "Use a computer to obtain credentials through a bookmark or the console",
-            "Check the UID, preview, and choose the data types",
-            "Confirming resonance import replaces all local resonance records with the preview"
+            "Get credentials on desktop, Android or iOS; desktop is recommended",
+            "Find desktop, Android and iOS video tutorials in the import dialog",
+            "Check the UID and preview before importing resonance or wardrobe data"
           ]
         }
       },
@@ -1537,12 +1785,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
         "points": {
           "zh": [
             "自定义名称、封面与单标签分类",
+            "双击封面查看大图，支持缩放、拖动及前后切换",
             "复制参数、编辑收藏或打开详情",
             "支持 ZIP 备份导入与导出"
           ],
           "en": [
             "Custom names, covers and single-tag categories",
-            "Copy parameters, edit favorites, or open details",
+            "Double-click a cover to zoom, drag and browse images",
+            "Copy parameters, edit favorites or open details",
             "Import and export ZIP backups"
           ]
         },
@@ -1562,12 +1812,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
         "schematicItems": {
           "zh": [
             "自定义名称、封面与单标签分类",
+            "双击封面查看大图，支持缩放、拖动及前后切换",
             "复制参数、编辑收藏或打开详情",
             "支持 ZIP 备份导入与导出"
           ],
           "en": [
             "Custom names, covers and single-tag categories",
-            "Copy parameters, edit favorites, or open details",
+            "Double-click a cover to zoom, drag and browse images",
+            "Copy parameters, edit favorites or open details",
             "Import and export ZIP backups"
           ]
         }
@@ -1683,6 +1935,118 @@ export const showcaseCategories: ShowcaseCategory[] = [
             "Facing direction"
           ]
         }
+      },
+      {
+        "id": "directory-backup",
+        "label": {
+          "zh": "电脑自动备份",
+          "en": "Desktop auto backup"
+        },
+        "caption": {
+          "zh": "电脑自动备份",
+          "en": "Desktop auto backup"
+        },
+        "title": {
+          "zh": "把灵感，自动备份到电脑",
+          "en": "Automatically back up your inspiration"
+        },
+        "body": {
+          "zh": "选择电脑本地文件夹，自动备份搭配码、家园方案和相机参数收藏。",
+          "en": "Choose a local desktop folder to back up outfit codes, home schemes and camera favorites automatically."
+        },
+        "points": {
+          "zh": [
+            "三个模块可分别开启或关闭",
+            "数据变化时增量备份，查看备份状态",
+            "支持从备份目录恢复，异常清空时保护已有备份"
+          ],
+          "en": [
+            "Enable each of the three modules separately",
+            "Back up changes incrementally and check status",
+            "Restore from the folder and protect backups against unexpected data loss"
+          ]
+        },
+        "note": {
+          "zh": "需使用支持目录授权的电脑浏览器。备份保存在自己的电脑，不是云同步；未开启也可正常使用网站。",
+          "en": "Requires a desktop browser with folder access. Files stay on your computer; this is separate from cloud sync. The app also works without auto backup."
+        },
+        "image": "/images/screenshots/directory-backup.webp",
+        "alt": {
+          "zh": "电脑自动备份",
+          "en": "Desktop auto backup"
+        },
+        "schematicTitle": {
+          "zh": "把灵感，自动备份到电脑",
+          "en": "Automatically back up your inspiration"
+        },
+        "schematicItems": {
+          "zh": [
+            "三个模块可分别开启或关闭",
+            "数据变化时增量备份，查看备份状态",
+            "支持从备份目录恢复，异常清空时保护已有备份"
+          ],
+          "en": [
+            "Enable each of the three modules separately",
+            "Back up changes incrementally and check status",
+            "Restore from the folder and protect backups against unexpected data loss"
+          ]
+        }
+      },
+      {
+        "id": "install-app",
+        "label": {
+          "zh": "安装应用",
+          "en": "Install app"
+        },
+        "caption": {
+          "zh": "安装应用",
+          "en": "Install app"
+        },
+        "title": {
+          "zh": "从桌面，直接打开暖立方",
+          "en": "Open NikkiCube from your home screen"
+        },
+        "body": {
+          "zh": "通过“更多 → 安装应用”，按设备指引添加到手机主屏幕或电脑桌面。",
+          "en": "Open More → Install app and follow the device guide to add NikkiCube to your home screen or desktop."
+        },
+        "points": {
+          "zh": [
+            "支持手机与电脑的安装指引",
+            "支持的浏览器可在独立窗口运行",
+            "从图标快速返回暖立方"
+          ],
+          "en": [
+            "Installation guides for mobile and desktop",
+            "Run in a separate window in supported browsers",
+            "Return quickly from the app icon"
+          ]
+        },
+        "note": {
+          "zh": "具体安装方式取决于浏览器；安装不会自动备份或同步浏览器数据。",
+          "en": "Installation depends on the browser and does not automatically back up or sync browser data."
+        },
+        "image": "/images/screenshots/install-app.webp",
+        "alt": {
+          "zh": "安装应用",
+          "en": "Install app"
+        },
+        "schematicTitle": {
+          "zh": "从桌面，直接打开暖立方",
+          "en": "Open NikkiCube from your home screen"
+        },
+        "schematicItems": {
+          "zh": [
+            "支持手机与电脑的安装指引",
+            "支持的浏览器可在独立窗口运行",
+            "从图标快速返回暖立方"
+          ],
+          "en": [
+            "Installation guides for mobile and desktop",
+            "Run in a separate window in supported browsers",
+            "Return quickly from the app icon"
+          ]
+        }
       }
     ]
   }
@@ -1735,8 +2099,8 @@ export const showcaseSupport = {
         "en": "Album access and view settings"
       },
       "body": {
-        "zh": "切换或恢复相册路径，授权 X6Game；调整主题、语言与照片缩略图比例。",
-        "en": "Switch or restore album access, authorize X6Game, and adjust theme, language and thumbnail ratios."
+        "zh": "切换或恢复相册路径，授权 X6Game；调整主题、语言、照片比例及暖暖档案背景。",
+        "en": "Switch or restore album access, authorize X6Game, and adjust theme, language, photo ratios and archive backgrounds."
       }
     },
     {
@@ -1767,6 +2131,26 @@ export const showcaseSupport = {
       "body": {
         "zh": "在“更多”中导出或导入搭配码、家园方案、相机参数收藏、共鸣记录与衣橱数据，不包含相册原图与网站设置。",
         "en": "Use More to export or import outfit codes, home schemes, camera favorites, resonance records and wardrobe data; original album photos and site settings are excluded."
+      }
+    },
+    {
+      "title": {
+        "zh": "电脑端自动备份",
+        "en": "Desktop auto backup"
+      },
+      "body": {
+        "zh": "在顶部“自动备份”选择本地目录，按模块开启增量备份，也可从目录恢复。",
+        "en": "Choose a local folder under Auto backup, enable modules and restore from that folder when needed."
+      }
+    },
+    {
+      "title": {
+        "zh": "数据保存提醒",
+        "en": "Local data reminder"
+      },
+      "body": {
+        "zh": "数据保存在当前浏览器。清除站点数据、使用清理工具或卸载浏览器可能导致数据丢失；更换浏览器或设备时请导入备份，或手动同步共鸣与衣橱。",
+        "en": "Data is stored in the current browser. Clearing site data, cleanup tools or uninstalling the browser may erase it. Import a backup when changing browsers or devices, or manually sync resonance and wardrobe."
       }
     }
   ],

@@ -233,16 +233,16 @@ const copy = computed(() => language.value === 'zh'
       nav: ['首页', '功能预览', '使用指南', '常见问题'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: '把每一段心动，\n好好珍藏。',
-      heroBody: "暖立方（Nikki³）是为无限暖暖玩家打造的实用工具集。整理游戏照片，珍藏搭配、家园灵感与相机参数，记录共鸣，查看个人衣橱收集进度，让珍贵瞬间留在自己的设备里。",
+      heroBody: "暖立方（Nikki³）是为无限暖暖玩家打造的实用工具集。整理游戏照片，珍藏搭配、家园灵感与相机参数，记录共鸣，查看个人衣橱收集进度与妆容图鉴，让珍贵瞬间留在自己的设备里。",
       useNow: '打开网站',
       viewFeatures: '看看它能做什么',
       heroNote: "免费使用 · 本地功能无需注册 · 无需下载",
       artHero: '首屏暖暖氛围美照',
       artRatioWide: '轮播 · 浅色 1-10 / 深色 11-20 · 16:9 横向原图 · 宽度 2400px+',
-      benefits: [{"title":"照片本地读取","body":"相册浏览与照片参数解析在本地完成，原图无需上传。"},{"title":"电脑手机都能用","body":"整理搭配、家园与拍摄灵感，查看共鸣记录和衣橱。"},{"title":"数据随时备份","body":"支持模块备份与全部数据导出，方便迁移到其他设备。"},{"title":"游戏灵感集中珍藏","body":"将搭配码、家园方案与相机参数分类保存，随时查找。"},{"title":"共鸣与衣橱一目了然","body":"查看共鸣抽数、部件获取记录和服装收集进度。"},{"title":"共鸣与衣橱云同步","body":"登录后可单独或一起同步共鸣记录与衣橱，跨设备继续查看。"}],
+      benefits: [{"title":"照片本地读取","body":"相册浏览与照片参数解析在本地完成，原图无需上传。"},{"title":"电脑手机都能用","body":"整理搭配、家园与拍摄灵感，查看共鸣记录、衣橱和妆容图鉴。"},{"title":"数据随时备份","body":"支持模块与全部数据导出，电脑端还可开启本地目录自动备份。"},{"title":"游戏灵感集中珍藏","body":"将搭配码、家园方案与相机参数分类保存，随时查找。"},{"title":"档案与图鉴一目了然","body":"查看共鸣抽数、服装收集进度与妆容图鉴，按条件查找喜欢的部件。"},{"title":"共鸣与衣橱云同步","body":"登录后可单独或一起同步共鸣记录与衣橱，跨设备继续查看。"}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: '从相册时光，到趁手的小工具。',
-      previewBody: "整理照片、珍藏搭配与家园灵感，记录每一次共鸣，也看看衣橱里的收集进度。",
+      previewBody: "整理照片、珍藏搭配与家园灵感，记录每一次共鸣，查看衣橱收集进度，探索喜欢的妆容。",
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER',
       galleryTitle: '留一块位置，给你镜头里的暖暖。',
       galleryBody: '尽情欣赏暖暖美照，让官网也像一本小小的旅途画册。',
@@ -280,12 +280,16 @@ const copy = computed(() => language.value === 'zh'
   {
     "no": "03",
     "title": "查看暖暖档案与迁移数据",
-    "body": "进入“暖暖档案”，按引导导入共鸣记录和衣橱数据；通过模块备份或“更多”中的全部数据备份迁移设备，共鸣记录与衣橱还可在同一窗口手动云同步。"
+    "body": "进入“暖暖档案”，浏览妆容图鉴，或按引导导入共鸣记录和衣橱数据；通过模块备份或“更多”中的全部数据备份迁移设备，共鸣记录与衣橱还可在同一窗口手动云同步。"
   }
 ],
       questionsKicker: 'GOOD TO KNOW',
       questionsTitle: '开始前，几个常见问题。',
       questions: [
+{
+  "q": "本地数据会一直保留吗？",
+  "a": "数据保存在当前浏览器。清除本站数据、使用清理工具或卸载浏览器可能导致数据丢失；换浏览器或设备时不会自动带过去。建议定期导出备份，电脑端可开启自动备份；共鸣记录与衣橱可手动云同步。安装应用也不能替代备份。"
+},
   {
     "q": "照片会上传到服务器吗？",
     "a": "照片浏览与相机参数解析在本地浏览器中完成。临时选择的游戏原图不会上传，也不会自动加入相册；主动使用云同步时，仅上传所选的共鸣或衣橱存档。"
@@ -296,7 +300,7 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "手机上可以使用哪些功能？",
-    "a": "手机可管理搭配码、家园方案和相机参数收藏，使用独立照片与代码解析，查看共鸣记录与个人衣橱。相册目录管理、游戏搭配自动接收和专项清理需要支持目录授权的电脑浏览器。"
+    "a": "手机可管理搭配码、家园方案和相机参数收藏，使用独立照片与代码解析，查看共鸣记录、个人衣橱与妆容图鉴。相册目录管理、游戏搭配自动接收和专项清理需要支持目录授权的电脑浏览器。"
   },
   {
     "q": "如何把电脑数据迁移到手机？",
@@ -325,13 +329,13 @@ const copy = computed(() => language.value === 'zh'
       nav: ['Home', 'Features', 'Usage guide', 'FAQ'],
       eyebrow: 'INFINITY NIKKI · LOCAL ALBUM STUDIO',
       title: 'Keep every lovely\nmoment close.',
-      heroBody: "NikkiCube (Nikki³) is a practical toolkit for Infinity Nikki players. Organize game photos, save outfits, home ideas and camera presets, track resonance, and explore your wardrobe collection while keeping precious moments on your device.",
+      heroBody: "NikkiCube (Nikki³) is a practical toolkit for Infinity Nikki players. Organize game photos, save outfits, home ideas and camera presets, track resonance, explore your wardrobe collection and browse the makeup catalog while keeping precious moments on your device.",
       useNow: 'Open the app', viewFeatures: 'Explore the features', heroNote: "Free to use · Local features need no sign-up · No download",
       artHero: 'Infinity Nikki hero artwork', artRatioWide: 'Carousel · light 1-10 / dark 11-20 · 16:9 landscape · 2400px+ wide',
-      benefits: [{"title":"Photos stay local","body":"Album browsing and photo parameter parsing run locally. Original photos need no upload."},{"title":"Desktop and mobile","body":"Organize outfits, home ideas and camera presets, and explore resonance records and your wardrobe."},{"title":"Back up anytime","body":"Export individual modules or all data to move your collection to another device."},{"title":"Keep your inspiration","body":"Save outfit codes, home schemes and camera presets by category for easy access."},{"title":"Track your collection","body":"Review resonance pulls, piece acquisition records and clothing collection progress."},{"title":"Resonance and wardrobe cloud sync","body":"Sign in to sync resonance and wardrobe separately or together across devices."}],
+      benefits: [{"title":"Photos stay local","body":"Album browsing and photo parameter parsing run locally. Original photos need no upload."},{"title":"Desktop and mobile","body":"Organize outfits, home ideas and camera presets, and explore resonance records, your wardrobe and makeup."},{"title":"Back up anytime","body":"Export individual modules or all data, or enable automatic local-folder backups on desktop."},{"title":"Keep your inspiration","body":"Save outfit codes, home schemes and camera presets by category for easy access."},{"title":"Track your collection","body":"Review resonance pulls, wardrobe progress and the makeup catalog, with filters to find your favorites."},{"title":"Resonance and wardrobe cloud sync","body":"Sign in to sync resonance and wardrobe separately or together across devices."}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: 'From album memories to handy little tools.',
-      previewBody: "Organize photos, save outfit and home ideas, track resonance, and explore your wardrobe collection.",
+      previewBody: "Organize photos, save outfit and home ideas, track resonance, explore your wardrobe collection and browse the makeup catalog.",
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER', galleryTitle: 'A little space for Nikki in your frame.',
       galleryBody: "Enjoy Nikki's beautiful photos, and let this site feel like a little travel album.",
       tutorialKicker: 'OUTFIT CODE · AUTO UPDATE',
@@ -367,11 +371,15 @@ const copy = computed(() => language.value === 'zh'
   {
     "no": "03",
     "title": "Explore Nikki Archive and migrate data",
-    "body": "Import resonance and wardrobe data in Nikki Archive. Transfer data through module backups or all-data backups under More; resonance and wardrobe also share one manual cloud-sync window."
+    "body": "Browse the makeup catalog or import resonance and wardrobe data in Nikki Archive. Transfer data through module backups or all-data backups under More; resonance and wardrobe also share one manual cloud-sync window."
   }
 ],
       questionsKicker: 'GOOD TO KNOW', questionsTitle: 'A few things before you begin.',
       questions: [
+{
+  "q": "Will my local data always be kept?",
+  "a": "Data is stored in the current browser. Clearing site data, cleanup tools or uninstalling the browser may erase it. Changing browsers or devices does not transfer it automatically. Export backups regularly or enable desktop auto backup; resonance and wardrobe can be synced manually. Installing the app does not replace a backup."
+},
   {
     "q": "Are my photos uploaded?",
     "a": "Photo browsing and camera parameter parsing run locally. Originals selected for temporary parsing are not uploaded or added to an album. Manual cloud sync uploads only the selected resonance or wardrobe saves."
@@ -382,7 +390,7 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "Which features work on a phone?",
-    "a": "Manage outfit codes, home schemes and camera favorites, parse photos or codes, and view resonance records and your wardrobe. Folder-based albums, automatic game outfit imports and targeted cleanup require a desktop browser with folder access."
+    "a": "Manage outfit codes, home schemes and camera favorites, parse photos or codes, and view resonance records, your wardrobe and the makeup catalog. Folder-based albums, automatic game outfit imports and targeted cleanup require a desktop browser with folder access."
   },
   {
     "q": "How do I move desktop data to my phone?",
@@ -467,8 +475,8 @@ function setLanguage(value: Language): void {
   // 标签页标题中英文统一，不再随语言切换
   document.title = '暖立方（Nikki³）｜无限暖暖工具集'
   document.querySelector('meta[name="description"]')?.setAttribute('content', value === 'zh'
-    ? '暖立方（Nikki³）是无限暖暖玩家工具集，提供无限暖暖相册管理、搭配码解析、家园方案管理、相机参数收藏与共鸣记录统计。查看功能介绍、使用指南并进入在线工具。'
-    : 'NikkiCube (Nikki³) is an Infinity Nikki toolkit for photo albums, outfit codes, home plans, camera presets and resonance records. Explore features, guides and the online app.')
+    ? '暖立方（Nikki³）是无限暖暖玩家工具集，提供无限暖暖相册管理、搭配码解析、家园方案管理、相机参数收藏、共鸣记录、个人衣橱与妆容图鉴。查看功能介绍、使用指南并进入在线工具。'
+    : 'NikkiCube (Nikki³) is an Infinity Nikki toolkit for photo albums, outfit codes, home plans, camera presets, resonance records, wardrobe tracking and a makeup catalog. Explore features, guides and the online app.')
   try { localStorage.setItem('nikki-website-language', value) } catch { /* Language still applies for this session. */ }
   mobileMenuOpen.value = false
 }
