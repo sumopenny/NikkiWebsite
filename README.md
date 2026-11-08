@@ -41,7 +41,7 @@ npm run preview
 ## 素材
 
 - 源图片统一放在项目根目录的 `images/`，不会复制进部署目录。首屏浅色使用 `1.webp`～`10.webp`，深色使用 `11.webp`～`20.webp`；画廊使用 `gallery-1.webp`～`gallery-10.webp`。
-- 功能预览包含相册、搭配码、家园方案、暖暖档案和解析工具五类，数据与截图路径在 `src/data/showcase.ts`；真实截图放在 `images/screenshots/`。未提供或加载失败的截图显示功能示意图。
+- 功能预览包含相册、搭配码、家园方案、暖暖档案和解析工具五类，包括妆容图鉴、搭配总结、分享图、背景切换和电脑端自动备份；数据与截图路径在 `src/data/showcase.ts`，截图放在 `images/screenshots/`。未提供或加载失败的截图显示功能示意图。
 - 教程图为 `images/auto-update-outfit-code.webp`，保留原始纵向比例，支持打开完整图片。
 - 品牌图标位于 `public/images/brand-mark.png`，浏览器图标位于 `public/favicon.ico` 与 `public/favicon.svg`。
 - 原始 JPEG/JPG 可选归档在 `images/originals/`。安装 Python 与 Pillow 后，可使用 `python scripts/convert_webp.py` 转成源 WebP；归档文件不发布。
@@ -49,7 +49,7 @@ npm run preview
 
 ## 页面内容
 
-官网介绍相册管理、搭配码、家园方案、相机参数收藏、共鸣记录与个人衣橱，提供自动接收搭配码教程、备份迁移说明和常见问题。详细操作请阅读主项目的[中文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md)或[英文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md)。
+官网介绍相册管理、搭配码、家园方案、相机参数收藏、共鸣记录、个人衣橱与妆容图鉴，展示搭配总结、分享图、背景切换、自动备份及自动接收搭配码教程。详细操作请阅读主项目的[中文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md)或[英文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md)。
 
 ## 动效与无障碍
 

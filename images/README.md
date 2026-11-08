@@ -35,13 +35,18 @@
 | 文件名（`screenshots/` 下） | 界面 |
 | --- | --- |
 | `album-timeline.webp` | 相册时间轴 |
+| `archive-pearpal.webp` | 暖暖档案手账导入 |
 | `album-actions.webp` | 相册动作分类 |
 | `image-parameters.webp` | 照片参数解析 |
 | `photo-lightbox.webp` | 照片大图预览 |
+| `photo-share-portrait.webp` | 照片竖版分享图 |
+| `photo-share-landscape.webp` | 照片横版分享图 |
 | `outfit-library.webp` | 搭配方案列表 |
 | `outfit-editor.webp` | 搭配方案编辑 |
 | `outfit-code.webp` | 搭配码解析 |
 | `outfit-parts.webp` | 搭配码部件详情 |
+| `outfit-summary.webp` | 搭配总结 |
+| `outfit-code-share.webp` | 搭配码分享图 |
 | `home-plan.webp` | 家园方案列表 |
 | `home-plan-detail.webp` | 家园方案编辑与解析 |
 | `resonance.webp` | 共鸣记录 |
@@ -49,12 +54,19 @@
 | `wardrobe-items.webp` | 衣橱部件 |
 | `wardrobe-outfit-details.webp` | 套装详情 |
 | `wardrobe-item-details.webp` | 部件详情 |
+| `makeup-catalog.webp` | 妆容图鉴 |
+| `makeup-details.webp` | 妆容详情 |
+| `archive-background.webp` | 背景切换 |
 | `parse-tools.webp` | 参数输入与解析 |
 | `camera-favorites.webp` | 相机参数收藏 |
+| `directory-backup.webp` | 电脑端自动备份 |
+| `data-backup.webp` | 数据备份 |
+| `data-sync.webp` | 数据同步 |
+| `install-app.webp` | 添加到桌面 |
 | `special-cleanup.webp` | 专项清理 |
 | `lucky-times.webp` | 抽卡吉时 |
 
-`resonance-cloud.webp` 是已配置、尚未提供的截图，当前会回退为功能示意图。其他视图的 `image: null` 表示使用示意图。新增截图时应同时设置数据文件中的 `image` 和中英文替代文本。
+未配置真实截图的视图（`image: null`）使用功能示意图。新增截图时应同时设置 `src/data/showcase.ts` 中的 `image` 和中英文替代文本。
 
 预览区按 16:10 裁剪、居中显示；弹窗显示完整图片。建议截图原图比例为 16:10、宽度 1600px+。
 
