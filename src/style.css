@@ -89,6 +89,12 @@ button, a { font: inherit; }
 button { color: inherit; }
 a { color: inherit; text-decoration: none; }
 button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid var(--mint); outline-offset: 4px; }
+
+/* 移动端关闭浏览器原生触摸高亮，保留控件自身的点击与键盘焦点反馈。 */
+@media (max-width: 899px) {
+  html { -webkit-tap-highlight-color: transparent; }
+}
+
 ::selection { color: #352742; background: #f4c6d5; }
 
 .site-shell { min-height: 100vh; overflow: clip; background: var(--page); transition: background-color .3s ease, color .3s ease; }
