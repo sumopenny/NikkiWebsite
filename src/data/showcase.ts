@@ -54,12 +54,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "折叠日期分组，快速跳转",
             "搜索文件名和照片备注",
-            "多种缩略图比例，批量选择操作"
+            "多种缩略图比例；单击预览，点击右下角圆圈多选"
           ],
           "en": [
             "Collapse date groups and jump to a date",
             "Search photo filenames and notes",
-            "Choose thumbnail ratios and select photos in batches"
+            "Multiple thumbnail ratios; click to preview or use the bottom-right circle to select"
           ]
         },
         "note": {
@@ -79,12 +79,12 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "zh": [
             "折叠日期分组，快速跳转",
             "搜索文件名和照片备注",
-            "多种缩略图比例，批量选择操作"
+            "多种缩略图比例；单击预览，点击右下角圆圈多选"
           ],
           "en": [
-            "Date groups",
-            "Search",
-            "Batch selection"
+            "Collapse date groups and jump to a date",
+            "Search photo filenames and notes",
+            "Multiple thumbnail ratios; click to preview or use the bottom-right circle to select"
           ]
         }
       },
@@ -323,8 +323,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Take a closer look at every detail"
         },
         "body": {
-          "zh": "双击照片打开大图，缩放和拖动查看细节，或用键盘连续翻阅。",
-          "en": "Double-click a photo to open its preview. Zoom, drag and use the keyboard to browse."
+          "zh": "单击照片打开大图，缩放和拖动查看细节，或用键盘连续翻阅。",
+          "en": "Click a photo to open its preview. Zoom, drag and use the keyboard to browse."
         },
         "points": {
           "zh": [
@@ -339,8 +339,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           ]
         },
         "note": {
-          "zh": "照片与预览过程在本地浏览器中完成。",
-          "en": "Photos are read and previewed in your local browser."
+          "zh": "点击图片右下角圆圈可多选，手机端也可长按图片选择；照片在本地浏览器中读取与预览。",
+          "en": "Use the circle at the bottom right of an image to select multiple items, or long-press on mobile. Photos are read and previewed locally."
         },
         "image": "/images/screenshots/photo-lightbox.webp",
         "alt": {
@@ -502,8 +502,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Keep your favorite outfits together"
         },
         "body": {
-          "zh": "把搭配图片、搭配码、标签和备注一起保存，让每个灵感都有自己的位置。",
-          "en": "Save outfit images, outfit codes, tags and notes together in your local collection."
+          "zh": "把搭配图片、搭配码、标签、备注和来源链接一起保存，让每个灵感都有自己的位置。",
+          "en": "Save outfit images, codes, tags, notes and source links together in your local collection."
         },
         "points": {
           "zh": [
@@ -518,8 +518,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           ]
         },
         "note": {
-          "zh": "数据保存在当前浏览器，所有相册共用，无需先选择相册目录。",
-          "en": "Data is saved in the current browser and shared across albums. No album folder is required."
+          "zh": "点击卡片上的链接按钮回看原帖；单击图片预览，点击右下角圆圈多选，手机端也可长按选择。无需先选择相册目录。",
+          "en": "Use the card link button to revisit the original post. Click an image to preview it, use its bottom-right circle to select, or long-press on mobile. No album folder is required."
         },
         "image": "/images/screenshots/outfit-library.webp",
         "alt": {
@@ -563,14 +563,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "本地保存图片与搭配码",
-            "为方案设置标签和简短备注",
-            "大图预览中可复制搭配码或继续编辑"
+            "本地保存图片与搭配码，任选其一即可保存",
+            "为方案设置标签、简短备注及来源链接",
+            "粘贴原帖分享文本自动提取网址，从卡片打开原帖"
           ],
           "en": [
-            "Save an image and outfit code locally",
-            "Assign a tag and a short note",
-            "Copy a code or edit the scheme from its image preview"
+            "Save locally with an image, an outfit code, or both",
+            "Add a tag, a short note and a source link",
+            "Extract a URL from shared post text and revisit the post from its card"
           ]
         },
         "note": {
@@ -588,14 +588,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "本地保存图片与搭配码",
-            "为方案设置标签和简短备注",
-            "大图预览中可复制搭配码或继续编辑"
+            "本地保存图片与搭配码，任选其一即可保存",
+            "为方案设置标签、简短备注及来源链接",
+            "粘贴原帖分享文本自动提取网址，从卡片打开原帖"
           ],
           "en": [
-            "Images",
-            "Outfit codes",
-            "Scheme tags"
+            "Save locally with an image, an outfit code, or both",
+            "Add a tag, a short note and a source link",
+            "Extract a URL from shared post text and revisit the post from its card"
           ]
         }
       },
@@ -925,8 +925,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           ]
         },
         "note": {
-          "zh": "数据保存在当前浏览器，所有相册共用，无需先选择相册目录。",
-          "en": "Data is saved in the current browser and shared across albums. No album folder is required."
+          "zh": "数据保存在当前浏览器，所有相册共用，无需先选择相册目录。 单击图片查看大图，点击右下角圆圈多选，手机端也可长按选择。",
+          "en": "Data is saved in the current browser and shared across albums. No album folder is required. Click an image to preview, use its bottom-right circle to select, or long-press on mobile."
         },
         "image": "/images/screenshots/home-plan.webp",
         "alt": {
@@ -1320,8 +1320,8 @@ export const showcaseCategories: ShowcaseCategory[] = [
           "en": "Take a closer look at a piece"
         },
         "body": {
-          "zh": "点击衣橱部件卡片、套装详情中的部件图片或共鸣记录中的部件图片，打开对应部件详情。",
-          "en": "Click a wardrobe piece card, a piece image in outfit details, or a piece image in resonance records to open its details."
+          "zh": "点击衣橱部件卡片、套装详情中的部件图片或共鸣记录中的部件图片，打开对应部件详情。 标题旁的来源胶囊方便查看获取途径。",
+          "en": "Click a wardrobe piece card, a piece image in outfit details, or a piece image in resonance records to open its details. A source badge beside the title shows how to obtain the piece."
         },
         "points": {
           "zh": [
@@ -1549,24 +1549,24 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "points": {
           "zh": [
-            "支持电脑端、安卓端和苹果端获取凭据，建议优先使用电脑",
-            "导入窗口提供电脑端、安卓端、苹果端视频教程入口",
-            "核对 UID、预览内容后，再选择导入共鸣记录或衣橱数据"
+            "支持国服和国际服，预览 UID 与数据后确认导入",
+            "提供书签、控制台及脚本法操作指引",
+            "内置电脑端、安卓端、苹果端和“脚本法手机端”视频教程"
           ],
           "en": [
-            "Get credentials on desktop, Android or iOS; desktop is recommended",
-            "Find desktop, Android and iOS video tutorials in the import dialog",
-            "Check the UID and preview before importing resonance or wardrobe data"
+            "Supports China and global servers; review the UID and data before importing",
+            "Instructions for bookmarklets, the console and userscripts",
+            "Desktop, Android, iOS and mobile userscript video tutorials in the import dialog"
           ]
         },
         "note": {
-          "zh": "导入窗口按设备提供操作指引；确认导入共鸣记录会替换本地共鸣记录。凭据不保存到本地。",
-          "en": "Follow the device-specific guide in the import dialog. Confirming a resonance import replaces local resonance records. Credentials are not saved locally."
+          "zh": "脚本法需要支持用户脚本的浏览器（如 Via、X 浏览器），或电脑端的油猴等扩展。复制凭据后返回网站粘贴并预览；确认导入共鸣记录会替换本地共鸣记录，凭据不保存到本地。",
+          "en": "The userscript method requires a browser with userscript support, such as Via or X Browser, or a desktop extension such as Tampermonkey. Copy the credentials back to the app and preview the data. Confirming a resonance import replaces local resonance records. Credentials are not saved locally."
         },
         "image": "/images/screenshots/archive-pearpal.webp",
         "alt": {
-          "zh": "从美鸭梨奇想手账导入功能示意",
-          "en": "Import from Pear-Pal Whim-Log feature illustration"
+          "zh": "美鸭梨脚本法导入及视频教程界面截图",
+          "en": "Pear-Pal userscript import and video tutorial interface screenshot"
         },
         "schematicTitle": {
           "zh": "从奇想手账，带回你的暖暖档案",
@@ -1574,14 +1574,14 @@ export const showcaseCategories: ShowcaseCategory[] = [
         },
         "schematicItems": {
           "zh": [
-            "支持电脑端、安卓端和苹果端获取凭据，建议优先使用电脑",
-            "导入窗口提供电脑端、安卓端、苹果端视频教程入口",
-            "核对 UID、预览内容后，再选择导入共鸣记录或衣橱数据"
+            "支持国服和国际服，预览 UID 与数据后确认导入",
+            "提供书签、控制台及脚本法操作指引",
+            "内置电脑端、安卓端、苹果端和“脚本法手机端”视频教程"
           ],
           "en": [
-            "Get credentials on desktop, Android or iOS; desktop is recommended",
-            "Find desktop, Android and iOS video tutorials in the import dialog",
-            "Check the UID and preview before importing resonance or wardrobe data"
+            "Supports China and global servers; review the UID and data before importing",
+            "Instructions for bookmarklets, the console and userscripts",
+            "Desktop, Android, iOS and mobile userscript video tutorials in the import dialog"
           ]
         }
       },
@@ -1765,6 +1765,62 @@ export const showcaseCategories: ShowcaseCategory[] = [
         }
       },
       {
+        "id": "avatar-simulator",
+        "label": {
+          "zh": "头像模拟器",
+          "en": "Avatar simulator"
+        },
+        "caption": {
+          "zh": "头像模拟器",
+          "en": "Avatar simulator"
+        },
+        "title": {
+          "zh": "把喜欢的照片，装进暖暖头像框",
+          "en": "Frame your favorite photo with Nikki"
+        },
+        "body": {
+          "zh": "在“工具 → 头像模拟器”中选择头像框，上传照片，调整后保存为 PNG 图片。",
+          "en": "Choose Tools → Avatar simulator, pick a frame, add a photo and save the result as a PNG."
+        },
+        "points": {
+          "zh": [
+            "浏览头像框与对应介绍",
+            "拖动调整照片位置，缩放取景",
+            "电脑端可从已打开的相册选图，并用滚轮缩放"
+          ],
+          "en": [
+            "Browse avatar frames and their descriptions",
+            "Drag to position the photo and zoom to adjust the crop",
+            "On desktop, choose from an open album and zoom with the mouse wheel"
+          ]
+        },
+        "note": {
+          "zh": "电脑和手机均可使用；手机端通过上传照片制作。",
+          "en": "Available on desktop and mobile; add a photo using the upload button on mobile."
+        },
+        "image": "/images/screenshots/avatar-simulator.webp",
+        "alt": {
+          "zh": "头像模拟器界面截图",
+          "en": "Avatar simulator interface screenshot"
+        },
+        "schematicTitle": {
+          "zh": "把喜欢的照片，装进暖暖头像框",
+          "en": "Frame your favorite photo with Nikki"
+        },
+        "schematicItems": {
+          "zh": [
+            "浏览头像框与对应介绍",
+            "拖动调整照片位置，缩放取景",
+            "电脑端可从已打开的相册选图，并用滚轮缩放"
+          ],
+          "en": [
+            "Browse avatar frames and their descriptions",
+            "Drag to position the photo and zoom to adjust the crop",
+            "On desktop, choose from an open album and zoom with the mouse wheel"
+          ]
+        }
+      },
+      {
         "id": "camera-favorites",
         "label": {
           "zh": "相机参数收藏",
@@ -1785,20 +1841,20 @@ export const showcaseCategories: ShowcaseCategory[] = [
         "points": {
           "zh": [
             "自定义名称、封面与单标签分类",
-            "双击封面查看大图，支持缩放、拖动及前后切换",
+            "单击封面查看大图，支持缩放、拖动及前后切换",
             "复制参数、编辑收藏或打开详情",
             "支持 ZIP 备份导入与导出"
           ],
           "en": [
             "Custom names, covers and single-tag categories",
-            "Double-click a cover to zoom, drag and browse images",
+            "Click a cover to zoom, drag and browse images",
             "Copy parameters, edit favorites or open details",
             "Import and export ZIP backups"
           ]
         },
         "note": {
-          "zh": "数据保存在当前浏览器，所有相册共用，无需先选择相册目录。",
-          "en": "Data is saved in the current browser and shared across albums. No album folder is required."
+          "zh": "数据保存在当前浏览器，所有相册共用，无需先选择相册目录。 点击图片右下角圆圈可多选，手机端也可长按图片选择。",
+          "en": "Data is saved in the current browser and shared across albums. No album folder is required. Use the bottom-right circle to select multiple images, or long-press on mobile."
         },
         "image": "/images/screenshots/camera-favorites.webp",
         "alt": {
@@ -1812,13 +1868,13 @@ export const showcaseCategories: ShowcaseCategory[] = [
         "schematicItems": {
           "zh": [
             "自定义名称、封面与单标签分类",
-            "双击封面查看大图，支持缩放、拖动及前后切换",
+            "单击封面查看大图，支持缩放、拖动及前后切换",
             "复制参数、编辑收藏或打开详情",
             "支持 ZIP 备份导入与导出"
           ],
           "en": [
             "Custom names, covers and single-tag categories",
-            "Double-click a cover to zoom, drag and browse images",
+            "Click a cover to zoom, drag and browse images",
             "Copy parameters, edit favorites or open details",
             "Import and export ZIP backups"
           ]
@@ -2099,8 +2155,18 @@ export const showcaseSupport = {
         "en": "Album access and view settings"
       },
       "body": {
-        "zh": "切换或恢复相册路径，授权 X6Game；调整主题、语言、照片比例及暖暖档案背景。",
-        "en": "Switch or restore album access, authorize X6Game, and adjust theme, language, photo ratios and archive backgrounds."
+        "zh": "切换或恢复相册路径、授权 X6Game；主题支持跟随系统，可调整材质、手机导航布局、照片比例及档案背景，并记住上次使用的模块。",
+        "en": "Switch or restore album access and authorize X6Game. Follow the system theme, choose materials, mobile navigation, photo ratios and archive backgrounds, and return to the last module."
+      }
+    },
+    {
+      "title": {
+        "zh": "手机工具菜单",
+        "en": "Mobile tools menu"
+      },
+      "body": {
+        "zh": "参数/搭配码解析、头像模拟器和抽卡吉时统一从顶部“工具”菜单进入。",
+        "en": "Open photo/code parsers, the avatar simulator and lucky times from the top Tools menu."
       }
     },
     {

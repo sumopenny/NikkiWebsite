@@ -172,6 +172,12 @@ function restoreDialog(): void {
   trigger = null
 }
 function closeImage(): void { dialog.value?.close() }
+// 缓存命中时图片可能先于过渡挂载完成，补读状态，避免占位一直保留。
+function syncPreviewImage(): void {
+  const image = previewImage.value
+  if (image?.dataset.viewId === view.value.id && image.complete)
+    imageState.value = image.naturalWidth > 0 ? 'ready' : 'failed'
+}
 function imageLoaded(event: Event): void {
   if ((event.target as HTMLImageElement).dataset.viewId === view.value.id) imageState.value = 'ready'
 }
@@ -211,10 +217,14 @@ onBeforeUnmount(() => {
     <div class="showcase-layout">
       <div class="showcase-preview-column">
         <!-- Keep the original image shell, 16:10 crop, hover tilt and screenshot transition. -->
-        <motion.button v-if="view.image && imageState !== 'failed'" type="button" class="showcase-image-button" :aria-label="`${showcaseUi.openImage[language]}: ${view.caption[language]}`" :aria-disabled="!imageReady" :style="{ rotateX, rotateY, transformPerspective: 1200 }" :while-hover="reducedMotion ? undefined : { scale: 1.008 }" @pointermove="movePointer" @pointerleave="resetTilt" @click="openImage">
-          <Transition name="screenshot-switch" mode="out-in">
+        <motion.button v-if="view.image && imageState !== 'failed'" type="button" class="showcase-image-button" :class="{ 'is-loading': !imageReady }" :aria-busy="!imageReady" :aria-label="`${showcaseUi.openImage[language]}: ${view.caption[language]}`" :aria-disabled="!imageReady" :style="{ rotateX, rotateY, transformPerspective: 1200 }" :while-hover="reducedMotion ? undefined : { scale: 1.008 }" @pointermove="movePointer" @pointerleave="resetTilt" @click="openImage">
+          <Transition name="screenshot-switch" mode="out-in" @after-enter="syncPreviewImage">
             <img ref="previewImage" :key="view.id" :data-view-id="view.id" :class="{ 'is-parameter-scrolling': view.id === 'image-parameters' && imageReady && !reducedMotion }" :src="imageSource(view.image)" :srcset="imageSrcset(view.image)" sizes="(max-width: 900px) 100vw, 65vw" :alt="view.alt[language]" decoding="async" fetchpriority="high" @load="imageLoaded" @error="failImage" />
           </Transition>
+          <span v-if="!imageReady" class="showcase-image-loading" role="status">
+            <span class="showcase-loading-ring" aria-hidden="true"></span>
+            <span>{{ language === 'zh' ? '图片正在加载…' : 'Loading image…' }}</span>
+          </span>
           <span v-if="imageReady" class="image-open-hint"><ArrowUpRight :size="17" /> {{ showcaseUi.openImage[language] }}</span>
         </motion.button>
         <div v-else class="showcase-schematic" role="img" :aria-label="view.alt[language]">
@@ -274,7 +284,18 @@ onBeforeUnmount(() => {
 .category-count { font-size: 12px; opacity: .75; }
 .showcase-layout { align-items: start; }
 .showcase-preview-column { min-width: 0; }
-.showcase-image-button { width: 100%; }
+.showcase-image-button { width: 100%; aspect-ratio: 16 / 10; }
+.showcase-image-button.is-loading { cursor: progress; }
+.showcase-image-button.is-loading img { opacity: 0; }
+.showcase-image-loading { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; overflow: hidden; background: var(--surface-soft); color: var(--muted); font-size: 14px; pointer-events: none; }
+.showcase-image-loading::before { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 25%, color-mix(in srgb, var(--surface) 70%, transparent) 50%, transparent 75%); transform: translateX(-100%); animation: screenshot-loading-sweep 1.8s ease-in-out infinite; }
+.showcase-image-loading > span { position: relative; }
+.showcase-loading-ring { width: 28px; height: 28px; border: 2px solid var(--line); border-top-color: var(--accent-deep); border-radius: 50%; animation: screenshot-loading-spin .9s linear infinite; }
+@keyframes screenshot-loading-sweep { to { transform: translateX(100%); } }
+@keyframes screenshot-loading-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .showcase-image-loading::before, .showcase-loading-ring { animation: none; }
+}
 .showcase-image-button img { object-position: center; }
 /* Only the photo-parameters preview pans through its tall screenshot. */
 .showcase-image-button img.is-parameter-scrolling {

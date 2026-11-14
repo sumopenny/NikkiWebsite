@@ -65,6 +65,7 @@
 | `install-app.webp` | 添加到桌面 |
 | `special-cleanup.webp` | 专项清理 |
 | `lucky-times.webp` | 抽卡吉时 |
+| `avatar-simulator.webp` | 头像模拟器 |
 
 未配置真实截图的视图（`image: null`）使用功能示意图。新增截图时应同时设置 `src/data/showcase.ts` 中的 `image` 和中英文替代文本。
 
@@ -81,3 +82,20 @@ python scripts/convert_webp.py
 脚本默认读取 `images/originals/`，输出本目录的同名 WebP；照片和截图质量均默认为 88。可用 `--src`、`--dst`、`--quality`、`--shot-quality` 覆盖。
 
 当前构建链处理 WebP。更换格式需要协调修改 `src/App.vue` 路径、`src/data/showcase.ts`、图片生成脚本及 `index.html` / `vite.config.ts` 的首图预加载配置，不能只改 `IMAGE_EXT`。
+
+## 2026-11-14 截图更新与待替换
+
+已接入桌面提供的头像模拟器截图，并替换美鸭梨导入、搭配编辑截图。
+
+| 类型 | 文件名（screenshots/ 下） | 截图内容 |
+| --- | --- | --- |
+| 已新增 | avatar-simulator.webp | 电脑端头像模拟器：已选照片和头像框，显示预览、缩放、保存及头像框列表 |
+| 已替换 | archive-pearpal.webp | 当前美鸭梨导入窗口，显示脚本法与四项视频教程入口，凭据和 UID 使用演示数据 |
+| 已替换 | outfit-editor.webp | 显示新增来源链接输入项的搭配编辑窗口 |
+| 替换 | outfit-library.webp | 显示来源链接按钮与右下角多选圆圈的搭配列表 |
+| 替换 | photo-lightbox.webp | 当前材质样式的大图预览 |
+| 替换 | camera-favorites.webp | 带右下角多选圆圈的相机收藏列表 |
+| 替换 | wardrobe-item-details.webp | 标题旁带紫色来源胶囊的部件详情 |
+| 替换 | makeup-details.webp | 标题旁带紫色来源胶囊的妆容详情 |
+
+其余标为“替换”的截图可后续补充。源素材使用 WebP，电脑截图建议 16:10、宽 1600px 以上。无需重新提供 Logo、背景图、头像框单张资源或首屏美照。

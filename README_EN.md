@@ -41,7 +41,7 @@ The homepage has a self-referencing canonical; `public/robots.txt` references `p
 ## Assets
 
 - Keep source WebP files in the project-root `images/` directory, outside the public deployment tree. Light hero photos use `1.webp`–`10.webp`, dark photos use `11.webp`–`20.webp`, and gallery photos use `gallery-1.webp`–`gallery-10.webp`.
-- Feature previews cover Album, Outfit codes, Home schemes, Nikki Archive, and Parsers and tools, including makeup catalog, outfit summary, share cards, archive backgrounds and automatic desktop backups. Their content and image paths are in `src/data/showcase.ts`; screenshots belong in `images/screenshots/`. Missing or failed screenshots fall back to feature illustrations.
+- Feature previews cover Album, Outfit codes, Home schemes, Nikki Archive, and Parsers and tools, including makeup catalog, outfit summary, share cards, avatar simulator, archive backgrounds and automatic desktop backups. Their content and image paths are in `src/data/showcase.ts`; screenshots belong in `images/screenshots/`. Missing or failed screenshots fall back to feature illustrations.
 - The tutorial source is `images/auto-update-outfit-code.webp`, displayed at its original portrait ratio with a link to the complete image.
 - The brand image is `public/images/brand-mark.png`; browser icons are `public/favicon.ico` and `public/favicon.svg`.
 - Optionally archive JPEG/JPG originals under `images/originals/`. With Python and Pillow installed, run `python scripts/convert_webp.py` to regenerate source WebP files. Archives are not published.
@@ -49,7 +49,7 @@ The homepage has a self-referencing canonical; `public/robots.txt` references `p
 
 ## Page content
 
-The website covers albums, outfit codes, home schemes, camera favorites, resonance records, wardrobe and makeup catalog, including outfit summaries, share cards, backgrounds, automatic backups, an outfit-code walkthrough and FAQ. For detailed instructions, read the toolkit [Chinese README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md) or [English README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md).
+The website covers albums, outfit codes, home schemes, camera favorites, resonance records, wardrobe and makeup catalog, including outfit summaries, source links, share cards, avatar creation, userscript imports, system theme, materials, mobile navigation, backgrounds, automatic backups, an outfit-code walkthrough and FAQ. For detailed instructions, read the toolkit [Chinese README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md) or [English README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md).
 
 ## Motion and accessibility
 

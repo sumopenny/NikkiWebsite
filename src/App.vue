@@ -242,7 +242,7 @@ const copy = computed(() => language.value === 'zh'
       benefits: [{"title":"照片本地读取","body":"相册浏览与照片参数解析在本地完成，原图无需上传。"},{"title":"电脑手机都能用","body":"整理搭配、家园与拍摄灵感，查看共鸣记录、衣橱和妆容图鉴。"},{"title":"数据随时备份","body":"支持模块与全部数据导出，电脑端还可开启本地目录自动备份。"},{"title":"游戏灵感集中珍藏","body":"将搭配码、家园方案与相机参数分类保存，随时查找。"},{"title":"档案与图鉴一目了然","body":"查看共鸣抽数、服装收集进度与妆容图鉴，按条件查找喜欢的部件。"},{"title":"共鸣与衣橱云同步","body":"登录后可单独或一起同步共鸣记录与衣橱，跨设备继续查看。"}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: '从相册时光，到趁手的小工具。',
-      previewBody: "整理照片、珍藏搭配与家园灵感，记录每一次共鸣，查看衣橱收集进度，探索喜欢的妆容。",
+      previewBody: "整理照片、珍藏搭配与家园灵感，记录共鸣与衣橱收集进度，探索妆容，还能制作暖暖头像。",
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER',
       galleryTitle: '留一块位置，给你镜头里的暖暖。',
       galleryBody: '尽情欣赏暖暖美照，让官网也像一本小小的旅途画册。',
@@ -275,12 +275,12 @@ const copy = computed(() => language.value === 'zh'
   {
     "no": "02",
     "title": "珍藏搭配与拍摄灵感",
-    "body": "电脑和手机均可直接管理搭配码、家园方案与相机参数收藏，无需先授权相册目录；也可从工具菜单解析原图或参数码。"
+    "body": "电脑和手机均可直接管理搭配码、家园方案与相机参数收藏，无需先授权相册目录；从“工具”菜单可解析原图或代码、制作头像和查看抽卡吉时。"
   },
   {
     "no": "03",
     "title": "查看暖暖档案与迁移数据",
-    "body": "进入“暖暖档案”，浏览妆容图鉴，或按引导导入共鸣记录和衣橱数据；通过模块备份或“更多”中的全部数据备份迁移设备，共鸣记录与衣橱还可在同一窗口手动云同步。"
+    "body": "进入“暖暖档案”，浏览妆容图鉴，或通过书签、控制台、脚本法导入共鸣与衣橱数据；通过备份迁移设备，共鸣与衣橱还支持手动云同步。"
   }
 ],
       questionsKicker: 'GOOD TO KNOW',
@@ -300,11 +300,15 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "手机上可以使用哪些功能？",
-    "a": "手机可管理搭配码、家园方案和相机参数收藏，使用独立照片与代码解析，查看共鸣记录、个人衣橱与妆容图鉴。相册目录管理、游戏搭配自动接收和专项清理需要支持目录授权的电脑浏览器。"
+    "a": "手机可管理搭配码、家园方案和相机参数收藏，查看共鸣记录、个人衣橱与妆容图鉴；从顶部“工具”菜单可解析照片或代码、制作头像和查看抽卡吉时。相册目录管理、游戏搭配自动接收和专项清理需要支持目录授权的电脑浏览器。"
   },
   {
     "q": "如何把电脑数据迁移到手机？",
-    "a": "在电脑端“更多”中选择“导出全部数据”，将 ZIP 文件传到手机，再用手机浏览器打开网站，在“更多”中选择“导入全部数据”。导入会按各模块规则合并，请核对结果提示。"
+    "a": "在电脑端“更多”中选择“导出全部数据”，将原样导出的 ZIP 传到手机，再在手机网站“更多”中选择“导入全部数据”。请勿自行解压重打包或选用单模块备份；选错类型时按提示切换入口。导入按各模块规则合并，请核对结果。"
+  },
+  {
+    "q": "提示数据库版本不匹配怎么办？",
+    "a": "请使用最新页面并刷新后重试，不要直接清除网站数据，以免丢失本地搭配码、家园方案和相机参数收藏。若仍有问题，请保留原数据并反馈。"
   },
   {
     "q": "云同步会自动同步所有数据吗？",
@@ -335,7 +339,7 @@ const copy = computed(() => language.value === 'zh'
       benefits: [{"title":"Photos stay local","body":"Album browsing and photo parameter parsing run locally. Original photos need no upload."},{"title":"Desktop and mobile","body":"Organize outfits, home ideas and camera presets, and explore resonance records, your wardrobe and makeup."},{"title":"Back up anytime","body":"Export individual modules or all data, or enable automatic local-folder backups on desktop."},{"title":"Keep your inspiration","body":"Save outfit codes, home schemes and camera presets by category for easy access."},{"title":"Track your collection","body":"Review resonance pulls, wardrobe progress and the makeup catalog, with filters to find your favorites."},{"title":"Resonance and wardrobe cloud sync","body":"Sign in to sync resonance and wardrobe separately or together across devices."}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: 'From album memories to handy little tools.',
-      previewBody: "Organize photos, save outfit and home ideas, track resonance, explore your wardrobe collection and browse the makeup catalog.",
+      previewBody: "Organize photos, save outfit and home ideas, explore resonance, wardrobe and makeup, and create a framed Nikki avatar.",
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER', galleryTitle: 'A little space for Nikki in your frame.',
       galleryBody: "Enjoy Nikki's beautiful photos, and let this site feel like a little travel album.",
       tutorialKicker: 'OUTFIT CODE · AUTO UPDATE',
@@ -366,12 +370,12 @@ const copy = computed(() => language.value === 'zh'
   {
     "no": "02",
     "title": "Save outfits and camera inspiration",
-    "body": "Manage outfit codes, home schemes and camera favorites directly on desktop or mobile without album access, or use Tools to parse an original photo or code."
+    "body": "Manage outfit codes, home schemes and camera favorites on desktop or mobile without album access. Use Tools to parse photos or codes, create avatars and view lucky times."
   },
   {
     "no": "03",
     "title": "Explore Nikki Archive and migrate data",
-    "body": "Browse the makeup catalog or import resonance and wardrobe data in Nikki Archive. Transfer data through module backups or all-data backups under More; resonance and wardrobe also share one manual cloud-sync window."
+    "body": "Browse makeup or import resonance and wardrobe data using a bookmarklet, console or userscript in Nikki Archive. Transfer data with backups, or manually cloud-sync resonance and wardrobe."
   }
 ],
       questionsKicker: 'GOOD TO KNOW', questionsTitle: 'A few things before you begin.',
@@ -390,11 +394,15 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "Which features work on a phone?",
-    "a": "Manage outfit codes, home schemes and camera favorites, parse photos or codes, and view resonance records, your wardrobe and the makeup catalog. Folder-based albums, automatic game outfit imports and targeted cleanup require a desktop browser with folder access."
+    "a": "Manage outfit codes, home schemes and camera favorites, and browse resonance, wardrobe and makeup. The top Tools menu offers photo/code parsers, avatar creation and lucky times. Folder-based albums, automatic game outfit imports and targeted cleanup require a desktop browser with folder access."
   },
   {
     "q": "How do I move desktop data to my phone?",
-    "a": "Choose Export all data under More on desktop, send the ZIP to your phone, open the site in its browser, and select Import all data under More. Data is merged according to module rules; review the result."
+    "a": "Choose Export all data under More on desktop, transfer the unchanged ZIP to your phone, and select Import all data under More. Do not repack it or substitute a module backup; follow the guidance if the type is wrong. Data is merged according to module rules; review the result."
+  },
+  {
+    "q": "What if the database version does not match?",
+    "a": "Open the latest version of the site and refresh before retrying. Do not clear site data, as this may erase local outfit codes, home schemes and camera favorites. If the problem continues, keep the original data and report it."
   },
   {
     "q": "Does cloud sync automatically sync everything?",
