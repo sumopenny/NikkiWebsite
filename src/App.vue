@@ -218,7 +218,7 @@ const featureCardVariants = {
 const trustIcons = [FileImage, MonitorSmartphone, Archive, Heart, Shirt, Cloud]
 
 const links = {
-  app: 'https://infinity-nikki-album-manager.pages.dev/',
+  app: 'https://nikkicube.cc.cd/',
   fallback: 'https://infinity-nikki-album-manager.vercel.app/',
   github: 'https://github.com/sumopenny/Infinity-Nikki-Toolkit',
   // 反馈入口：小红书主页（原 GitHub Issues 已不再作为对外反馈渠道）
@@ -242,7 +242,7 @@ const copy = computed(() => language.value === 'zh'
       benefits: [{"title":"照片本地读取","body":"相册浏览与照片参数解析在本地完成，原图无需上传。"},{"title":"电脑手机都能用","body":"整理搭配、家园与拍摄灵感，查看共鸣记录、衣橱和妆容图鉴。"},{"title":"数据随时备份","body":"支持模块与全部数据导出，电脑端还可开启本地目录自动备份。"},{"title":"游戏灵感集中珍藏","body":"将搭配码、家园方案与相机参数分类保存，随时查找。"},{"title":"档案与图鉴一目了然","body":"查看共鸣抽数、服装收集进度与妆容图鉴，按条件查找喜欢的部件。"},{"title":"共鸣与衣橱云同步","body":"登录后可单独或一起同步共鸣记录与衣橱，跨设备继续查看。"}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: '从相册时光，到趁手的小工具。',
-      previewBody: "整理照片、珍藏搭配与家园灵感，记录共鸣与衣橱收集进度，探索妆容，还能制作暖暖头像。",
+      previewBody: "整理照片、珍藏搭配与家园灵感，记录共鸣与衣橱收集进度，探索妆容与满进动画，还能制作暖暖头像。",
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER',
       galleryTitle: '留一块位置，给你镜头里的暖暖。',
       galleryBody: '尽情欣赏暖暖美照，让官网也像一本小小的旅途画册。',
@@ -250,7 +250,7 @@ const copy = computed(() => language.value === 'zh'
       tutorialTitle: '自动更新搭配码，几步就能设好。',
       tutorialBody: '授权当前游戏目录后，在游戏中生成搭配码，再回到网页即可自动接收。',
       tutorialSteps: [
-        { no: '01', title: '授权游戏目录', body: '在网页右上角当前相册下拉菜单中，授权当前游戏的 X6Game 文件夹。' },
+        { no: '01', title: '授权游戏目录', body: '在电脑端点击“授权 X6Game”，选择当前游戏的 X6Game 文件夹；已授权可直接继续。' },
         { no: '02', title: '在游戏中框选搭配', body: '点击分享，再点搭配截图右下角的框选按钮，调整展示区域并确认。' },
         { no: '03', title: '生成搭配码并返回', body: '点击“生成搭配码”，然后回到网页。网站会检查搭配码和游戏搭配图片的更新时间。' }
       ],
@@ -265,42 +265,47 @@ const copy = computed(() => language.value === 'zh'
       galleryPause: '暂停自动播放', galleryPlay: '继续自动播放', galleryMotionOff: '系统减少动态效果已关闭自动播放',
       startKicker: 'USAGE GUIDE',
       startTitle: '找到你的上手方式。',
-      startBody: "相册管理需要电脑端目录授权；搭配码、家园方案、相机参数收藏与暖暖档案可在电脑和手机直接使用。",
+      startBody: "相册管理需要电脑端目录授权；搭配码、家园方案、相机参数与暖暖档案可在电脑和手机直接使用。",
       startSteps: [
   {
     "no": "01",
-    "title": "整理电脑相册",
-    "body": "使用支持目录授权的电脑浏览器，选择照片目录，浏览、收藏与整理游戏照片；自动接收搭配码另行授权 X6Game，设置见下方教程。"
+    "title": "直接收藏灵感",
+    "body": "打开搭配码、家园方案或相机参数，添加喜欢的方案；搭配图片与搭配码任选其一即可保存。"
   },
   {
     "no": "02",
-    "title": "珍藏搭配与拍摄灵感",
-    "body": "电脑和手机均可直接管理搭配码、家园方案与相机参数收藏，无需先授权相册目录；从“工具”菜单可解析原图或代码、制作头像和查看抽卡吉时。"
+    "title": "建立暖暖档案",
+    "body": "按站内指引导入共鸣与衣橱数据，查看自己的收集进度；妆容图鉴和满进动画无需导入即可浏览。"
   },
   {
     "no": "03",
-    "title": "查看暖暖档案与迁移数据",
-    "body": "进入“暖暖档案”，浏览妆容图鉴，或通过书签、控制台、脚本法导入共鸣与衣橱数据；通过备份迁移设备，共鸣与衣橱还支持手动云同步。"
+    "title": "连接电脑游戏相册",
+    "body": "授权 X6Game 自动查找大喵高画质相册，也可打开单独存放照片的文件夹。自动接收搭配码与专项清理复用游戏目录授权。"
+  },
+  {
+    "no": "04",
+    "title": "留一份数据备份",
+    "body": "用“更多”中的全部数据 ZIP 迁移收藏，或在电脑端“数据备份”开启目录自动备份；共鸣与衣橱另可手动云同步。"
   }
 ],
       questionsKicker: 'GOOD TO KNOW',
       questionsTitle: '开始前，几个常见问题。',
       questions: [
-{
-  "q": "本地数据会一直保留吗？",
-  "a": "数据保存在当前浏览器。清除本站数据、使用清理工具或卸载浏览器可能导致数据丢失；换浏览器或设备时不会自动带过去。建议定期导出备份，电脑端可开启自动备份；共鸣记录与衣橱可手动云同步。安装应用也不能替代备份。"
-},
+  {
+    "q": "本地数据会一直保留吗？",
+    "a": "数据保存在当前浏览器。清除本站数据、使用清理工具或卸载浏览器可能导致数据丢失；换浏览器或设备时不会自动带过去。建议定期导出备份，电脑端可开启自动备份；共鸣记录与衣橱可手动云同步。安装应用也不能替代备份。"
+  },
   {
     "q": "照片会上传到服务器吗？",
     "a": "照片浏览与相机参数解析在本地浏览器中完成。临时选择的游戏原图不会上传，也不会自动加入相册；主动使用云同步时，仅上传所选的共鸣或衣橱存档。"
   },
   {
     "q": "为什么无法授权文件夹，或相册没有显示？",
-    "a": "请使用支持目录授权的电脑端 Chromium 浏览器，选择实际存放照片的文件夹；授权失效时重新选择。普通授权失败时，可尝试“兼容打开（只读）”浏览、解析、收藏与导出照片；刷新或查看新照片时需重新选择文件夹。不要选择磁盘根目录。"
+    "a": "请使用支持目录授权的电脑端 Chromium 浏览器，选择实际存放照片的文件夹；授权失效时重新选择。普通授权失败时，可尝试“兼容打开（只读）”浏览、解析、查看已有收藏和备注及导出照片，不能修改原目录；刷新或查看新照片时需重新选择文件夹。不要选择磁盘根目录。"
   },
   {
     "q": "手机上可以使用哪些功能？",
-    "a": "手机可管理搭配码、家园方案和相机参数收藏，查看共鸣记录、个人衣橱与妆容图鉴；从顶部“工具”菜单可解析照片或代码、制作头像和查看抽卡吉时。相册目录管理、游戏搭配自动接收和专项清理需要支持目录授权的电脑浏览器。"
+    "a": "手机可管理搭配码、家园方案和相机参数，查看共鸣记录、个人衣橱、妆容图鉴与满进动画；从顶部“工具”菜单可解析照片或代码、制作头像和查看抽卡吉时。相册目录管理、游戏搭配自动接收和专项清理需要支持目录授权的电脑浏览器。"
   },
   {
     "q": "如何把电脑数据迁移到手机？",
@@ -308,7 +313,7 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "提示数据库版本不匹配怎么办？",
-    "a": "请使用最新页面并刷新后重试，不要直接清除网站数据，以免丢失本地搭配码、家园方案和相机参数收藏。若仍有问题，请保留原数据并反馈。"
+    "a": "请使用最新页面并刷新后重试，不要直接清除网站数据，以免丢失本地搭配码、家园方案和相机参数。若仍有问题，请保留原数据并反馈。"
   },
   {
     "q": "云同步会自动同步所有数据吗？",
@@ -321,6 +326,14 @@ const copy = computed(() => language.value === 'zh'
   {
     "q": "删除的照片能恢复吗？",
     "a": "相册普通删除会移入最近删除，可从中恢复。最近删除中的永久删除、清空全部和专项清理会直接修改电脑文件，无法通过最近删除恢复。"
+  },
+  {
+    "q": "自动备份、ZIP 备份和数据同步有什么区别？",
+    "a": "目录自动备份从电脑端“数据备份”开启，支持搭配码、家园方案和相机参数。网页运行且目录授权有效时更新，保留最新状态，删除也会同步，不保留历史版本。全部数据 ZIP 还包含共鸣与衣橱，适合手动备份和迁移。数据同步仅用于共鸣与衣橱，需登录后手动操作。三者都不包含游戏相册原图。"
+  },
+  {
+    "q": "换到新网址后，原来的数据怎么办？",
+    "a": "浏览器按网址分别保存数据。在旧网址“更多”中导出全部数据，再到 nikkicube.cc.cd 导入原样 ZIP；共鸣与衣橱也可手动云同步。确认迁移完成前请保留旧站数据，相册原图另行保存。"
   }
 ],
       report: '反馈问题-小红书',
@@ -339,14 +352,14 @@ const copy = computed(() => language.value === 'zh'
       benefits: [{"title":"Photos stay local","body":"Album browsing and photo parameter parsing run locally. Original photos need no upload."},{"title":"Desktop and mobile","body":"Organize outfits, home ideas and camera presets, and explore resonance records, your wardrobe and makeup."},{"title":"Back up anytime","body":"Export individual modules or all data, or enable automatic local-folder backups on desktop."},{"title":"Keep your inspiration","body":"Save outfit codes, home schemes and camera presets by category for easy access."},{"title":"Track your collection","body":"Review resonance pulls, wardrobe progress and the makeup catalog, with filters to find your favorites."},{"title":"Resonance and wardrobe cloud sync","body":"Sign in to sync resonance and wardrobe separately or together across devices."}],
       previewKicker: 'A LITTLE LOOK INSIDE',
       previewTitle: 'From album memories to handy little tools.',
-      previewBody: "Organize photos, save outfit and home ideas, explore resonance, wardrobe and makeup, and create a framed Nikki avatar.",
+      previewBody: "Organize photos, save outfit and home ideas, explore resonance, wardrobe, makeup and evolution animations, and create a framed Nikki avatar.",
       galleryKicker: 'YOUR WORLD, YOUR WALLPAPER', galleryTitle: 'A little space for Nikki in your frame.',
       galleryBody: "Enjoy Nikki's beautiful photos, and let this site feel like a little travel album.",
       tutorialKicker: 'OUTFIT CODE · AUTO UPDATE',
       tutorialTitle: 'Set up automatic outfit-code updates in a few steps.',
       tutorialBody: 'Authorize the current game folder once. Then create an outfit code in game and return to the website to import it.',
       tutorialSteps: [
-        { no: '01', title: 'Authorize the game folder', body: 'Open the current album menu at the top right and grant access to the current game’s X6Game folder.' },
+        { no: '01', title: 'Authorize the game folder', body: 'On desktop, choose Authorize X6Game and select the game’s X6Game folder. Continue if already authorized.' },
         { no: '02', title: 'Select the outfit in game', body: 'Tap Share, choose the selection button at the bottom right of the outfit screenshot, adjust the frame, and confirm.' },
         { no: '03', title: 'Generate the code and return', body: 'Tap Generate Outfit Code, then return to the website. It checks the code and the outfit image’s modified time.' }
       ],
@@ -360,41 +373,46 @@ const copy = computed(() => language.value === 'zh'
       galleryControlsLabel: 'Gallery controls', galleryPrevious: 'Previous photo', galleryNext: 'Next photo',
       galleryPause: 'Pause autoplay', galleryPlay: 'Resume autoplay', galleryMotionOff: 'Autoplay is off because reduced motion is enabled',
       startKicker: 'USAGE GUIDE', startTitle: 'Find the right way to get started.',
-      startBody: "Album management requires desktop folder access; outfit codes, home schemes, camera favorites and Nikki Archive work directly on desktop and mobile.",
+      startBody: "Album management requires desktop folder access; outfit codes, home schemes, camera presets and Nikki Archive work directly on desktop and mobile.",
       startSteps: [
   {
     "no": "01",
-    "title": "Organize desktop albums",
-    "body": "Use a desktop browser with folder access to select a photo folder, then browse, favorite and organize photos. Automatic outfit-code imports require separate X6Game access; see the tutorial below."
+    "title": "Save inspiration",
+    "body": "Open outfits, home schemes or camera presets and add a favorite. An outfit can be saved with an image, a code or both."
   },
   {
     "no": "02",
-    "title": "Save outfits and camera inspiration",
-    "body": "Manage outfit codes, home schemes and camera favorites on desktop or mobile without album access. Use Tools to parse photos or codes, create avatars and view lucky times."
+    "title": "Build your Nikki Archive",
+    "body": "Follow the in-app guide to import resonance and wardrobe data. Makeup and evolution animations can be browsed without an import."
   },
   {
     "no": "03",
-    "title": "Explore Nikki Archive and migrate data",
-    "body": "Browse makeup or import resonance and wardrobe data using a bookmarklet, console or userscript in Nikki Archive. Transfer data with backups, or manually cloud-sync resonance and wardrobe."
+    "title": "Connect a desktop album",
+    "body": "Authorize X6Game to find the high-quality game album, or open a separate photo folder. Automatic outfit imports and targeted cleanup reuse game-folder access."
+  },
+  {
+    "no": "04",
+    "title": "Keep a copy of your data",
+    "body": "Use the all-data ZIP under More to migrate your collection, or enable folder backup in Data backup on desktop. Resonance and wardrobe also offer manual cloud sync."
   }
 ],
       questionsKicker: 'GOOD TO KNOW', questionsTitle: 'A few things before you begin.',
       questions: [
-{
-  "q": "Will my local data always be kept?",
-  "a": "Data is stored in the current browser. Clearing site data, cleanup tools or uninstalling the browser may erase it. Changing browsers or devices does not transfer it automatically. Export backups regularly or enable desktop auto backup; resonance and wardrobe can be synced manually. Installing the app does not replace a backup."
-},
+  {
+    "q": "Will my local data always be kept?",
+    "a": "Data is stored in the current browser. Clearing site data, cleanup tools or uninstalling the browser may erase it. Changing browsers or devices does not transfer it automatically. Export backups regularly or enable desktop auto backup; resonance and wardrobe can be synced manually. Installing the app does not replace a backup."
+  },
   {
     "q": "Are my photos uploaded?",
     "a": "Photo browsing and camera parameter parsing run locally. Originals selected for temporary parsing are not uploaded or added to an album. Manual cloud sync uploads only the selected resonance or wardrobe saves."
   },
   {
     "q": "Why is folder access denied or my album missing?",
-    "a": "Use a desktop Chromium browser supporting folder access and select the folder containing your photos. Reauthorize if access expires. If normal authorization fails, try Compatibility open (read-only) to browse, decode, favorite and export photos. Select the folder again after reloading or to see new photos. Do not select a drive root."
+    "a": "Use a desktop Chromium browser supporting folder access and select the folder containing your photos. Reauthorize if access expires. If normal authorization fails, try Compatibility open (read-only) to browse, decode, view existing favorites and notes, and export photos, without modifying the original folder. Select the folder again after reloading or to see new photos. Do not select a drive root."
   },
   {
     "q": "Which features work on a phone?",
-    "a": "Manage outfit codes, home schemes and camera favorites, and browse resonance, wardrobe and makeup. The top Tools menu offers photo/code parsers, avatar creation and lucky times. Folder-based albums, automatic game outfit imports and targeted cleanup require a desktop browser with folder access."
+    "a": "Manage outfit codes, home schemes and camera presets, and browse resonance, wardrobe, makeup and evolution animations. The top Tools menu offers photo/code parsers, avatar creation and lucky times. Folder-based albums, automatic game outfit imports and targeted cleanup require a desktop browser with folder access."
   },
   {
     "q": "How do I move desktop data to my phone?",
@@ -402,7 +420,7 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "What if the database version does not match?",
-    "a": "Open the latest version of the site and refresh before retrying. Do not clear site data, as this may erase local outfit codes, home schemes and camera favorites. If the problem continues, keep the original data and report it."
+    "a": "Open the latest version of the site and refresh before retrying. Do not clear site data, as this may erase local outfit codes, home schemes and camera presets. If the problem continues, keep the original data and report it."
   },
   {
     "q": "Does cloud sync automatically sync everything?",
@@ -415,6 +433,14 @@ const copy = computed(() => language.value === 'zh'
   {
     "q": "Can I restore deleted photos?",
     "a": "Regular album deletion moves photos to Recently Deleted for restoration. Permanent deletion, clearing Recently Deleted and targeted cleanup modify local files and cannot be restored through Recently Deleted."
+  },
+  {
+    "q": "How do auto backup, ZIP backup and cloud sync differ?",
+    "a": "Enable folder backup in Data backup on desktop for outfits, home schemes and camera presets. It updates while the app is running with valid access, keeping the latest state including deletions, without version history. All-data ZIP also includes resonance and wardrobe for manual backup and migration. Cloud sync covers only resonance and wardrobe and requires sign-in and manual action. None includes original album photos."
+  },
+  {
+    "q": "How do I move my data to the new URL?",
+    "a": "Browsers store data separately for each site address. Export all data under More on the old site, then import the unchanged ZIP at nikkicube.cc.cd. Resonance and wardrobe also support manual cloud sync. Keep the old site data until migration is confirmed, and save original photos separately."
   }
 ],
       report: 'Feedback on Xiaohongshu',
@@ -481,10 +507,10 @@ function setLanguage(value: Language): void {
   language.value = value
   document.documentElement.lang = value === 'zh' ? 'zh-CN' : 'en'
   // 标签页标题中英文统一，不再随语言切换
-  document.title = '暖立方（Nikki³）｜无限暖暖工具集'
+  document.title = '官网 · 暖立方'
   document.querySelector('meta[name="description"]')?.setAttribute('content', value === 'zh'
-    ? '暖立方（Nikki³）是无限暖暖玩家工具集，提供无限暖暖相册管理、搭配码解析、家园方案管理、相机参数收藏、共鸣记录、个人衣橱与妆容图鉴。查看功能介绍、使用指南并进入在线工具。'
-    : 'NikkiCube (Nikki³) is an Infinity Nikki toolkit for photo albums, outfit codes, home plans, camera presets, resonance records, wardrobe tracking and a makeup catalog. Explore features, guides and the online app.')
+    ? '暖立方（Nikki³）是无限暖暖玩家工具集，提供无限暖暖相册管理、搭配码解析、家园方案管理、相机参数、共鸣记录、个人衣橱、妆容图鉴与满进动画。查看功能介绍、使用指南并进入在线工具。'
+    : 'NikkiCube (Nikki³) is an Infinity Nikki toolkit for photo albums, outfit codes, home plans, camera presets, resonance records, wardrobe tracking, makeup and evolution animations. Explore features, guides and the online app.')
   try { localStorage.setItem('nikki-website-language', value) } catch { /* Language still applies for this session. */ }
   mobileMenuOpen.value = false
 }

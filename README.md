@@ -32,7 +32,7 @@ npm run preview
 
 ## 搜索收录
 
-官网主网址为 `https://nikki3.pages.dev/`，在线工具仍为 `https://infinity-nikki-album-manager.pages.dev/`。首页标题与介绍使用“暖立方（Nikki³）”“无限暖暖相册管理”“无限暖暖共鸣记录”等真实品牌与功能名称。
+官网主网址为 `https://nikki3.pages.dev/`，在线工具仍为 `https://nikkicube.cc.cd/`。首页标题与介绍使用“暖立方（Nikki³）”“无限暖暖相册管理”“无限暖暖共鸣记录”等真实品牌与功能名称。
 
 `npm run build` 在类型检查和前端打包后，使用同一套 Vue 组件预渲染中文首页；发布目录仍为 `dist`，无需服务器或新增依赖。原始 HTML 包含介绍、默认功能预览、使用指南与常见问题，浏览器接管后保留语言、主题、分类切换和截图预览。正文初始可见，入场保留位移、取消从全透明开始；轮播和其他交互动效保留。已保存的语言偏好在接管后恢复。预渲染失败会终止构建，临时模块位于忽略的 `.verify/prerender/`，不会发布。
 
@@ -41,7 +41,7 @@ npm run preview
 ## 素材
 
 - 源图片统一放在项目根目录的 `images/`，不会复制进部署目录。首屏浅色使用 `1.webp`～`10.webp`，深色使用 `11.webp`～`20.webp`；画廊使用 `gallery-1.webp`～`gallery-10.webp`。
-- 功能预览包含相册、搭配码、家园方案、暖暖档案和解析工具五类，包括妆容图鉴、搭配总结、分享图、头像模拟器、背景切换和电脑端自动备份；数据与截图路径在 `src/data/showcase.ts`，截图放在 `images/screenshots/`。未提供或加载失败的截图显示功能示意图。
+- 功能预览按桌面首页、相册管理、搭配码、家园方案、相机参数、暖暖档案、备份与工具七类组织，补充角色资料、满进动画、动态头像框和新版搭配总结。数据与截图路径在 `src/data/showcase.ts`，截图放在 `images/screenshots/`。已接入桌面首页、角色资料、满进动画及相册打开入口的新截图，并更新八张现有截图；其余无截图功能沿用文字示意。
 - 教程图为 `images/auto-update-outfit-code.webp`，保留原始纵向比例，支持打开完整图片。
 - 品牌图标位于 `public/images/brand-mark.png`，浏览器图标位于 `public/favicon.ico` 与 `public/favicon.svg`。
 - 原始 JPEG/JPG 可选归档在 `images/originals/`。安装 Python 与 Pillow 后，可使用 `python scripts/convert_webp.py` 转成源 WebP；归档文件不发布。
@@ -49,7 +49,7 @@ npm run preview
 
 ## 页面内容
 
-官网介绍相册管理、搭配码、家园方案、相机参数收藏、共鸣记录、个人衣橱与妆容图鉴，展示搭配总结、来源链接、分享图、头像模拟器、脚本法导入、主题跟随系统、材质与手机导航设置、背景切换、自动备份及自动接收搭配码教程。详细操作请阅读主项目的[中文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md)或[英文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md)。
+官网按整理照片与灵感、浏览收集档案、备份与日常工具组织介绍。使用指南涵盖直接收藏、导入档案、连接电脑相册及数据备份；常见问题区分目录备份、全部数据 ZIP 和手动云同步，并说明从旧网址迁移到新网址。详细操作请阅读主项目的[中文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md)或[英文 README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md)。
 
 ## 动效与无障碍
 
@@ -61,7 +61,7 @@ npm run preview
 
 ## 页面入口
 
-- 在线应用：[Cloudflare Pages](https://infinity-nikki-album-manager.pages.dev/)，[备用站点](https://infinity-nikki-album-manager.vercel.app/)
+- 在线应用：[暖立方工具集](https://nikkicube.cc.cd/)，[备用站点](https://infinity-nikki-album-manager.vercel.app/)
 - 源码与发布：[GitHub](https://github.com/sumopenny/Infinity-Nikki-Toolkit)，[Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Toolkit)
 
 项目是独立社区工具，与《无限暖暖》官方及其发行方没有隶属、授权或背书关系。

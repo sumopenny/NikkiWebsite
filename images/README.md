@@ -34,6 +34,10 @@
 
 | 文件名（`screenshots/` 下） | 界面 |
 | --- | --- |
+| `desktop-home.webp` | 桌面首页 |
+| `character-profile.webp` | 角色资料与头像框 |
+| `evolution-animation.webp` | 满进动画 |
+| `album-entry.webp` | 相册打开入口 |
 | `album-timeline.webp` | 相册时间轴 |
 | `archive-pearpal.webp` | 暖暖档案手账导入 |
 | `album-actions.webp` | 相册动作分类 |
@@ -58,7 +62,7 @@
 | `makeup-details.webp` | 妆容详情 |
 | `archive-background.webp` | 背景切换 |
 | `parse-tools.webp` | 参数输入与解析 |
-| `camera-favorites.webp` | 相机参数收藏 |
+| `camera-favorites.webp` | 相机参数 |
 | `directory-backup.webp` | 电脑端自动备份 |
 | `data-backup.webp` | 数据备份 |
 | `data-sync.webp` | 数据同步 |
@@ -99,3 +103,7 @@ python scripts/convert_webp.py
 | 替换 | makeup-details.webp | 标题旁带紫色来源胶囊的妆容详情 |
 
 其余标为“替换”的截图可后续补充。源素材使用 WebP，电脑截图建议 16:10、宽 1600px 以上。无需重新提供 Logo、背景图、头像框单张资源或首屏美照。
+
+## 2026-11-26 截图更新
+
+新增桌面首页、角色资料、满进动画和相册打开入口；替换搭配总结、目录备份、相机参数、大图预览、搭配列表、妆容图鉴、相册时间轴和动作分类。素材来自本次提供的 12 张 WebP，保持原始尺寸与内容。角色资料缩略图完整显示，其他图片沿用现有展示方式；头像模拟器继续保留原图。

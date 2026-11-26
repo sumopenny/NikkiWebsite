@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, Minus, Plus, House, Images, ScanSearch, Shirt, Sparkles, X } from 'lucide-vue-next'
+import { ArrowUpRight, Check, ChevronDown, ChevronLeft, ChevronRight, Minus, Plus, Monitor, Camera, House, Images, ScanSearch, Shirt, Sparkles, X } from 'lucide-vue-next'
 import { useImageZoom, MIN_ZOOM, ZOOM_STEP } from '../composables/useImageZoom'
 import { imageSource, imageSrcset, setImageRequest } from '../imageAssets'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion-v'
 import { showcaseCategories, showcaseSupport, showcaseUi, type CategoryId, type Language } from '../data/showcase'
 
 const props = defineProps<{ language: Language; reducedMotion: boolean; appUrl: string; preloadReady: boolean }>()
-const categoryIcons = { album: Images, outfit: Shirt, home: House, resonance: Sparkles, tools: ScanSearch }
-const activeCategoryId = ref<CategoryId>('album')
-const rememberedViews = ref<Record<string, string>>(Object.fromEntries(showcaseCategories.map(category => [category.id, category.defaultViewId])))
+const categoryIcons = { desktop: Monitor, album: Images, outfit: Shirt, home: House, camera: Camera, resonance: Sparkles, tools: ScanSearch }
+const activeCategoryId = ref<CategoryId>(showcaseCategories[0]!.id)
+const rememberedViews = ref<Record<string, string>>({})
 const category = computed(() => showcaseCategories.find(item => item.id === activeCategoryId.value)!)
 const view = computed(() => category.value.views.find(item => item.id === rememberedViews.value[category.value.id]) ?? category.value.views[0]!)
 const viewNumber = computed(() => category.value.views.indexOf(view.value) + 1)
@@ -71,7 +71,7 @@ function scheduleScreenshots(): void {
   if (!mounted.value || !props.preloadReady || preloadStopped) return
   preloadStarted = true
   const categories = limitedConnection() ? [category.value] : showcaseCategories
-  const defaults = categories.map(c => c.views.find(v => v.id === c.defaultViewId)?.image)
+  const defaults = categories.map(c => c.views[0]?.image)
   const images = [...defaults, ...categories.flatMap(c => c.views.map(v => v.image))]
   screenshotQueue = [...new Set(images.filter((src): src is string => !!src))]
     .filter(src => src !== view.value.image && !screenshotRequests.has(src))
@@ -219,7 +219,7 @@ onBeforeUnmount(() => {
         <!-- Keep the original image shell, 16:10 crop, hover tilt and screenshot transition. -->
         <motion.button v-if="view.image && imageState !== 'failed'" type="button" class="showcase-image-button" :class="{ 'is-loading': !imageReady }" :aria-busy="!imageReady" :aria-label="`${showcaseUi.openImage[language]}: ${view.caption[language]}`" :aria-disabled="!imageReady" :style="{ rotateX, rotateY, transformPerspective: 1200 }" :while-hover="reducedMotion ? undefined : { scale: 1.008 }" @pointermove="movePointer" @pointerleave="resetTilt" @click="openImage">
           <Transition name="screenshot-switch" mode="out-in" @after-enter="syncPreviewImage">
-            <img ref="previewImage" :key="view.id" :data-view-id="view.id" :class="{ 'is-parameter-scrolling': view.id === 'image-parameters' && imageReady && !reducedMotion }" :src="imageSource(view.image)" :srcset="imageSrcset(view.image)" sizes="(max-width: 900px) 100vw, 65vw" :alt="view.alt[language]" decoding="async" fetchpriority="high" @load="imageLoaded" @error="failImage" />
+            <img ref="previewImage" :key="view.id" :data-view-id="view.id" :class="{ 'is-profile-image': view.id === 'character-profile', 'is-parameter-scrolling': view.id === 'image-parameters' && imageReady && !reducedMotion }" :src="imageSource(view.image)" :srcset="imageSrcset(view.image)" sizes="(max-width: 900px) 100vw, 65vw" :alt="view.alt[language]" decoding="async" fetchpriority="high" @load="imageLoaded" @error="failImage" />
           </Transition>
           <span v-if="!imageReady" class="showcase-image-loading" role="status">
             <span class="showcase-loading-ring" aria-hidden="true"></span>
@@ -276,6 +276,7 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.showcase-image-button img.is-profile-image { object-fit: contain; object-position: center; }
 .showcase-categories { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
 .showcase-categories button, .showcase-views button { min-height: 44px; border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft); cursor: pointer; transition: background .2s ease, color .2s ease; }
 .showcase-categories button { display: inline-flex; align-items: center; gap: 9px; padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 650; }

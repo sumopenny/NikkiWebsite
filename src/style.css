@@ -227,7 +227,7 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px soli
 .showcase-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(270px, .8fr); align-items: stretch; gap: 34px; perspective: 1200px; }
 .showcase-image-button { position: relative; display: block; min-width: 0; overflow: hidden; padding: 0; border: 1px solid var(--line); border-radius: 24px; background: var(--surface-soft); cursor: zoom-in; transform-style: preserve-3d; }
 .showcase-image-button img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
-.image-open-hint { position: absolute; right: 15px; bottom: 15px; display: flex; align-items: center; gap: 7px; padding: 9px 11px; border: 1px solid color-mix(in srgb, var(--line) 75%, transparent); border-radius: 5px; background: color-mix(in srgb, var(--page) 92%, transparent); color: var(--ink-soft); font-size: 12px; opacity: 0; transition: opacity .2s ease; }
+.image-open-hint { position: absolute; right: 15px; bottom: 15px; display: flex; align-items: center; gap: 7px; padding: 9px 11px; border: 1px solid color-mix(in srgb, var(--line) 75%, transparent); border-radius: 12px; background: color-mix(in srgb, var(--page) 92%, transparent); color: var(--ink-soft); font-size: 12px; opacity: 0; transition: opacity .2s ease; }
 .showcase-image-button:hover .image-open-hint, .showcase-image-button:focus-visible .image-open-hint { opacity: 1; }
 .showcase-side { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; padding: 12px 0; }
 .showcase-side h3 { margin: 13px 0 5px; font-size: 24px; font-weight: 650; line-height: 1.35; }

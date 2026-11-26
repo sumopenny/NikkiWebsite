@@ -32,7 +32,7 @@ The included `wrangler.toml` declares the Pages output directory. This is a stat
 
 ## Search indexing
 
-The canonical website is `https://nikki3.pages.dev/`; the online toolkit remains at `https://infinity-nikki-album-manager.pages.dev/`. The title and copy use the brand 暖立方 (Nikki³) and the actual Infinity Nikki album management and resonance record features.
+The canonical website is `https://nikki3.pages.dev/`; the online toolkit is at `https://nikkicube.cc.cd/`. The title and copy use the brand 暖立方 (Nikki³) and the actual Infinity Nikki album management and resonance record features.
 
 After type checking and client bundling, `npm run build` prerenders the Chinese homepage from the same Vue components. Deploy `dist` as before; no server or new dependency is required. The initial HTML includes the introduction, default feature preview, usage guide and FAQ. Hydration preserves language, theme, category selection and screenshot previews. Text is visible initially: entrance movement remains, but text no longer starts fully transparent. Carousels and other interactive animations remain. Saved language preferences are restored after hydration. Prerender failures stop the build; temporary modules stay in the ignored `.verify/prerender/` directory and are not deployed.
 
@@ -41,7 +41,7 @@ The homepage has a self-referencing canonical; `public/robots.txt` references `p
 ## Assets
 
 - Keep source WebP files in the project-root `images/` directory, outside the public deployment tree. Light hero photos use `1.webp`–`10.webp`, dark photos use `11.webp`–`20.webp`, and gallery photos use `gallery-1.webp`–`gallery-10.webp`.
-- Feature previews cover Album, Outfit codes, Home schemes, Nikki Archive, and Parsers and tools, including makeup catalog, outfit summary, share cards, avatar simulator, archive backgrounds and automatic desktop backups. Their content and image paths are in `src/data/showcase.ts`; screenshots belong in `images/screenshots/`. Missing or failed screenshots fall back to feature illustrations.
+- Feature previews cover Desktop home, Album, Outfit codes, Home schemes, Camera presets, Nikki Archive, and Backup & tools. They include character profiles, evolution animations, animated avatar frames and outfit insights. Content lives in `src/data/showcase.ts`; screenshots belong in `images/screenshots/`. New desktop home, character profile, evolution animation and album entry screenshots are connected, and eight existing screenshots are updated. Features without screenshots retain text illustrations.
 - The tutorial source is `images/auto-update-outfit-code.webp`, displayed at its original portrait ratio with a link to the complete image.
 - The brand image is `public/images/brand-mark.png`; browser icons are `public/favicon.ico` and `public/favicon.svg`.
 - Optionally archive JPEG/JPG originals under `images/originals/`. With Python and Pillow installed, run `python scripts/convert_webp.py` to regenerate source WebP files. Archives are not published.
@@ -49,7 +49,7 @@ The homepage has a self-referencing canonical; `public/robots.txt` references `p
 
 ## Page content
 
-The website covers albums, outfit codes, home schemes, camera favorites, resonance records, wardrobe and makeup catalog, including outfit summaries, source links, share cards, avatar creation, userscript imports, system theme, materials, mobile navigation, backgrounds, automatic backups, an outfit-code walkthrough and FAQ. For detailed instructions, read the toolkit [Chinese README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md) or [English README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md).
+The website presents photos and inspiration, collection records, backups and everyday tools. Getting started covers saving ideas, importing an archive, connecting a desktop album and backing up data. FAQ explains folder backup, all-data ZIP, manual cloud sync and migration from the old URL. Read the toolkit [Chinese README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README.md) or [English README](https://github.com/sumopenny/Infinity-Nikki-Toolkit/blob/main/README_EN.md) for detailed instructions.
 
 ## Motion and accessibility
 
@@ -61,7 +61,7 @@ The website covers albums, outfit codes, home schemes, camera favorites, resonan
 
 ## Links
 
-- App: [Cloudflare Pages](https://infinity-nikki-album-manager.pages.dev/), [alternate site](https://infinity-nikki-album-manager.vercel.app/)
+- App: [NikkiCube toolkit](https://nikkicube.cc.cd/), [alternate site](https://infinity-nikki-album-manager.vercel.app/)
 - Source and releases: [GitHub](https://github.com/sumopenny/Infinity-Nikki-Toolkit), [Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Toolkit)
 
 This is an independent community tool. It is not affiliated with, authorized, or endorsed by the Infinity Nikki team or publisher.
