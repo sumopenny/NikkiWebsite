@@ -32,7 +32,7 @@ npm run preview
 
 ## 搜索收录
 
-官网主网址为 `https://nikki3.pages.dev/`，在线工具仍为 `https://nikkicube.cc.cd/`。首页标题与介绍使用“暖立方（Nikki³）”“无限暖暖相册管理”“无限暖暖共鸣记录”等真实品牌与功能名称。
+官网主网址为 `https://nikki3.pages.dev/`，在线工具仍为 `https://nikkicube.pages.dev/`。首页标题与介绍使用“暖立方（Nikki³）”“无限暖暖相册管理”“无限暖暖共鸣记录”等真实品牌与功能名称。
 
 `npm run build` 在类型检查和前端打包后，使用同一套 Vue 组件预渲染中文首页；发布目录仍为 `dist`，无需服务器或新增依赖。原始 HTML 包含介绍、默认功能预览、使用指南与常见问题，浏览器接管后保留语言、主题、分类切换和截图预览。正文初始可见，入场保留位移、取消从全透明开始；轮播和其他交互动效保留。已保存的语言偏好在接管后恢复。预渲染失败会终止构建，临时模块位于忽略的 `.verify/prerender/`，不会发布。
 
@@ -61,7 +61,7 @@ npm run preview
 
 ## 页面入口
 
-- 在线应用：[暖立方工具集](https://nikkicube.cc.cd/)，[备用站点](https://infinity-nikki-album-manager.vercel.app/)
+- 在线应用：[暖立方工具集](https://nikkicube.pages.dev/)，[备用站点](https://infinity-nikki-album-manager.vercel.app/)
 - 源码与发布：[GitHub](https://github.com/sumopenny/Infinity-Nikki-Toolkit)，[Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Toolkit)
 
 项目是独立社区工具，与《无限暖暖》官方及其发行方没有隶属、授权或背书关系。

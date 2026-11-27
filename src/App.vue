@@ -218,7 +218,7 @@ const featureCardVariants = {
 const trustIcons = [FileImage, MonitorSmartphone, Archive, Heart, Shirt, Cloud]
 
 const links = {
-  app: 'https://nikkicube.cc.cd/',
+  app: 'https://nikkicube.pages.dev/',
   fallback: 'https://infinity-nikki-album-manager.vercel.app/',
   github: 'https://github.com/sumopenny/Infinity-Nikki-Toolkit',
   // 反馈入口：小红书主页（原 GitHub Issues 已不再作为对外反馈渠道）
@@ -333,7 +333,7 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "换到新网址后，原来的数据怎么办？",
-    "a": "浏览器按网址分别保存数据。在旧网址“更多”中导出全部数据，再到 nikkicube.cc.cd 导入原样 ZIP；共鸣与衣橱也可手动云同步。确认迁移完成前请保留旧站数据，相册原图另行保存。"
+    "a": "浏览器按网址分别保存数据。在旧网址“更多”中导出全部数据，再到 nikkicube.pages.dev 导入原样 ZIP；共鸣与衣橱也可手动云同步。确认迁移完成前请保留旧站数据，相册原图另行保存。"
   }
 ],
       report: '反馈问题-小红书',
@@ -440,7 +440,7 @@ const copy = computed(() => language.value === 'zh'
   },
   {
     "q": "How do I move my data to the new URL?",
-    "a": "Browsers store data separately for each site address. Export all data under More on the old site, then import the unchanged ZIP at nikkicube.cc.cd. Resonance and wardrobe also support manual cloud sync. Keep the old site data until migration is confirmed, and save original photos separately."
+    "a": "Browsers store data separately for each site address. Export all data under More on the old site, then import the unchanged ZIP at nikkicube.pages.dev. Resonance and wardrobe also support manual cloud sync. Keep the old site data until migration is confirmed, and save original photos separately."
   }
 ],
       report: 'Feedback on Xiaohongshu',

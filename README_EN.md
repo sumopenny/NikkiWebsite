@@ -32,7 +32,7 @@ The included `wrangler.toml` declares the Pages output directory. This is a stat
 
 ## Search indexing
 
-The canonical website is `https://nikki3.pages.dev/`; the online toolkit is at `https://nikkicube.cc.cd/`. The title and copy use the brand 暖立方 (Nikki³) and the actual Infinity Nikki album management and resonance record features.
+The canonical website is `https://nikki3.pages.dev/`; the online toolkit is at `https://nikkicube.pages.dev/`. The title and copy use the brand 暖立方 (Nikki³) and the actual Infinity Nikki album management and resonance record features.
 
 After type checking and client bundling, `npm run build` prerenders the Chinese homepage from the same Vue components. Deploy `dist` as before; no server or new dependency is required. The initial HTML includes the introduction, default feature preview, usage guide and FAQ. Hydration preserves language, theme, category selection and screenshot previews. Text is visible initially: entrance movement remains, but text no longer starts fully transparent. Carousels and other interactive animations remain. Saved language preferences are restored after hydration. Prerender failures stop the build; temporary modules stay in the ignored `.verify/prerender/` directory and are not deployed.
 
@@ -61,7 +61,7 @@ The website presents photos and inspiration, collection records, backups and eve
 
 ## Links
 
-- App: [NikkiCube toolkit](https://nikkicube.cc.cd/), [alternate site](https://infinity-nikki-album-manager.vercel.app/)
+- App: [NikkiCube toolkit](https://nikkicube.pages.dev/), [alternate site](https://infinity-nikki-album-manager.vercel.app/)
 - Source and releases: [GitHub](https://github.com/sumopenny/Infinity-Nikki-Toolkit), [Gitee](https://gitee.com/sumopenny/Infinity-Nikki-Toolkit)
 
 This is an independent community tool. It is not affiliated with, authorized, or endorsed by the Infinity Nikki team or publisher.
