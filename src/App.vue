@@ -248,7 +248,7 @@ const copy = computed(() => language.value === 'zh'
       galleryBody: '尽情欣赏暖暖美照，让官网也像一本小小的旅途画册。',
       tutorialKicker: 'OUTFIT CODE · AUTO UPDATE',
       tutorialTitle: '自动更新搭配码，几步就能设好。',
-      tutorialBody: '授权当前游戏目录后，在游戏中生成搭配码，再回到网页即可自动接收。',
+      tutorialBody: '授权当前游戏目录后，在游戏中生成搭配码，再回到网页即可自动接收。每次只能读取一个搭配码；每生成一个后，请回到网站读取，再生成下一个。',
       tutorialSteps: [
         { no: '01', title: '授权游戏目录', body: '在电脑端点击“授权 X6Game”，选择当前游戏的 X6Game 文件夹；已授权可直接继续。' },
         { no: '02', title: '在游戏中框选搭配', body: '点击分享，再点搭配截图右下角的框选按钮，调整展示区域并确认。' },
@@ -357,7 +357,7 @@ const copy = computed(() => language.value === 'zh'
       galleryBody: "Enjoy Nikki's beautiful photos, and let this site feel like a little travel album.",
       tutorialKicker: 'OUTFIT CODE · AUTO UPDATE',
       tutorialTitle: 'Set up automatic outfit-code updates in a few steps.',
-      tutorialBody: 'Authorize the current game folder once. Then create an outfit code in game and return to the website to import it.',
+      tutorialBody: 'Authorize the current game folder once. Then create an outfit code in game and return to the website to import it. Only one code can be read at a time; return to read each code before generating the next one.',
       tutorialSteps: [
         { no: '01', title: 'Authorize the game folder', body: 'On desktop, choose Authorize X6Game and select the game’s X6Game folder. Continue if already authorized.' },
         { no: '02', title: 'Select the outfit in game', body: 'Tap Share, choose the selection button at the bottom right of the outfit screenshot, adjust the frame, and confirm.' },
